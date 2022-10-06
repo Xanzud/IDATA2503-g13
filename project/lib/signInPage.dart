@@ -1,22 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project/authentication_service.dart';
+import 'package:provider/provider.dart';
 
 class SignInPage extends StatelessWidget {
-  const SignInPage({super.key});
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  //const SignInPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("PrepActive"),
+        title: const Text("PrepActive"),
         elevation: 2.0,
       ),
-      body: _buildContent(),
+      body: _buildContent(context),
       backgroundColor: Colors.red,
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context) {
     return Container(
         padding: EdgeInsets.all(25),
         color: Colors.white,
@@ -31,8 +35,10 @@ class SignInPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             TextField(
-              obscureText: true,
+              controller: emailController,
+              obscureText: false,
               decoration: InputDecoration(
+                labelText: "Email",
                 border: OutlineInputBorder(),
               ),
             ),
@@ -43,18 +49,22 @@ class SignInPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             TextField(
+                controller: passwordController,
                 obscureText: true,
-                decoration: InputDecoration(border: OutlineInputBorder())),
+                decoration: InputDecoration(
+                  labelText: "Password",
+                    border: OutlineInputBorder())),
             SizedBox(height: 60),
             ElevatedButton(
-                onPressed: () => _signIn(),
+                onPressed: () {
+                  context.read<AuthenticationService>().signIn(
+                      emailController.text.trim(),
+                      passwordController.text.trim());
+                },
                 child: Text("Login", style: TextStyle(color: Colors.black),),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.white))
           ],
         ));
   }
 
-  void _signIn() {
-
-  }
 }
