@@ -54,5 +54,7 @@ class SignInPage extends StatelessWidget {
         ));
   }
 
-  void _signIn() {}
+  void _signIn() {
+
+  }
 }

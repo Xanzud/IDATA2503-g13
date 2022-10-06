@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1026957749869",
+    "project_id": "prepactive-fd5ba",
+    "storage_bucket": "prepactive-fd5ba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026957749869:android:266fba50acedb849cbd964",
+        "android_client_info": {
+          "package_name": "com.example.project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026957749869-ns6sio5v632vja4r62r9a1do8k9eeaqd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDprP7E_Bqda5R7bf_RqS8uaaV_Vr8JcM8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026957749869-ns6sio5v632vja4r62r9a1do8k9eeaqd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
