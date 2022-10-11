@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'signInPage.dart';
 
-Future<void> main() async{
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
@@ -19,33 +19,36 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(providers: [
-      Provider<AuthenticationService>(
-        create: (_) => AuthenticationService(FirebaseAuth.instance),
-      ),
-      StreamProvider(create:
-          (context) => context.read<AuthenticationService>().authStateChanges, initialData: null,
-      ),
-    ],
-    child: MaterialApp(
-      title: 'PrepActive',
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-      ),
-      home: AuthenticationWrapper(),
+    return MultiProvider(
+      providers: [
+        Provider<AuthenticationService>(
+          create: (_) => AuthenticationService(FirebaseAuth.instance),
+        ),
+        StreamProvider(
+          create: (context) =>
+              context.read<AuthenticationService>().authStateChanges,
+          initialData: null,
+        ),
+      ],
+      child: MaterialApp(
+        title: 'PrepActive',
+        theme: ThemeData(
+          primarySwatch: Colors.red,
+        ),
+        home: AuthenticationWrapper(),
       ),
     );
   }
 }
 
-class AuthenticationWrapper extends StatelessWidget{
+class AuthenticationWrapper extends StatelessWidget {
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     final firebaseUser = context.watch<User?>();
 
-    if(firebaseUser != null){
+    if (firebaseUser != null) {
       return LandingPage();
-    }else{
+    } else {
       return SignInPage();
     }
   }

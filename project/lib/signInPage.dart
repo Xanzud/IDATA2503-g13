@@ -15,8 +15,11 @@ class SignInPage extends StatelessWidget {
         title: const Text("PrepActive"),
         elevation: 2.0,
       ),
-      body: _buildContent(context),
-      backgroundColor: Colors.red,
+      body: SingleChildScrollView(
+        child: _buildContent(context),
+      ),
+      resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.white,
     );
   }
 
@@ -52,8 +55,7 @@ class SignInPage extends StatelessWidget {
                 controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
-                  labelText: "Password",
-                    border: OutlineInputBorder())),
+                    labelText: "Password", border: OutlineInputBorder())),
             SizedBox(height: 60),
             ElevatedButton(
                 onPressed: () {
@@ -61,10 +63,12 @@ class SignInPage extends StatelessWidget {
                       emailController.text.trim(),
                       passwordController.text.trim());
                 },
-                child: Text("Login", style: TextStyle(color: Colors.black),),
+                child: Text(
+                  "Login",
+                  style: TextStyle(color: Colors.black),
+                ),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.white))
           ],
         ));
   }
-
 }

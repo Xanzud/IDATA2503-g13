@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1026957749869:android:266fba50acedb849cbd964",
+        "mobilesdk_app_id": "1:1026957749869:android:29e43b5c1e3b3289cbd964",
         "android_client_info": {
-          "package_name": "com.example.project"
+          "package_name": "com.g13.prepactive"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "1026957749869-44u6alam9ljsrr6o9bfjqn9mj30p685t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.g13.prepactive",
+            "certificate_hash": "c9a3e183f9a840fbc0c0563bea81d0c8da53fc09"
+          }
+        },
         {
           "client_id": "1026957749869-ns6sio5v632vja4r62r9a1do8k9eeaqd.apps.googleusercontent.com",
           "client_type": 3
@@ -29,6 +37,13 @@
             {
               "client_id": "1026957749869-ns6sio5v632vja4r62r9a1do8k9eeaqd.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1026957749869-86jpeaji4vo5vpsel2aru622ioo5sqar.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.g13.prepactive"
+              }
             }
           ]
         }
