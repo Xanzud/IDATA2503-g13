@@ -29,9 +29,8 @@ class MyApp extends StatelessWidget {
         Provider<AuthenticationService>(
           create: (_) => AuthenticationService(FirebaseAuth.instance),
         ),
-        StreamProvider(
-          create: (context) =>
-              context.read<AuthenticationService>().authStateChanges,
+        StreamProvider<User?>(
+          create: (context) => context.read<AuthenticationService>().authStateChanges,
           initialData: null,
         ),
       ],
@@ -54,8 +53,10 @@ class AuthenticationWrapper extends StatelessWidget {
 
     if (firebaseUser != null) {
       return Provider<Repository>(
-        create: (context) => FirestoreRepository(),
-        child: LandingPage(),
+        create: (_) => FirestoreRepository(),
+        builder: (context, child){
+          return LandingPage();
+        },
       );
     } else {
       return SignInPage();
