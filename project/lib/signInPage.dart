@@ -10,16 +10,18 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("PrepActive"),
-        elevation: 2.0,
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text("PrepActive"),
+          elevation: 2.0,
+        ),
+        body: SingleChildScrollView(
+          child: _buildContent(context),
+        ),
+        resizeToAvoidBottomInset: true,
+        backgroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        child: _buildContent(context),
-      ),
-      resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.white,
     );
   }
 
