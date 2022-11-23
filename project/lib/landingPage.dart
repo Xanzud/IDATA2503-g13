@@ -34,6 +34,53 @@ class LandingPage extends StatelessWidget {
     return Container(
       child: Column(children: <Widget>[
         ElevatedButton(
+          onPressed: () {
+            print("Testing packing list view");
+          },
+          child: Text(
+            "packing list view",
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            print("Testing feedback view");
+          },
+          child: Text(
+            "feedpack view",
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+
+        ElevatedButton(
+          onPressed: () {
+            print("Testing mission archeive view");
+          },
+          child: Text(
+            "mission archeive view",
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+
+        ElevatedButton(
+          onPressed: () {
+            print("Testing mission overview view");
+          },
+          child: Text(
+            "mission overview view",
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            print("Testing damage report view");
+          },
+          child: Text(
+            "damage report view",
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+        ElevatedButton(
             onPressed: () {
               context.read<AuthenticationService>().signOut();
             },
