@@ -15,6 +15,16 @@ class _FeedPageState extends State<FeedPage>{
   void _onItemTapped(int index){
     setState(() {
       _selectedIndex = index;
+      if(_selectedIndex == 0){
+
+      }else if(_selectedIndex == 1){
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context){
+                  return ProfilePage();
+                }));
+      }
     });
   }
 
