@@ -7,26 +7,23 @@ import 'package:provider/provider.dart';
 
 import '../utils/user_settings.dart';
 
-class FeedPage extends StatefulWidget{
+class FeedPage extends StatefulWidget {
   @override
   _FeedPageState createState() => _FeedPageState();
 }
 
-class _FeedPageState extends State<FeedPage>{
+class _FeedPageState extends State<FeedPage> {
   int _selectedIndex = 0;
 
-  void _onItemTapped(int index){
+  void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      if(_selectedIndex == 0){
-
-      }else if(_selectedIndex == 1){
-        Navigator.push(
-          context,
-            MaterialPageRoute(
-                builder: (BuildContext context){
-                  return ProfilePage();
-            }));
+      if (_selectedIndex == 0) {
+      } else if (_selectedIndex == 1) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) {
+          return ProfilePage();
+        }));
       }
     });
   }
@@ -34,7 +31,6 @@ class _FeedPageState extends State<FeedPage>{
   @override
   Widget build(BuildContext context) {
     final user = UserSettings.currentUser;
-
 
     return Scaffold(
       appBar: AppBar(
@@ -50,28 +46,24 @@ class _FeedPageState extends State<FeedPage>{
             )),
       ),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(40, 100, 40, 40),
-        child: _buildMissionInfo(context)
-      ),
-
+          padding: const EdgeInsets.fromLTRB(40, 100, 40, 40),
+          child: _buildMissionInfo(context)),
       bottomNavigationBar: bottomNavigationBar(context),
     );
-
-
   }
 
-  BottomNavigationBar bottomNavigationBar(BuildContext context){
+  BottomNavigationBar bottomNavigationBar(BuildContext context) {
     return BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.feed,size: 40),
-              label: 'Feed',
-              backgroundColor: Colors.red),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person,size: 40),
-              label: 'Profile',
-              backgroundColor: Colors.blue),
-        ],
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+            icon: Icon(Icons.feed, size: 40),
+            label: 'Feed',
+            backgroundColor: Colors.red),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.person, size: 40),
+            label: 'Profile',
+            backgroundColor: Colors.blue),
+      ],
       type: BottomNavigationBarType.shifting,
       currentIndex: _selectedIndex,
       selectedItemColor: Colors.amber[200],
@@ -79,7 +71,7 @@ class _FeedPageState extends State<FeedPage>{
     );
   }
 
-  Widget _buildMissionInfo(BuildContext context){
+  Widget _buildMissionInfo(BuildContext context) {
     const String missionId = "g1tXCcqtk1YSV45o9p6v";
     final repository = Provider.of<Repository>(context, listen: false);
     bool isChecked = false;
@@ -109,77 +101,78 @@ class _FeedPageState extends State<FeedPage>{
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          blurRadius: 1,
-                          offset: Offset(1,4),
-                        )
-                      ]
-                  ),
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topLeft,
+                    height: 150,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            blurRadius: 1,
+                            offset: Offset(1, 4),
+                          )
+                        ]),
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      children: <Widget>[
+                        Align(
+                            alignment: Alignment.topLeft,
                             child: Padding(
                               padding: EdgeInsets.all(5),
-                              child: Text(mission.name, style: TextStyle(color: Colors.red[300])),
-                            )
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
+                              child: Text(mission.name,
+                                  style: TextStyle(color: Colors.red[300])),
+                            )),
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text(mission.name,
+                                  style: TextStyle(
+                                      color: Colors.blue[700], fontSize: 18)),
+                            )),
+                        Align(
+                          alignment: Alignment.bottomLeft,
                           child: Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(mission.name, style: TextStyle(color: Colors.blue[700],fontSize: 18)),
-                          )
-                      ),
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(10, 20, 0, 0),
-                            child: Row(
-                              children: [
-                                Wrap(
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  spacing: 5,
-                                  children: [Icon(Icons.access_time_outlined),Text(mission.time),
+                              padding: EdgeInsets.fromLTRB(10, 20, 0, 0),
+                              child: Row(
+                                children: [
+                                  Wrap(
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.center,
+                                    spacing: 5,
+                                    children: [
+                                      Icon(Icons.access_time_outlined),
+                                      Text(mission.time),
                                     ],
-                                ),
-                                Spacer(),
-                                Wrap(
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  spacing: 5,
-                                  children: [
-                                    Text('Attend',style: TextStyle(fontSize: 16)),
-                                    Checkbox(
-                                      checkColor: Colors.white,
-                                      value: isChecked,
-                                      onChanged: (bool? value){
-                                        setState(() {
-                                          isChecked = value!;
-                                        });
-
-                                      },
-                                    )],
+                                  ),
+                                  Spacer(),
+                                  Wrap(
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.center,
+                                    spacing: 5,
+                                    children: [
+                                      Text('Attend',
+                                          style: TextStyle(fontSize: 16)),
+                                      Checkbox(
+                                        checkColor: Colors.white,
+                                        value: isChecked,
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            isChecked = value!;
+                                          });
+                                        },
+                                      )
+                                    ],
                                   )
                                 ],
-                            )
-                          ),
-                      ),
-
-                    ],
-                  )
-                ),
-              ]
-          );
-
+                              )),
+                        ),
+                      ],
+                    )),
+              ]);
         });
   }
+
   Widget _buildMissionTitle(String missionName) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),

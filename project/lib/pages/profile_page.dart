@@ -1,3 +1,5 @@
+import 'dart:js_util';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project/widget/profile_widget.dart';
@@ -11,10 +13,17 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
+  TextEditingController addressController = TextEditingController();
+  TextEditingController phoneNrController = TextEditingController();
+  TextEditingController regNrController = TextEditingController();
+  TextEditingController certificationsController = TextEditingController();
+
+  bool isEditButtonPressed = false;
+
   @override
   Widget build(BuildContext context) {
   final user = UserSettings.currentUser;
-
     return Scaffold(
       appBar: _buildAppBar(context),
       body: ListView(
@@ -38,6 +47,13 @@ class _ProfilePageState extends State<ProfilePage> {
               info: user.certifications.toString()
           ),
           const SizedBox(height: 24),
+          ElevatedButton(onPressed:() {
+            onEditButtonPressed();
+          },
+              child: Text(  isEditButtonPressed ? "Save" : "Edit",
+                style: TextStyle(color: Colors.black),
+              )
+          )
         ]
       )
     );
@@ -89,10 +105,17 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: TextField(
                 decoration: InputDecoration(
-                  labelText: info,
-                )
+                ),
+              enabled: isEditButtonPressed,
             )
         )
       ]
   );
+
+  ///Method to be called when edit button is pressed
+  void onEditButtonPressed(){
+    setState(() {
+      isEditButtonPressed = !isEditButtonPressed;
+    });
+  }
 }
