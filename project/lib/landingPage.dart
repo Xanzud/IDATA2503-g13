@@ -115,7 +115,7 @@ class LandingPage extends StatelessWidget {
             children: [
               _buildMissionTitle(mission.name),
               _buildMissionLocation(mission.location),
-              _buildMissionTime(mission.time),
+              _buildMissionTime(mission.time.toString()),
             ],
           );
         });
