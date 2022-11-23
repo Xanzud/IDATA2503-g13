@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Mission{
   final String name;
-  final String time;
+  final Timestamp time;
   final String location;
 
   Mission(this.name, this.time,this.location);

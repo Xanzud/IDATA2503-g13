@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project/model/Mission.dart';
@@ -5,6 +6,7 @@ import 'package:project/pages/profile_page.dart';
 import 'package:project/services/repository.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/DateFormatter.dart';
 import '../utils/user_settings.dart';
 
 class FeedPage extends StatefulWidget {
@@ -47,7 +49,7 @@ class _FeedPageState extends State<FeedPage> {
       ),
       body: Padding(
           padding: const EdgeInsets.fromLTRB(40, 100, 40, 40),
-          child: _buildMissionInfo(context)),
+          child: _buildMissionInfoAll(context)),
       bottomNavigationBar: bottomNavigationBar(context),
     );
   }
@@ -142,7 +144,7 @@ class _FeedPageState extends State<FeedPage> {
                                     spacing: 5,
                                     children: [
                                       Icon(Icons.access_time_outlined),
-                                      Text(mission.time),
+                                      Text(mission.time.toString()),
                                     ],
                                   ),
                                   Spacer(),
@@ -157,9 +159,7 @@ class _FeedPageState extends State<FeedPage> {
                                         checkColor: Colors.white,
                                         value: isChecked,
                                         onChanged: (bool? value) {
-                                          setState(() {
-                                            isChecked = value!;
-                                          });
+                                          setState(() => isChecked = value!);
                                         },
                                       )
                                     ],
@@ -171,6 +171,120 @@ class _FeedPageState extends State<FeedPage> {
                     )),
               ]);
         });
+  }
+
+  Widget _buildMissionInfoAll(BuildContext context) {
+    final repository = Provider.of<Repository>(context, listen: false);
+    bool isChecked = false;
+
+    return StreamBuilder<Iterable<Mission>>(
+        stream: repository.getAllMissionsStream(),
+        builder: (context, snapshot) {
+          // Check if we got something other than real data...
+          if (snapshot.connectionState != ConnectionState.active) {
+            return Center(
+              child: const CircularProgressIndicator.adaptive(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text("Error: ${snapshot.error}"),
+            );
+          } else if (!snapshot.hasData || snapshot.data == null) {
+            return const Center(
+              child: Text("No data to load"),
+            );
+          }
+
+          // If we get so far, this means we got data!
+          final Iterable<Mission> mission = snapshot.data!;
+
+
+          return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: List.generate(mission.length,(index){
+                return Padding(
+                  padding: EdgeInsets.all(20),
+                  child: _buildSingleMissionObject(
+                      mission.elementAt(index).name,
+                      mission.elementAt(index).time,
+                      mission.elementAt(index).location),);
+
+              }),
+          );
+        });
+  }
+
+  Widget _buildSingleMissionObject(String? name,Timestamp time,String? location){
+    bool isChecked = true;
+    return Container(
+        height: 150,
+        decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 1,
+                offset: Offset(1, 4),
+              )
+            ]),
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          children: <Widget>[
+            Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: EdgeInsets.all(5),
+                  child: Text(name!,
+                      style: TextStyle(color: Colors.red[300])),
+                )),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(name,
+                      style: TextStyle(
+                          color: Colors.blue[700], fontSize: 18)),
+                )),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                  padding: EdgeInsets.fromLTRB(10, 20, 0, 0),
+                  child: Row(
+                    children: [
+                      Wrap(
+                        crossAxisAlignment:
+                        WrapCrossAlignment.center,
+                        spacing: 5,
+                        children: [
+                          Icon(Icons.access_time_outlined),
+                          Text(
+                              DateFormatter.toRightFormat(DateTime.fromMicrosecondsSinceEpoch(time.microsecondsSinceEpoch))
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      Wrap(
+                        crossAxisAlignment:
+                        WrapCrossAlignment.center,
+                        spacing: 5,
+                        children: [
+                          Text('Attend',
+                              style: TextStyle(fontSize: 16)),
+                          Checkbox(
+                            checkColor: Colors.white,
+                            value: isChecked,
+                            onChanged: (bool? value) {
+                              setState(() => isChecked = value!);
+                            },
+                          )
+                        ],
+                      )
+                    ],
+                  )),
+            ),
+          ],
+        ));
   }
 
   Widget _buildMissionTitle(String missionName) {
