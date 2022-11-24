@@ -1,7 +1,6 @@
 import '../model/Mission.dart';
 
-abstract class Repository{
-
+abstract class Repository {
   /// Get a stream with mission snapshot for a specific mission with given ID
   Stream<Mission?> getMissionStream(String missionId);
 
@@ -9,4 +8,6 @@ abstract class Repository{
   Stream<Iterable<Mission>> getAllMissionsStream();
 
   Future<void> createMission(Mission mission, String missionID);
+
+  Stream<Iterable<Mission>> getUsersStream();
 }

@@ -7,15 +7,15 @@ class User {
   String email;
   String phoneNr;
   List<String> certifications;
+  String role;
 
-  User({
-    required this.imagePath,
-    required this.name,
-    required this.address,
-    required this.regNr,
-    required this.email,
-    required this.phoneNr,
-    required this.certifications,
-    }
-  );
+  User(
+      {required this.imagePath,
+      required this.name,
+      required this.address,
+      required this.regNr,
+      required this.email,
+      required this.phoneNr,
+      required this.certifications,
+      required this.role});
 }

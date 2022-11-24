@@ -12,17 +12,23 @@ class FirestoreRepository implements Repository {
   final _service = FirestoreService.instance;
 
   @override
-  Stream<Iterable<Mission>> getAllMissionsStream() =>
-      _service.getCollectionStream(ApiPaths.missionRoot(), Mission.fromMap, store);
+  Stream<Iterable<Mission>> getAllMissionsStream() => _service
+      .getCollectionStream(ApiPaths.missionRoot(), Mission.fromMap, store);
 
   @override
-  Stream<Mission?> getMissionStream(String missionId) =>
-      _service.getDocumentStream(ApiPaths.mission(missionId), Mission.fromMap, store);
+  Stream<Mission?> getMissionStream(String missionId) => _service
+      .getDocumentStream(ApiPaths.mission(missionId), Mission.fromMap, store);
 
   @override
-  Future<void> createMission(Mission mission, String missionID) => _service.setData(
-    path: ApiPaths.missionRoot() + missionID,
-    data: mission.toMap(),
-  );
+  Future<void> createMission(Mission mission, String missionID) =>
+      _service.setData(
+        path: ApiPaths.missionRoot() + missionID,
+        data: mission.toMap(),
+      );
+
+  @override
+  Stream<Iterable<Mission>> getUsersStream() {
+    return _service.getCollectionStream(
+        ApiPaths.userRoot(), Mission.fromMap, store);
+  }
 }
-

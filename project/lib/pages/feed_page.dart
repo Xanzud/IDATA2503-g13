@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project/missions/new_mission_page.dart';
 import 'package:project/model/Mission.dart';
+import 'package:project/pages/admin_page.dart';
 import 'package:project/pages/profile_page.dart';
 import 'package:project/services/repository.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +27,16 @@ class _FeedPageState extends State<FeedPage> {
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) {
           return ProfilePage();
+        }));
+      } else if (_selectedIndex == 2) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) {
+          return newMissionPage();
+        }));
+      } else if (_selectedIndex == 3) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) {
+          return AdminPage();
         }));
       }
     });
@@ -64,6 +76,14 @@ class _FeedPageState extends State<FeedPage> {
         BottomNavigationBarItem(
             icon: Icon(Icons.person, size: 40),
             label: 'Profile',
+            backgroundColor: Colors.blue),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.create, size: 40),
+            label: 'Create Mission',
+            backgroundColor: Colors.blue),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.admin_panel_settings_outlined, size: 40),
+            label: 'Admin',
             backgroundColor: Colors.blue),
       ],
       type: BottomNavigationBarType.shifting,
@@ -198,23 +218,23 @@ class _FeedPageState extends State<FeedPage> {
           // If we get so far, this means we got data!
           final Iterable<Mission> mission = snapshot.data!;
 
-
           return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: List.generate(mission.length,(index){
-                return Padding(
-                  padding: EdgeInsets.all(20),
-                  child: _buildSingleMissionObject(
-                      mission.elementAt(index).name,
-                      mission.elementAt(index).time,
-                      mission.elementAt(index).location),);
-
-              }),
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: List.generate(mission.length, (index) {
+              return Padding(
+                padding: EdgeInsets.all(20),
+                child: _buildSingleMissionObject(
+                    mission.elementAt(index).name,
+                    mission.elementAt(index).time,
+                    mission.elementAt(index).location),
+              );
+            }),
           );
         });
   }
 
-  Widget _buildSingleMissionObject(String? name,Timestamp time,String? location){
+  Widget _buildSingleMissionObject(
+      String? name, Timestamp time, String? location) {
     bool isChecked = true;
     return Container(
         height: 150,
@@ -235,16 +255,14 @@ class _FeedPageState extends State<FeedPage> {
                 alignment: Alignment.topLeft,
                 child: Padding(
                   padding: EdgeInsets.all(5),
-                  child: Text(name!,
-                      style: TextStyle(color: Colors.red[300])),
+                  child: Text(name!, style: TextStyle(color: Colors.red[300])),
                 )),
             Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: Text(name,
-                      style: TextStyle(
-                          color: Colors.blue[700], fontSize: 18)),
+                      style: TextStyle(color: Colors.blue[700], fontSize: 18)),
                 )),
             Align(
               alignment: Alignment.bottomLeft,
@@ -253,24 +271,21 @@ class _FeedPageState extends State<FeedPage> {
                   child: Row(
                     children: [
                       Wrap(
-                        crossAxisAlignment:
-                        WrapCrossAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         spacing: 5,
                         children: [
                           Icon(Icons.access_time_outlined),
-                          Text(
-                              DateFormatter.toRightFormat(DateTime.fromMicrosecondsSinceEpoch(time.microsecondsSinceEpoch))
-                          ),
+                          Text(DateFormatter.toRightFormat(
+                              DateTime.fromMicrosecondsSinceEpoch(
+                                  time.microsecondsSinceEpoch))),
                         ],
                       ),
                       Spacer(),
                       Wrap(
-                        crossAxisAlignment:
-                        WrapCrossAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         spacing: 5,
                         children: [
-                          Text('Attend',
-                              style: TextStyle(fontSize: 16)),
+                          Text('Attend', style: TextStyle(fontSize: 16)),
                           Checkbox(
                             checkColor: Colors.white,
                             value: isChecked,

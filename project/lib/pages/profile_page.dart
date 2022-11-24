@@ -1,5 +1,3 @@
-import 'dart:js_util';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project/widget/profile_widget.dart';

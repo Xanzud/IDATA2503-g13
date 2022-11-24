@@ -21,12 +21,10 @@ class LandingPage extends StatelessWidget {
         title: const Text("Landing Page"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: () {},
         backgroundColor: Colors.red,
         child: const Icon(Icons.add),
       ),
-      
-
     );
   }
 
@@ -51,7 +49,6 @@ class LandingPage extends StatelessWidget {
             style: TextStyle(color: Colors.black),
           ),
         ),
-
         ElevatedButton(
           onPressed: () {
             print("Testing mission archeive view");
@@ -61,7 +58,6 @@ class LandingPage extends StatelessWidget {
             style: TextStyle(color: Colors.black),
           ),
         ),
-
         ElevatedButton(
           onPressed: () {
             print("Testing mission overview view");
@@ -94,7 +90,7 @@ class LandingPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMissionInfo(BuildContext context){
+  Widget _buildMissionInfo(BuildContext context) {
     final repository = Provider.of<Repository>(context, listen: false);
     return StreamBuilder<Mission?>(
         stream: repository.getMissionStream(missionId),
@@ -120,6 +116,7 @@ class LandingPage extends StatelessWidget {
           );
         });
   }
+
   Widget _buildMissionTitle(String missionName) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),

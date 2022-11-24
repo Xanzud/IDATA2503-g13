@@ -9,5 +9,6 @@ class UserSettings{
     email: "jane@doe.com",
     phoneNr: "10101010",
     certifications: [],
+    role: "user"
   );
 }
