@@ -14,4 +14,12 @@ class Mission{
     "Missing location property for a mission");
     return Mission(data["name"], data["time"], data["location"]);
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "name": name,
+      "time": time,
+      "location": location,
+    };
+  }
 }

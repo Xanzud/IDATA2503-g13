@@ -7,4 +7,6 @@ abstract class Repository{
 
   /// Get a stream with all the missions
   Stream<Iterable<Mission>> getAllMissionsStream();
+
+  Future<void> createMission(Mission mission, String missionID);
 }
