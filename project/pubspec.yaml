@@ -41,6 +41,7 @@ dependencies:
   provider: ^6.0.4
   cloud_firestore: 4.1.0
   intl: ^0.17.0
+  date_field: ^3.0.0
 
 
 dev_dependencies:

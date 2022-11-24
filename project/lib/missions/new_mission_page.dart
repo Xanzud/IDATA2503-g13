@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_field/date_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +18,7 @@ class _newMissionPageState extends State<newMissionPage> {
 
   //TODO should be non-initialized?
   String? _name;
-  String? _time;
+  Timestamp? _time;
   String? _location;
 
   String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
@@ -35,6 +37,7 @@ class _newMissionPageState extends State<newMissionPage> {
       print("form saved $_name, $_time, $_location");
       final repository = Provider.of<Repository>(context, listen: false);
       final mission = Mission(_name!, _time!, _location!);
+
       String missionID = "/${documentIdFromCurrentDate()}";
       await repository.createMission(mission, missionID);
     }
@@ -86,13 +89,20 @@ class _newMissionPageState extends State<newMissionPage> {
         decoration: InputDecoration(labelText: "Name"),
         onSaved: (value) => _name = value,
       ),
-      TextFormField(
-        decoration: InputDecoration(labelText: "Time"),
-        onSaved: (value) => _time = value,
-        keyboardType: TextInputType.numberWithOptions(
-          signed: false,
-          decimal: false,
+      DateTimeFormField(
+        decoration: const InputDecoration(
+          hintStyle: TextStyle(color: Colors.black45),
+          errorStyle: TextStyle(color: Colors.redAccent),
+          border: OutlineInputBorder(),
+          suffixIcon: Icon(Icons.event_note),
+          labelText: 'Only time',
         ),
+        mode: DateTimeFieldPickerMode.time,
+        autovalidateMode: AutovalidateMode.always,
+        validator: (e) => (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
+        onDateSelected: (DateTime value) {
+          _time = Timestamp.fromMicrosecondsSinceEpoch(value.microsecondsSinceEpoch);
+        },
       ),
       TextFormField(
         decoration: InputDecoration(labelText: "Location"),
