@@ -85,11 +85,6 @@ class _newMissionPageState extends State<newMissionPage> {
       appBar: AppBar(
         elevation: 2.0,
         title: Text("New Mission"),
-        actions: <Widget>[
-          FloatingActionButton(
-            child: Text("Submit", style: TextStyle(fontSize: 18,color: Colors.white)),
-              onPressed: _submit,
-          )],
       ),
       body: _buildContents(),
     );
@@ -130,6 +125,7 @@ class _newMissionPageState extends State<newMissionPage> {
           });
         },
       ),
+    SizedBox(height: 50),
       DateTimeFormField(
         decoration: const InputDecoration(
           hintStyle: TextStyle(color: Colors.black45),
@@ -147,11 +143,14 @@ class _newMissionPageState extends State<newMissionPage> {
           });
         },
       ),
+    SizedBox(height: 50),
       TextFormField(
         decoration: InputDecoration(labelText: "Location"),
         onChanged: (value) {
           _location = value;
         },
+      ),
+      Padding(padding: EdgeInsets.all(120), child: ElevatedButton(onPressed: _submit, child: Text("Submit", style: TextStyle(fontSize: 18,color: Colors.white)),)
       ),
     ];
   }
