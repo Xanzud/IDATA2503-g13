@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:project/authentication_service.dart';
+import 'package:project/pages/admin_page.dart';
 import 'package:project/pages/feed_page.dart';
 import 'package:project/services/firestore_repository.dart';
 import 'package:project/services/repository.dart';
@@ -53,12 +54,14 @@ class AuthenticationWrapper extends StatelessWidget {
     final firebaseUser = context.watch<User?>();
 
     if (firebaseUser != null) {
-      return Provider<Repository>(
-        create: (_) => FirestoreRepository(),
-        builder: (context, child) {
-          return FeedPage();
-        },
-      );
+      return MultiProvider(providers: [
+        Provider<Repository>(
+          create: (_) => FirestoreRepository(),
+          builder: (context, child) {
+            return FeedPage();
+          },
+        )
+      ]);
     } else {
       return SignInPage();
     }

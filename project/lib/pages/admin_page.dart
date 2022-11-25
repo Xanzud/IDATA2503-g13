@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:project/model/user.dart';
+import 'package:project/services/firestore_service.dart';
 import 'package:project/services/repository.dart';
 import 'package:provider/provider.dart';
 
@@ -41,9 +42,9 @@ class _AdminPageState extends State<AdminPage> {
 
                 return Column(
                   children: List.generate(usersData.length, (index) {
-                    return ListTile(
-                      title: Text(usersData.elementAt(index).name),
-                    );
+                    return Text(usersData.elementAt(index).name +
+                        " : " +
+                        usersData.elementAt(index).email);
                   }),
                 );
               },

@@ -6,7 +6,7 @@ class User {
   String regNr;
   String email;
   String phoneNr;
-  List<String> certifications;
+  List<dynamic> certifications;
   String role;
 
   User(this.imagePath, this.name, this.address, this.regNr, this.email,
