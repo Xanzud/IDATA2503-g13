@@ -31,7 +31,8 @@ class MyApp extends StatelessWidget {
           create: (_) => AuthenticationService(FirebaseAuth.instance),
         ),
         StreamProvider<User?>(
-          create: (context) => context.read<AuthenticationService>().authStateChanges,
+          create: (context) =>
+              context.read<AuthenticationService>().authStateChanges,
           initialData: null,
         ),
       ],
@@ -49,13 +50,12 @@ class MyApp extends StatelessWidget {
 class AuthenticationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     final firebaseUser = context.watch<User?>();
 
     if (firebaseUser != null) {
       return Provider<Repository>(
         create: (_) => FirestoreRepository(),
-        builder: (context, child){
+        builder: (context, child) {
           return FeedPage();
         },
       );

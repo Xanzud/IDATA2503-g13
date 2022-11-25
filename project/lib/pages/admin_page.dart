@@ -23,21 +23,28 @@ class _AdminPageState extends State<AdminPage> {
             StreamBuilder<Iterable<User>>(
               stream: repository.getUsersStream(),
               builder: (context, snapshot) {
-                if (snapshot.hasData && snapshot.data == null) {
-                  final docs = snapshot.data?.docs;
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: docs!.length,
-                    itemBuilder: (context, index) {
-                      final user = docs[index].data();
-                      return ListTile(
-                        title: Text(user['name'] ?? user['email']),
-                      );
-                    },
+                if (snapshot.connectionState != ConnectionState.active) {
+                  return Center(
+                    child: const CircularProgressIndicator.adaptive(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text("Error: ${snapshot.error}"),
+                  );
+                } else if (!snapshot.hasData || snapshot.data == null) {
+                  return const Center(
+                    child: Text("No data to load"),
                   );
                 }
-                return Center(
-                  child: Text("No users"),
+
+                final Iterable<User> usersData = snapshot.data!;
+
+                return Column(
+                  children: List.generate(usersData.length, (index) {
+                    return ListTile(
+                      title: Text(usersData.elementAt(index).name),
+                    );
+                  }),
                 );
               },
             )

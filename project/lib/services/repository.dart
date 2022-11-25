@@ -1,3 +1,5 @@
+import 'package:project/model/user.dart';
+
 import '../model/Mission.dart';
 
 abstract class Repository {
@@ -9,5 +11,5 @@ abstract class Repository {
 
   Future<void> createMission(Mission mission, String missionID);
 
-  Stream<Iterable<Mission>> getUsersStream();
+  Stream<Iterable<User>> getUsersStream();
 }

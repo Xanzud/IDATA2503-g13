@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project/model/Mission.dart';
+import 'package:project/model/user.dart';
 import 'package:project/services/firestore_service.dart';
 import '../../services/repository.dart';
 
@@ -27,8 +28,8 @@ class FirestoreRepository implements Repository {
       );
 
   @override
-  Stream<Iterable<Mission>> getUsersStream() {
+  Stream<Iterable<User>> getUsersStream() {
     return _service.getCollectionStream(
-        ApiPaths.userRoot(), Mission.fromMap, store);
+        ApiPaths.userRoot(), User.fromMap, store);
   }
 }
