@@ -45,7 +45,6 @@ class _FeedPageState extends State<FeedPage> {
   @override
   Widget build(BuildContext context) {
     final user = UserSettings.currentUser;
-
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
@@ -84,6 +83,10 @@ class _FeedPageState extends State<FeedPage> {
         BottomNavigationBarItem(
             icon: Icon(Icons.admin_panel_settings_outlined, size: 40),
             label: 'Admin',
+            backgroundColor: Colors.blue),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.add_card_sharp, size: 40),
+            label: 'Packing',
             backgroundColor: Colors.blue),
       ],
       type: BottomNavigationBarType.shifting,
