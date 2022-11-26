@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:project/model/user.dart';
-import 'package:project/services/firestore_service.dart';
 import 'package:project/services/repository.dart';
 import 'package:provider/provider.dart';
 
