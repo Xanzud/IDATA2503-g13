@@ -9,6 +9,7 @@ import 'package:project/pages/profile_page.dart';
 import 'package:project/services/repository.dart';
 import 'package:provider/provider.dart';
 
+import '../missions/edit_mission_page.dart';
 import '../utils/DateFormatter.dart';
 import '../utils/user_settings.dart';
 
@@ -206,7 +207,7 @@ class _FeedPageState extends State<FeedPage> {
     bool isChecked = false;
 
     return StreamBuilder<Iterable<Mission>>(
-        stream: repository.getAllMissionsStream(),
+        stream: repository.getAllMissionsStreamWithID(),
         builder: (context, snapshot) {
           // Check if we got something other than real data...
           if (snapshot.connectionState != ConnectionState.active) {
@@ -266,12 +267,18 @@ class _FeedPageState extends State<FeedPage> {
                   child: Text(name!, style: TextStyle(color: Colors.red[300])),
                 )),
             Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
+              alignment: Alignment.centerLeft,
+              child: Padding(
                   padding: EdgeInsets.all(10),
-                  child: Text(name,
-                      style: TextStyle(color: Colors.blue[700], fontSize: 18)),
-                )),
+                  child: Row(
+                    children: [
+                      Text(name,
+                          style: TextStyle(color: Colors.blue[700], fontSize: 18)),
+                      Spacer(),
+                      ElevatedButton(onPressed: () => _onItemTapped(4), child: Icon(Icons.edit_note)),
+                    ],
+                  )),
+            ),
             Align(
               alignment: Alignment.bottomLeft,
               child: Padding(

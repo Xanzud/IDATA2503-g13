@@ -2,7 +2,7 @@ import '../model/user.dart';
 
 class UserSettings {
   static User currentUser = User(
-      "images\\defaultProfilePic.jpg",
+      "images/defaultProfilePic.jpg",
       "Jane Doe",
       "123 Fakestreet",
       "eu12345",

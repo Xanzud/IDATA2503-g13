@@ -12,4 +12,6 @@ abstract class Repository {
   Future<void> createMission(Mission mission, String missionID);
 
   Stream<Iterable<User>> getUsersStream();
+
+  Stream<Iterable<Mission>> getAllMissionsStreamWithID();
 }

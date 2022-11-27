@@ -223,4 +223,17 @@ class FirebaseCrud {
     final reference = FirebaseFirestore.instance.doc(path);
     await reference.set(data);
   }
+
+  /// Returns a stream of iterable with snapshots together with document ID
+  Stream<Iterable<T>> collectionStreamWithID<T>({
+    required T Function(Map<String, dynamic> data, String documentID) builder,
+  }) {
+    final collection = _firestore.collection("missions");
+    final snapshots = collection.snapshots();
+
+    return snapshots.map((snapshots) => snapshots.docs
+        .map((snapshot) => builder(snapshot.data(), snapshot.id),
+    )
+        .toList());
+  }
 }

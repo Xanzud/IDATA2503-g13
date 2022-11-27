@@ -5,19 +5,14 @@ import "../utils/user_settings.dart";
 import "../widget/profile_widget.dart";
 import "../model/user.dart";
 
+
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
-  TextEditingController addressController = TextEditingController();
-  TextEditingController phoneNrController = TextEditingController();
-  TextEditingController regNrController = TextEditingController();
-  TextEditingController certificationsController = TextEditingController();
-
-  bool isEditButtonPressed = false;
+  bool _isEditButtonPressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +40,8 @@ class _ProfilePageState extends State<ProfilePage> {
               info: user.certifications.toString()
           ),
           const SizedBox(height: 24),
-          ElevatedButton(onPressed:() {
-            onEditButtonPressed();
-          },
-              child: Text(  isEditButtonPressed ? "Save" : "Edit",
+          ElevatedButton(onPressed:() {onEditButtonPressed();},
+              child: Text(  _isEditButtonPressed ? "Save" : "Edit",
                 style: TextStyle(color: Colors.black),
               )
           )
@@ -102,18 +95,17 @@ class _ProfilePageState extends State<ProfilePage> {
         Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: TextField(
-                decoration: InputDecoration(
-                ),
-              enabled: isEditButtonPressed,
+              enabled: _isEditButtonPressed,
             )
         )
       ]
   );
 
   ///Method to be called when edit button is pressed
+  ///Simply toggles isEditButtonPressed.
   void onEditButtonPressed(){
     setState(() {
-      isEditButtonPressed = !isEditButtonPressed;
+      _isEditButtonPressed = !_isEditButtonPressed;
     });
   }
 }
