@@ -34,7 +34,7 @@ class ProfileWidget extends StatelessWidget {
 
   /// Handles building of round profile image.
   Widget buildImage() {
-    final image = NetworkImage(imagePath);
+    final image = AssetImage(imagePath);
 
     return ClipOval(
       child: Material(
