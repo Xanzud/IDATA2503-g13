@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:project/authentication_service.dart';
+import 'package:project/missions/mission_page.dart';
+import 'package:project/model/Mission.dart';
 import 'package:project/pages/admin_page.dart';
 import 'package:project/pages/feed_page.dart';
 import 'package:project/services/firestore_repository.dart';
@@ -27,24 +29,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        Provider<AuthenticationService>(
-          create: (_) => AuthenticationService(FirebaseAuth.instance),
-        ),
-        StreamProvider<User?>(
-          create: (context) =>
-              context.read<AuthenticationService>().authStateChanges,
-          initialData: null,
-        ),
-      ],
-      child: MaterialApp(
-        title: 'PrepActive',
-        theme: ThemeData(
-          primarySwatch: Colors.red,
-        ),
-        home: AuthenticationWrapper(),
-      ),
-    );
+        providers: [
+          Provider<AuthenticationService>(
+            create: (context) => AuthenticationService(FirebaseAuth.instance),
+          ),
+          StreamProvider<User?>(
+            create: (context) =>
+                context.read<AuthenticationService>().authStateChanges,
+            initialData: null,
+          ),
+        ],
+        child: MaterialApp(
+          title: 'PrepActive',
+          theme: ThemeData(
+            primarySwatch: Colors.red,
+          ),
+          home: AuthenticationWrapper(),
+        ));
   }
 }
 
@@ -58,9 +59,9 @@ class AuthenticationWrapper extends StatelessWidget {
         Provider<Repository>(
           create: (_) => FirestoreRepository(),
           builder: (context, child) {
-            return FeedPage();
+            return MissionPage();
           },
-        )
+        ),
       ]);
     } else {
       return SignInPage();

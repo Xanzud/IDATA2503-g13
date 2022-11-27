@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project/missions/mission_page.dart';
 import 'package:project/missions/new_mission_page.dart';
 import 'package:project/model/Mission.dart';
 import 'package:project/pages/admin_page.dart';
@@ -23,6 +24,10 @@ class _FeedPageState extends State<FeedPage> {
     setState(() {
       _selectedIndex = index;
       if (_selectedIndex == 0) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) {
+          return MissionPage();
+        }));
       } else if (_selectedIndex == 1) {
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) {

@@ -9,7 +9,6 @@ import '../model/Mission.dart';
 import '../services/repository.dart';
 
 class newMissionPage extends StatefulWidget {
-
   @override
   _newMissionPageState createState() => _newMissionPageState();
 }
@@ -26,14 +25,14 @@ class _newMissionPageState extends State<newMissionPage> {
 
   bool _validateAndSaveForm() {
     final form = _formKey.currentState;
-    if(form!.validate()) {
+    if (form!.validate()) {
       form.save();
       return true;
     }
     return false;
   }
 
-  Future<void> _submit() async{
+  Future<void> _submit() async {
     /*
     if(_validateAndSaveForm()) {
       print("form saved $_name, $_time, $_location");
@@ -45,38 +44,36 @@ class _newMissionPageState extends State<newMissionPage> {
     }
 
      */
-      if(_location == null || _time == null || _name == null){
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                content: Text("Null values"),
-              );
-            });
-      }
+    if (_location == null || _time == null || _name == null) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text("Null values"),
+            );
+          });
+    }
 
-      var response = await FirebaseCrud.createMission(
-          location: _location!,
-          name: _name!,
-          time: _time!);
+    var response = await FirebaseCrud.createMission(
+        location: _location!, name: _name!, time: _time!);
 
-      if (response.code != 200) {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                content: Text(response.message.toString()),
-              );
-            });
-      } else {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                content: Text(response.message.toString()),
-              );
-            });
-      }
+    if (response.code != 200) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(response.message.toString()),
+            );
+          });
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(response.message.toString()),
+            );
+          });
+    }
   }
 
   @override
@@ -92,27 +89,23 @@ class _newMissionPageState extends State<newMissionPage> {
 
   Widget _buildContents() {
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Card(
+        child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Card(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: _buildForm(),
-            )
-          ),
-        )
-      );
+        padding: const EdgeInsets.all(16.0),
+        child: _buildForm(),
+      )),
+    ));
   }
-
 
   Widget _buildForm() {
     return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: _buildFormChildren(),
-      )
-    );
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: _buildFormChildren(),
+        ));
   }
 
   List<Widget> _buildFormChildren() {
@@ -125,7 +118,7 @@ class _newMissionPageState extends State<newMissionPage> {
           });
         },
       ),
-    SizedBox(height: 50),
+      SizedBox(height: 50),
       DateTimeFormField(
         decoration: const InputDecoration(
           hintStyle: TextStyle(color: Colors.black45),
@@ -136,22 +129,29 @@ class _newMissionPageState extends State<newMissionPage> {
         ),
         mode: DateTimeFieldPickerMode.dateAndTime,
         autovalidateMode: AutovalidateMode.always,
-        validator: (e) => (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
+        validator: (e) =>
+            (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
         onDateSelected: (DateTime value) {
           setState(() {
-            _time = Timestamp.fromMicrosecondsSinceEpoch(value.microsecondsSinceEpoch);
+            _time = Timestamp.fromMicrosecondsSinceEpoch(
+                value.microsecondsSinceEpoch);
           });
         },
       ),
-    SizedBox(height: 50),
+      SizedBox(height: 50),
       TextFormField(
         decoration: InputDecoration(labelText: "Location"),
         onChanged: (value) {
           _location = value;
         },
       ),
-      Padding(padding: EdgeInsets.all(120), child: ElevatedButton(onPressed: _submit, child: Text("Submit", style: TextStyle(fontSize: 18,color: Colors.white)),)
-      ),
+      Padding(
+          padding: EdgeInsets.all(120),
+          child: ElevatedButton(
+            onPressed: _submit,
+            child: Text("Submit",
+                style: TextStyle(fontSize: 18, color: Colors.white)),
+          )),
     ];
   }
 }

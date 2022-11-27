@@ -12,10 +12,6 @@ class SignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text("PrepActive"),
-          elevation: 2.0,
-        ),
         body: SingleChildScrollView(
           child: _buildContent(context),
         ),
