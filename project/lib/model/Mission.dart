@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Mission{
+class Mission {
   final String name;
   final Timestamp time;
   final String location;
@@ -9,11 +9,20 @@ class Mission{
   Mission(this.name, this.time, this.location, this.id);
 
   //TODO Cleanup, don't need 2 fromMaps
-  static Mission fromMap(Map<String, dynamic> data, String id){
+  static Mission fromMap(Map<String, dynamic> data, String id) {
     assert(data.containsKey("name"), "Missing name property for a mission");
     assert(data.containsKey("time"), "Missing time property for a mission");
     assert(data.containsKey("location"),
-    "Missing location property for a mission");
+        "Missing location property for a mission");
+    return Mission(data["name"], data["time"], data["location"], data["id"]);
+  }
+
+  static Mission fromMapOriginal(Map<String, dynamic> data) {
+    assert(data.containsKey("name"), "Missing name property for a mission");
+    assert(data.containsKey("time"), "Missing time property for a mission");
+    assert(data.containsKey("location"),
+        "Missing location property for a mission");
+    assert(data.containsKey("id"), "Missing id property for a mission");
     return Mission(data["name"], data["time"], data["location"], data["id"]);
   }
 
