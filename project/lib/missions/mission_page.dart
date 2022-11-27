@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:project/missions/edit_mission_page.dart';
+import 'package:project/missions/mission_entries_page.dart';
 import 'package:project/missions/list_items_builder.dart';
 import 'package:project/missions/mission_list_tile.dart';
 import 'package:project/services/firebase_crud.dart';
@@ -57,7 +58,7 @@ class MissionPage extends StatelessWidget {
             onDismissed: (direction) => _delete(context, mission),
             child: MissionListTile(
               mission: mission,
-              onTap: () => "JobEntriesPage.show(context, mission)",
+              onTap: () => MissionEntriesPage.show(context, mission),
             ),
           ),
         );

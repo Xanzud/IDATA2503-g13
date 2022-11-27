@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:html';
 
 import 'package:project/model/Mission.dart';
 import 'package:project/model/user.dart';
@@ -8,8 +9,6 @@ import '../../services/repository.dart';
 import 'api_paths.dart';
 
 class FirestoreRepository implements Repository {
-  //TODO Temporarily disabled i guess, use getAllMissionsStreamWithID() instead
-
   @override
   Stream<Iterable<Mission>> getAllMissionsStream() => FirebaseCrud()
       .getCollectionStream(ApiPaths.missionRoot(), Mission.fromMapOriginal);
@@ -35,6 +34,16 @@ class FirestoreRepository implements Repository {
   @override
   Stream<Iterable<Mission>> getAllMissionsStreamWithID() =>
       FirebaseCrud().collectionStreamWithID(
-        builder: (data, documentID) => Mission.fromMapFactory(data, documentID),
-      );
+          builder: (data, documentID) =>
+              Mission.fromMapFactory(data, documentID));
+
+  @override
+  Future<void> deleteMission(Mission mission) async {
+    FirebaseCrud.deleteMission(docId: mission.id);
+  }
+
+  @override
+  Stream<Mission> missionStream({required String missionId}) {
+    throw UnimplementedError();
+  }
 }

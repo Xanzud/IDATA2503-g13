@@ -10,8 +10,11 @@ abstract class Repository {
   Stream<Iterable<Mission>> getAllMissionsStream();
 
   Future<void> createMission(Mission mission, String missionID);
+  Future<void> deleteMission(Mission mission);
 
   Stream<Iterable<User>> getUsersStream();
+
+  Stream<Mission> missionStream({required String missionId});
 
   Stream<Iterable<Mission>> getAllMissionsStreamWithID();
 }
