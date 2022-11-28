@@ -19,7 +19,9 @@ class MissionPage extends StatelessWidget {
   Future<void> _delete(BuildContext context, Mission mission) async {
     try {
       //final database = Provider.of<Repository>(context, listen: false);
-      await FirebaseCrud.deleteMission(docId: mission.id);
+      final docMission =
+          FirebaseFirestore.instance.collection("missions").doc(mission.id);
+      await docMission.delete();
     } on FirebaseException catch (e) {
       showExceptionAlertDialog(
         context,

@@ -76,8 +76,16 @@ class _EditMissionPageState extends State<EditMissionPage> {
           );
         } else {
           final id = widget.mission?.id;
-          final mission = Mission(_name!, _time!, _location!, id!);
-          await FirebaseCrud.saveMission(mission);
+          //final mission = Mission(_name!, _time!, _location!, id!);
+          final docMission =
+              FirebaseFirestore.instance.collection("missions").doc(id?.trim());
+          docMission.update({
+            "id": id,
+            "name": _name,
+            "location": _location,
+            "time": _time,
+          });
+          //await FirebaseCrud.saveMission(mission);
           Navigator.of(context).pop();
         }
       } on FirebaseException catch (e) {
