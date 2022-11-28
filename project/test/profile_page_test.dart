@@ -18,12 +18,32 @@ main() {
 
  //creating Finders
   final addressFinder = find.text("Address");
+  final phoneFinder = find.text("Phone #");
+  final regFinder = find.text("Reg #");
+  final certFinder = find.text("Certifications");
 
-  //Tests that ProfilePage has a widget with the text "Address"
+  //Tests that ProfilePage has a single widget with the text "Address"
   testWidgets("ProfilePage has an address field", (WidgetTester tester) async {
     await tester.pumpWidget(profilePageTestWidget);
+    expect(addressFinder, findsOneWidget);
   });
 
-  //expect(addressFinder, findsOneWidget);
+  //Tests that profilPage has a single widget with the text "Phone #"
+  testWidgets("ProfilePage has a phone # field", (WidgetTester tester) async {
+    await tester.pumpWidget(profilePageTestWidget);
+    expect(phoneFinder, findsOneWidget);
+  });
 
+  //Tests that profilPage has a single widget with the text "Reg #"
+  testWidgets("ProfilePage has a reg # field", (WidgetTester tester) async {
+    await tester.pumpWidget(profilePageTestWidget);
+    expect(regFinder, findsOneWidget);
+  });
+
+  //Tests that profilPage has a single widget with the text "Certifications"
+  testWidgets("ProfilePage has an address field", (WidgetTester tester) async {
+    await tester.pumpWidget(profilePageTestWidget);
+    expect(certFinder, findsOneWidget);
+
+  });
 }

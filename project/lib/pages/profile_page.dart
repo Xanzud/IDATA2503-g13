@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project/utils/user_handler.dart';
 import 'package:project/widget/profile_widget.dart';
 import "../utils/user_settings.dart";
 import "../widget/profile_widget.dart";
@@ -13,10 +14,10 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool _isEditButtonPressed = false;
+  User _user = UserSettings.currentUser;
 
   @override
   Widget build(BuildContext context) {
-  final user = UserSettings.currentUser;
     return Scaffold(
       appBar: _buildAppBar(context),
       body: ListView(
@@ -24,27 +25,37 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           const SizedBox(height: 24),
           ProfileWidget(
-              imagePath: user.imagePath,
+              imagePath: _user.imagePath,
               onClicked: () async {},
           ),
           const SizedBox(height: 24),
-          buildNameAndEmail(user),
+          buildNameAndEmail(_user),
           const SizedBox(height: 24),
-          buildInfoField(infoName: "Address", info: user.address),
+          buildInfoField(infoName: "Address", info: _user.address),
           const SizedBox(height: 24),
-          buildInfoField(infoName: "Phone #", info: user.phoneNr),
+          buildInfoField(infoName: "Phone #", info: _user.phoneNr),
           const SizedBox(height: 24),
-          buildInfoField(infoName: "Reg #", info: user.regNr),
+          buildInfoField(infoName: "Reg #", info: _user.regNr),
           const SizedBox(height: 24),
           buildInfoField(infoName: "Certifications",
-              info: user.certifications.toString()
+              info: _user.certifications.toString()
           ),
           const SizedBox(height: 24),
           ElevatedButton(onPressed:() {onEditButtonPressed();},
               child: Text(  _isEditButtonPressed ? "Save" : "Edit",
                 style: TextStyle(color: Colors.black),
               )
-          )
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton(
+          onPressed: (() => onLoadUserButtonPressed()), 
+          child: const Text("Load user")
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton(
+          onPressed: (() => print(_user.name)), 
+          child: const Text("Print current user name")
+          ),
         ]
       )
     );
@@ -106,6 +117,14 @@ class _ProfilePageState extends State<ProfilePage> {
   void onEditButtonPressed(){
     setState(() {
       _isEditButtonPressed = !_isEditButtonPressed;
+    });
+  }
+
+  void onLoadUserButtonPressed(){
+    UserHandler.loadUser();
+    print("onLoadUserButtonPresse User: ${_user.name}");
+    setState(() {
+      _user = UserSettings.currentUser;
     });
   }
 }

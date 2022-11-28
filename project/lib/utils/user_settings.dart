@@ -1,5 +1,8 @@
 import '../model/user.dart';
 
+
+///Class for storing information on the current user.
+///For anything regarding changing this information, see the user_handler class.
 class UserSettings {
   static User currentUser = User(
       "images/defaultProfilePic.jpg",
