@@ -36,6 +36,7 @@ class Mission {
 
   Map<String, dynamic> toMap() {
     return {
+      "id": id,
       "name": name,
       "time": time,
       "location": location,

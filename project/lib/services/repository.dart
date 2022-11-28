@@ -11,6 +11,7 @@ abstract class Repository {
 
   Future<void> createMission(Mission mission, String missionID);
   Future<void> deleteMission(Mission mission);
+  Future<void> saveMission(Mission mission);
 
   Stream<Iterable<User>> getUsersStream();
 

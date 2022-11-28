@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_field/date_field.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:project/model/Mission.dart';
+import 'package:project/services/firebase_crud.dart';
 import 'package:project/services/repository.dart';
 import 'package:project/utils/show_alert_dialog.dart';
 import 'package:project/utils/show_exception_alert_dialog.dart';
@@ -34,6 +37,7 @@ class _EditMissionPageState extends State<EditMissionPage> {
 
   String? _name;
   String? _location;
+  Timestamp? _time;
 
   @override
   void initState() {
@@ -41,6 +45,7 @@ class _EditMissionPageState extends State<EditMissionPage> {
     if (widget.mission != null) {
       _name = widget.mission?.name;
       _location = widget.mission?.location;
+      _time = widget.mission?.time;
     }
   }
 
@@ -65,14 +70,14 @@ class _EditMissionPageState extends State<EditMissionPage> {
           showAlertDialog(
             context,
             title: 'Name already used',
-            content: 'Please choose a different job name',
+            content: 'Please choose a different mission name',
             defaultActionText: 'OK',
             cancelActionText: 'cancel',
           );
         } else {
-          final id = widget.mission?.name ?? "documentIdFromCurrentDate()";
-          //final mission = Mission(name: id, name: _name, ratePerHour: _location);
-          //await widget.database.setJob(job);
+          final id = widget.mission?.id;
+          final mission = Mission(_name!, _time!, _location!, id!);
+          await FirebaseCrud.saveMission(mission);
           Navigator.of(context).pop();
         }
       } on FirebaseException catch (e) {
@@ -90,7 +95,7 @@ class _EditMissionPageState extends State<EditMissionPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 2.0,
-        title: Text(widget.mission == null ? 'New Job' : 'Edit Mission'),
+        title: Text(widget.mission == null ? 'New Mission' : 'Edit Mission'),
         actions: <Widget>[
           TextButton(
             child: Text(
@@ -138,6 +143,7 @@ class _EditMissionPageState extends State<EditMissionPage> {
         validator: (value) => value!.isNotEmpty ? null : 'Name can\'t be empty',
         onSaved: (value) => _name = value,
       ),
+      SizedBox(height: 50),
       TextFormField(
         decoration: InputDecoration(labelText: 'Location'),
         initialValue: _location != null ? '$_location' : null,
@@ -145,8 +151,33 @@ class _EditMissionPageState extends State<EditMissionPage> {
           signed: false,
           decimal: false,
         ),
+        validator: (value) =>
+            value!.isNotEmpty ? null : 'Location can\'t be empty',
         onSaved: (value) => _location = value,
       ),
+      SizedBox(height: 50),
+      DateTimeFormField(
+        decoration: const InputDecoration(
+          hintStyle: TextStyle(color: Colors.black45),
+          errorStyle: TextStyle(color: Colors.redAccent),
+          border: OutlineInputBorder(),
+          suffixIcon: Icon(Icons.event_note),
+          labelText: 'Date',
+        ),
+        initialValue:
+            DateTime.fromMicrosecondsSinceEpoch(_time!.microsecondsSinceEpoch),
+        mode: DateTimeFieldPickerMode.dateAndTime,
+        autovalidateMode: AutovalidateMode.always,
+        validator: (e) =>
+            (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
+        onDateSelected: (DateTime value) {
+          setState(() {
+            _time = Timestamp.fromMicrosecondsSinceEpoch(
+                value.microsecondsSinceEpoch);
+          });
+        },
+      ),
+      SizedBox(height: 50),
     ];
   }
 }

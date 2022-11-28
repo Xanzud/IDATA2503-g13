@@ -10,7 +10,8 @@ class MissionListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(mission.name),
+      title:
+          Text(mission.name + " " + mission.time.toDate().toUtc().toString()),
       trailing: const Icon(Icons.chevron_right),
       onTap: onTap,
     );

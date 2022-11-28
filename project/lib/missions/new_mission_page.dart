@@ -124,7 +124,7 @@ class _newMissionPageState extends State<newMissionPage> {
           errorStyle: TextStyle(color: Colors.redAccent),
           border: OutlineInputBorder(),
           suffixIcon: Icon(Icons.event_note),
-          labelText: 'Only time',
+          labelText: 'Date',
         ),
         mode: DateTimeFieldPickerMode.dateAndTime,
         autovalidateMode: AutovalidateMode.always,

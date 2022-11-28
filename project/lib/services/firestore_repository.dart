@@ -46,4 +46,9 @@ class FirestoreRepository implements Repository {
   Stream<Mission> missionStream({required String missionId}) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> saveMission(Mission mission) async {
+    FirebaseCrud.saveMission(mission);
+  }
 }

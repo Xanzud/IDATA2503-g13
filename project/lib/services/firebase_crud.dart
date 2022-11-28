@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project/model/Mission.dart';
+import 'package:project/services/api_paths.dart';
+import 'package:project/services/firestore_service.dart';
 import '../model/Response.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -130,6 +133,7 @@ class FirebaseCrud {
     return notesItemCollection.snapshots();
   }
 
+/*
   static Future<Response> updateMission(
       {required String location,
       required String name,
@@ -155,6 +159,22 @@ class FirebaseCrud {
 
     return response;
   }
+  */
+
+  static Future<void> saveMission(Mission mission) =>
+      FirestoreService.instance.setData(
+        path: ApiPaths.mission(mission.id),
+        data: mission.toMap(),
+      );
+
+  static Future<void> setMission({
+    required String path,
+    required Map<String, dynamic> data,
+  }) async {
+    final reference = FirebaseFirestore.instance.doc(path);
+    print('$path: $data');
+    await reference.set(data);
+  }
 
   static Future<Response> deleteMission({
     required String docId,
@@ -175,12 +195,12 @@ class FirebaseCrud {
     return response;
   }
 
-  Stream<T?> getDocumentStream<T>(String path,
-      T Function(Map<String, dynamic>) converter) {
+  Stream<T?> getDocumentStream<T>(
+      String path, T Function(Map<String, dynamic>) converter) {
     print("Get document at $path");
     // Get snapshot stream first
     final Stream<DocumentSnapshot<Map<String, dynamic>>> snapshots =
-    _firestore.doc(path).snapshots();
+        _firestore.doc(path).snapshots();
 
     // Then we need to convert it to Stream<T?> - take every snapshot and
     // convert it to a T object. This effectively creates a new Stream
@@ -195,12 +215,12 @@ class FirebaseCrud {
   /// Get a stream for a collection stored at a specific path.
   /// Automatically convert each item in the collection to an object of
   /// corresponding type using the provided [converter] function
-  Stream<Iterable<T>> getCollectionStream<T>(String path,
-      T Function(Map<String, dynamic>) converter) {
+  Stream<Iterable<T>> getCollectionStream<T>(
+      String path, T Function(Map<String, dynamic>) converter) {
     print("Get collection items at $path");
     // Get snapshot stream first
     final Stream<QuerySnapshot<Map<String, dynamic>>> snapshots =
-    _firestore.collection(path).snapshots();
+        _firestore.collection(path).snapshots();
 
     // Then we traverse all the documents (as QueryDocumentSnapshot)
     // For each document, we extract the key-value pairs as Map<String, dynamic>
@@ -219,7 +239,8 @@ class FirebaseCrud {
     });
   }
 
-  Future<void> setData({required String path, required Map<String, dynamic> data}) async {
+  Future<void> setData(
+      {required String path, required Map<String, dynamic> data}) async {
     final reference = FirebaseFirestore.instance.doc(path);
     await reference.set(data);
   }
@@ -232,8 +253,14 @@ class FirebaseCrud {
     final snapshots = collection.snapshots();
 
     return snapshots.map((snapshots) => snapshots.docs
-        .map((snapshot) => builder(snapshot.data(), snapshot.id),
-    )
+        .map(
+          (snapshot) => builder(snapshot.data(), snapshot.id),
+        )
         .toList());
   }
+
+  static void updateMission(
+      {required String location,
+      required String name,
+      required Timestamp time}) {}
 }

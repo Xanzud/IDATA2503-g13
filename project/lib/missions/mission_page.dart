@@ -14,10 +14,12 @@ import '../services/firestore_repository.dart';
 import '../utils/show_exception_alert_dialog.dart';
 
 class MissionPage extends StatelessWidget {
+  const MissionPage({super.key});
+
   Future<void> _delete(BuildContext context, Mission mission) async {
     try {
-      final database = Provider.of<Repository>(context, listen: false);
-      await FirebaseCrud.deleteMission(docId: "test");
+      //final database = Provider.of<Repository>(context, listen: false);
+      await FirebaseCrud.deleteMission(docId: mission.id);
     } on FirebaseException catch (e) {
       showExceptionAlertDialog(
         context,
@@ -59,14 +61,16 @@ class MissionPage extends StatelessWidget {
         return ListItemsBuilder<Mission>(
           snapshot: snapshot,
           itemBuilder: (context, mission) => Dismissible(
-            key: Key('mission-${mission.name}'),
+            key: Key('mission-${mission.id}'),
             background: Container(color: Colors.red),
             direction: DismissDirection.endToStart,
-            onDismissed: (direction) => _delete(context, mission),
+            onDismissed: (direction) {
+              _delete(context, mission);
+            },
             child: MissionListTile(
-              mission: mission,
-              onTap: () => MissionEntriesPage.show(context, mission),
-            ),
+                mission: mission,
+                onTap: () => EditMissionPage.show(context,
+                    database: database, mission: mission)),
           ),
         );
       },
