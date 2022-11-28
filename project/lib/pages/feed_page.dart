@@ -6,6 +6,7 @@ import 'package:project/missions/new_mission_page.dart';
 import 'package:project/model/Mission.dart';
 import 'package:project/pages/admin_page.dart';
 import 'package:project/pages/profile_page.dart';
+import 'package:project/services/firestore_repository.dart';
 import 'package:project/services/repository.dart';
 import 'package:provider/provider.dart';
 
@@ -25,10 +26,7 @@ class _FeedPageState extends State<FeedPage> {
     setState(() {
       _selectedIndex = index;
       if (_selectedIndex == 0) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) {
-          return MissionPage();
-        }));
+        // Using setstate to update
       } else if (_selectedIndex == 1) {
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) {
@@ -37,12 +35,7 @@ class _FeedPageState extends State<FeedPage> {
       } else if (_selectedIndex == 2) {
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) {
-          return newMissionPage();
-        }));
-      } else if (_selectedIndex == 3) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) {
-          return AdminPage();
+          return const AdminPage();
         }));
       }
     });
@@ -51,24 +44,28 @@ class _FeedPageState extends State<FeedPage> {
   @override
   Widget build(BuildContext context) {
     final user = UserSettings.currentUser;
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 100,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        title: Text('Feed',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 30,
-            )),
-      ),
-      body: Padding(
-          padding: const EdgeInsets.fromLTRB(40, 100, 40, 40),
-          child: _buildMissionInfoAll(context)),
-      bottomNavigationBar: bottomNavigationBar(context),
-    );
+    return Provider<Repository>(
+        create: (context) => FirestoreRepository(),
+        builder: (context, child) {
+          return Scaffold(
+            appBar: AppBar(
+              toolbarHeight: 100,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              centerTitle: true,
+              title: Text('Feed',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 30,
+                  )),
+            ),
+            body: Padding(
+                padding: const EdgeInsets.fromLTRB(40, 100, 40, 40),
+                child: _buildMissionInfoAll(context)),
+            bottomNavigationBar: bottomNavigationBar(context),
+          );
+        });
   }
 
   BottomNavigationBar bottomNavigationBar(BuildContext context) {
@@ -81,10 +78,6 @@ class _FeedPageState extends State<FeedPage> {
         BottomNavigationBarItem(
             icon: Icon(Icons.person, size: 40),
             label: 'Profile',
-            backgroundColor: Colors.blue),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.create, size: 40),
-            label: 'Create Mission',
             backgroundColor: Colors.blue),
         BottomNavigationBarItem(
             icon: Icon(Icons.admin_panel_settings_outlined, size: 40),
@@ -273,9 +266,12 @@ class _FeedPageState extends State<FeedPage> {
                   child: Row(
                     children: [
                       Text(name,
-                          style: TextStyle(color: Colors.blue[700], fontSize: 18)),
+                          style:
+                              TextStyle(color: Colors.blue[700], fontSize: 18)),
                       Spacer(),
-                      ElevatedButton(onPressed: () => _onItemTapped(4), child: Icon(Icons.edit_note)),
+                      ElevatedButton(
+                          onPressed: () => _onItemTapped(4),
+                          child: Icon(Icons.edit_note)),
                     ],
                   )),
             ),

@@ -42,7 +42,6 @@ class _newMissionPageState extends State<newMissionPage> {
       String missionID = "/${documentIdFromCurrentDate()}";
       await repository.createMission(mission, missionID);
     }
-
      */
     if (_location == null || _time == null || _name == null) {
       showDialog(

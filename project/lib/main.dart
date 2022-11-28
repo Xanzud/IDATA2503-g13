@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           title: 'PrepActive',
+          debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.red,
           ),
@@ -55,14 +56,12 @@ class AuthenticationWrapper extends StatelessWidget {
     final firebaseUser = context.watch<User?>();
 
     if (firebaseUser != null) {
-      return MultiProvider(providers: [
-        Provider<Repository>(
-          create: (_) => FirestoreRepository(),
-          builder: (context, child) {
-            return FeedPage();
-          },
-        ),
-      ]);
+      return Provider<Repository>(
+        create: (_) => FirestoreRepository(),
+        builder: (context, child) {
+          return FeedPage();
+        },
+      );
     } else {
       return SignInPage();
     }
