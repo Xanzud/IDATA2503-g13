@@ -88,7 +88,7 @@ class _FeedPageState extends State<FeedPage> {
             label: 'Packing',
             backgroundColor: Colors.blue),
       ],
-      type: BottomNavigationBarType.shifting,
+      type: BottomNavigationBarType.fixed,
       currentIndex: _selectedIndex,
       selectedItemColor: Colors.amber[200],
       onTap: _onItemTapped,
