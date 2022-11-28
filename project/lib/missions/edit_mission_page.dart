@@ -4,7 +4,6 @@ import 'package:project/model/Mission.dart';
 import 'package:project/services/repository.dart';
 import 'package:project/utils/show_alert_dialog.dart';
 import 'package:project/utils/show_exception_alert_dialog.dart';
-import 'package:provider/provider.dart';
 
 class EditMissionPage extends StatefulWidget {
   const EditMissionPage(
@@ -134,13 +133,13 @@ class _EditMissionPageState extends State<EditMissionPage> {
   List<Widget> _buildFormChildren() {
     return [
       TextFormField(
-        decoration: InputDecoration(labelText: 'Job name'),
+        decoration: InputDecoration(labelText: 'Mission name'),
         initialValue: _name,
         validator: (value) => value!.isNotEmpty ? null : 'Name can\'t be empty',
         onSaved: (value) => _name = value,
       ),
       TextFormField(
-        decoration: InputDecoration(labelText: 'Rate per hour'),
+        decoration: InputDecoration(labelText: 'Location'),
         initialValue: _location != null ? '$_location' : null,
         keyboardType: TextInputType.numberWithOptions(
           signed: false,

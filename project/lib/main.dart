@@ -59,7 +59,7 @@ class AuthenticationWrapper extends StatelessWidget {
         Provider<Repository>(
           create: (_) => FirestoreRepository(),
           builder: (context, child) {
-            return MissionPage();
+            return FeedPage();
           },
         ),
       ]);
