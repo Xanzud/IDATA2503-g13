@@ -101,8 +101,7 @@ class FirebaseCrud {
   // Missions
 
   static Future<Response> createMission(
-      {required id,
-      required String location,
+      {required String location,
       required String name,
       required Timestamp time}) async {
     _Collection = _firestore.collection('missions');
@@ -111,7 +110,7 @@ class FirebaseCrud {
     DocumentReference documentReference = _Collection.doc();
 
     Map<String, dynamic> data = <String, dynamic>{
-      "id": id,
+      "id": documentReference.id,
       "location": location,
       "name": name,
       "time": time

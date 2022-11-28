@@ -54,10 +54,7 @@ class _newMissionPageState extends State<newMissionPage> {
     }
 
     var response = await FirebaseCrud.createMission(
-        id: documentIdFromCurrentDate(),
-        location: _location!,
-        name: _name!,
-        time: _time!);
+        location: _location!, name: _name!, time: _time!);
 
     if (response.code != 200) {
       showDialog(
