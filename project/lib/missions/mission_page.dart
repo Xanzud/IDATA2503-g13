@@ -21,7 +21,7 @@ class MissionPage extends StatelessWidget {
       //final database = Provider.of<Repository>(context, listen: false);
       final docMission =
           FirebaseFirestore.instance.collection("missions").doc(mission.id);
-      await docMission.delete();
+      docMission.delete();
     } on FirebaseException catch (e) {
       showExceptionAlertDialog(
         context,
