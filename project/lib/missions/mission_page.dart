@@ -4,11 +4,13 @@ import 'package:project/missions/edit_mission_page.dart';
 import 'package:project/missions/mission_entries_page.dart';
 import 'package:project/missions/list_items_builder.dart';
 import 'package:project/missions/mission_list_tile.dart';
+import 'package:project/missions/new_mission_page.dart';
 import 'package:project/services/firebase_crud.dart';
 import 'package:project/services/repository.dart';
 import 'package:provider/provider.dart';
 
 import '../model/Mission.dart';
+import '../services/firestore_repository.dart';
 import '../utils/show_exception_alert_dialog.dart';
 
 class MissionPage extends StatelessWidget {
@@ -27,21 +29,26 @@ class MissionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Missions'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add, color: Colors.white),
-            onPressed: () => EditMissionPage.show(
-              context,
-              database: Provider.of<Repository>(context, listen: false),
+    return Provider<Repository>(
+        create: (context) => FirestoreRepository(),
+        builder: (context, child) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Missions'),
+              actions: <Widget>[
+                IconButton(
+                    icon: Icon(Icons.add, color: Colors.white),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return newMissionPage();
+                      }));
+                    }),
+              ],
             ),
-          ),
-        ],
-      ),
-      body: _buildContents(context),
-    );
+            body: _buildContents(context),
+          );
+        });
   }
 
   Widget _buildContents(BuildContext context) {
