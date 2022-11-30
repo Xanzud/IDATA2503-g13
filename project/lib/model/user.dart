@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 /// Stores variables concerning the user
 class User {
   String imagePath;
@@ -35,6 +38,39 @@ class User {
       "phoneNr": phoneNr,
       "certifications": certifications,
       "role": role,
+    };
+  }
+
+  ///For mapping data of user document from firestore into usable User object
+  factory User.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    final data = snapshot.data();
+    return User(
+        data?["imagePath"],
+        data?["name"],
+        data?["address"],
+        data?["regNr"],
+        data?["email"],
+        data?["phoneNr"],
+        data?['certifications'] is Iterable
+            ? List.from(data?['certifications'])
+            : [],
+        data?["role"]);
+  }
+
+  ///For mapping User object into user document for firestore.
+  Map<String, dynamic> toFireStore() {
+    return {
+      if (imagePath != null) "imagePath": imagePath,
+      if (name != null) "name": name,
+      if (address != null) "address": address,
+      if (regNr != null) "regNr": regNr,
+      if (email != null) "email": email,
+      if (phoneNr != null) "phoneNr": phoneNr,
+      if (certifications != null) "certifications": certifications,
+      if (role != null) "role": role,
     };
   }
 }

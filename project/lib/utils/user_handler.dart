@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:project/model/user.dart';
 import 'package:project/utils/user_settings.dart';
 
@@ -10,7 +12,12 @@ class UserHandler {
   ///Email used to sign in with. Intended for determining which user should be fetched from the database.
   static String _emailLoggedInWith = "";
 
+
+
+  ///Method for loading a user. Currently filled with dummy data.
+  ///When ready, should be rewritten to use data fetched from FireStore Firebase
   static void loadUser(){
+    // Todo: Rewrite method to use data queried from FireStore Firebase 
     print("loadUser() called");
     updateCurrentUser(User("images/defaultProfilePic.jpg",
       "Thomas",

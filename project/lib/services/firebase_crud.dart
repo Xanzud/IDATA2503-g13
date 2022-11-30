@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project/model/Mission.dart';
 import 'package:project/services/api_paths.dart';
 import 'package:project/services/firestore_service.dart';
 import '../model/Response.dart';
+import '../model/user.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 CollectionReference _Collection = _firestore.collection('');
@@ -47,6 +50,24 @@ class FirebaseCrud {
 
     return notesItemCollection.snapshots();
   }
+
+///Fethes a single user document once (not stream), querying by email.
+///Returns user value if user with email is found,
+///else, returns a Future.error.
+Future<User> getUserByEmailOnce(String email) async {
+  final docRef = _firestore.collection("users").doc(email).withConverter(
+      fromFirestore: User.fromFirestore,
+      toFirestore: (User user, _) => user.toFireStore());
+  final docSnap = await docRef.get();
+  final user = docSnap.data(); //Convert to User object
+  if (user != null) {
+    //user was found
+    return Future.value(user);
+  } else {
+    //user NOT found
+    return Future.error("Error: No user with email: \"$email\" could be found.");
+  }
+}
 
   static Future<Response> updateUser(
       {required String name,
@@ -265,3 +286,5 @@ class FirebaseCrud {
       required String name,
       required Timestamp time}) {}
 }
+
+

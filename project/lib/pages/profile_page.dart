@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project/services/firebase_crud.dart';
+import 'package:project/services/firestore_repository.dart';
 import 'package:project/utils/user_handler.dart';
 import 'package:project/widget/profile_widget.dart';
 import "../utils/user_settings.dart";
 import "../widget/profile_widget.dart";
 import "../model/user.dart";
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -13,7 +17,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool _isEditButtonPressed = false;
-  User _user = UserSettings.currentUser;
+  User _currentUser = UserSettings.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -22,21 +26,21 @@ class _ProfilePageState extends State<ProfilePage> {
         body: ListView(physics: const BouncingScrollPhysics(), children: [
           const SizedBox(height: 24),
           ProfileWidget(
-            imagePath: _user.imagePath,
+            imagePath: _currentUser.imagePath,
             onClicked: () async {},
           ),
           const SizedBox(height: 24),
-          buildNameAndEmail(_user),
+          buildNameAndEmail(_currentUser),
           const SizedBox(height: 24),
-          buildInfoField(infoName: "Address", info: _user.address),
+          buildInfoField(infoName: "Address", info: _currentUser.address),
           const SizedBox(height: 24),
-          buildInfoField(infoName: "Phone #", info: _user.phoneNr),
+          buildInfoField(infoName: "Phone #", info: _currentUser.phoneNr),
           const SizedBox(height: 24),
-          buildInfoField(infoName: "Reg #", info: _user.regNr),
+          buildInfoField(infoName: "Reg #", info: _currentUser.regNr),
           const SizedBox(height: 24),
           buildInfoField(
               infoName: "Certifications",
-              info: _user.certifications.toString()),
+              info: _currentUser.certifications.toString()),
           const SizedBox(height: 24),
           ElevatedButton(
               onPressed: () {
@@ -52,7 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: const Text("Load user")),
           const SizedBox(height: 24),
           ElevatedButton(
-              onPressed: (() => print(_user.name)),
+              onPressed: (() => print(_currentUser.name)),
               child: const Text("Print current user name")),
         ]));
   }
@@ -104,11 +108,22 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+
   void onLoadUserButtonPressed() {
     UserHandler.loadUser();
-    print("onLoadUserButtonPresse User: ${_user.name}");
+    print("onLoadUserButtonPresse User: ${_currentUser.name}");
     setState(() {
-      _user = UserSettings.currentUser;
+      _currentUser = UserSettings.currentUser;
     });
+
+    //Fetching user data by email signed in with from Firebase Firestore
+    FirebaseCrud fbc = FirebaseCrud();
+    User ?fetchedUser;
+    fbc.getUserByEmailOnce(UserHandler.getEmailSignedInWith).then((result) {
+      fetchedUser = result;
+    });
+    if(fetchedUser != null){
+      print(fetchedUser?.email);
+    }
   }
 }
