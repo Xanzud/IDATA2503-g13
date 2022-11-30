@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project/authentication_service.dart';
+import 'package:project/utils/user_handler.dart';
 import 'package:provider/provider.dart';
 
 class SignInPage extends StatelessWidget {
@@ -59,7 +60,10 @@ class SignInPage extends StatelessWidget {
                 onPressed: () {
                   context.read<AuthenticationService>().signIn(
                       emailController.text.trim(),
-                      passwordController.text.trim());
+                      passwordController.text.trim(),
+                      );
+                  //Pass email used to sign in to UserHandler, to use when loading user info for profile view.
+                  UserHandler.setEmailSignedInWith = emailController.text.trim();
                 },
                 child: Text(
                   "Login",
