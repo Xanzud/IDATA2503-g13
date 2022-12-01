@@ -7,6 +7,7 @@ import 'package:project/missions/mission_list_tile.dart';
 import 'package:project/missions/new_mission_page.dart';
 import 'package:project/model/user.dart';
 import 'package:project/pages/edit_user_page.dart';
+import 'package:project/pages/new_user_page.dart';
 import 'package:project/pages/user_list_tile.dart';
 import 'package:project/services/firebase_crud.dart';
 import 'package:project/services/repository.dart';
@@ -49,7 +50,7 @@ class UsersPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (BuildContext context) {
-                        return newMissionPage();
+                        return NewUserPage();
                       }));
                     }),
               ],

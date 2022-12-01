@@ -1,0 +1,159 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_field/date_field.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:project/services/firebase_crud.dart';
+import 'package:provider/provider.dart';
+
+import '../model/Mission.dart';
+import '../services/repository.dart';
+
+class NewUserPage extends StatefulWidget {
+  @override
+  _NewUserPagePageState createState() => _NewUserPagePageState();
+}
+
+class _NewUserPagePageState extends State<NewUserPage> {
+  final _formKey = GlobalKey<FormState>();
+
+  String? _name;
+  String? _email;
+  String? _uid;
+
+  bool _validateAndSaveForm() {
+    final form = _formKey.currentState;
+    if (form!.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _submit() async {
+    /*
+    if(_validateAndSaveForm()) {
+      print("form saved $_name, $_time, $_location");
+      final repository = Provider.of<Repository>(context, listen: false);
+      final mission = Mission(_name!, _time!, _location!);
+
+      String missionID = "/${documentIdFromCurrentDate()}";
+      await repository.createMission(mission, missionID);
+    }
+     */
+    if (_name == null || _email == null) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text("Null values"),
+            );
+          });
+    }
+
+    var response = await FirebaseCrud.createUser(
+        name: _name!,
+        phoneNr: "",
+        email: "",
+        role: "User",
+        uid: _uid!,
+        address: "",
+        certifications: List<String>.empty(),
+        imagePath: "",
+        regNr: "");
+
+    if (response.code != 200) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(response.message.toString()),
+            );
+          });
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(response.message.toString()),
+            );
+          });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 2.0,
+        title: Text("New User"),
+      ),
+      body: _buildContents(),
+    );
+  }
+
+  Widget _buildContents() {
+    return SingleChildScrollView(
+        child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Card(
+          child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: _buildForm(),
+      )),
+    ));
+  }
+
+  Widget _buildForm() {
+    return Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: _buildFormChildren(),
+        ));
+  }
+
+  List<Widget> _buildFormChildren() {
+    return [
+      TextFormField(
+        decoration: InputDecoration(labelText: "Name"),
+        onChanged: (value) {
+          setState(() {
+            _name = value;
+          });
+        },
+      ),
+      SizedBox(height: 50),
+      TextFormField(
+        decoration: InputDecoration(labelText: "UID"),
+        onChanged: (value) {
+          setState(() {
+            _uid = value;
+          });
+        },
+      ),
+      SizedBox(height: 50),
+      TextFormField(
+        decoration: InputDecoration(labelText: "Email"),
+        onChanged: (value) {
+          setState(() {
+            _email = value;
+          });
+        },
+      ),
+      Padding(
+          padding: EdgeInsets.all(120),
+          child: ElevatedButton(
+            onPressed: (_name == "" ||
+                    _name == null ||
+                    _uid == "" ||
+                    _uid == null ||
+                    _email == "" ||
+                    _email == null)
+                ? null
+                : _submit,
+            child: Text("Create",
+                style: TextStyle(fontSize: 18, color: Colors.white)),
+          )),
+    ];
+  }
+}

@@ -71,11 +71,12 @@ class FirebaseCrud {
   }
 
   static Future<Response> updateUser(
-      {required String name,
-      required String phone,
+      {required String uid,
+      required String name,
+      required String phoneNr,
       required String address,
       String? reg,
-      String? certifications,
+      List<String>? certifications,
       String? email}) async {
     _Collection = _firestore.collection('users');
 
@@ -84,7 +85,7 @@ class FirebaseCrud {
 
     Map<String, dynamic> data = <String, dynamic>{
       "address": address,
-      "phone": phone,
+      "phoneNr": phoneNr,
       "name": name,
       "regNr": reg,
       "email": email
@@ -116,6 +117,51 @@ class FirebaseCrud {
       response.code = 500;
       response.message = e;
     });
+
+    return response;
+  }
+
+  static Future<Response> createUser(
+      {required String name,
+      required String phoneNr,
+      required String email,
+      required String role,
+      required String uid,
+      required String imagePath,
+      required List<String> certifications,
+      required String address,
+      required String regNr}) async {
+    _Collection = _firestore.collection('users');
+
+    Response response = Response();
+    DocumentReference documentReference = _Collection.doc(uid);
+
+    bool exists = (await _firestore.collection("users").doc(uid).get()).exists;
+
+    Map<String, dynamic> data = <String, dynamic>{
+      "uid": uid,
+      "name": name,
+      "email": email,
+      "role": role,
+      "phoneNr": phoneNr,
+      "imagePath": imagePath,
+      "certifications": certifications,
+      "address": address,
+      "regNr": regNr,
+    };
+
+    if (!exists) {
+      await documentReference.set(data).whenComplete(() {
+        response.code = 200;
+        response.message = "Successfully added to database";
+      }).catchError((e) {
+        response.code = 500;
+        response.message = e;
+      });
+    } else {
+      response.code = 500;
+      response.message = "Already exists";
+    }
 
     return response;
   }
