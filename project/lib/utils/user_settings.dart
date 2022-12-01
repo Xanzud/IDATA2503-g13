@@ -1,6 +1,5 @@
 import '../model/user.dart';
 
-
 ///Class for storing settings and information on the current user.
 ///For anything regarding changing this information, see the user_handler class.
 class UserSettings {
@@ -12,7 +11,8 @@ class UserSettings {
       "jane@doe.com",
       "10101010",
       [],
-      "user");
+      "user",
+      "uid:test");
 }
 
 //old profile pic from web

@@ -51,23 +51,24 @@ class FirebaseCrud {
     return notesItemCollection.snapshots();
   }
 
-///Fethes a single user document once (not stream), querying by email.
-///Returns user value if user with email is found,
-///else, returns a Future.error.
-Future<User> getUserByEmailOnce(String email) async {
-  final docRef = _firestore.collection("users").doc(email).withConverter(
-      fromFirestore: User.fromFirestore,
-      toFirestore: (User user, _) => user.toFireStore());
-  final docSnap = await docRef.get();
-  final user = docSnap.data(); //Convert to User object
-  if (user != null) {
-    //user was found
-    return Future.value(user);
-  } else {
-    //user NOT found
-    return Future.error("Error: No user with email: \"$email\" could be found.");
+  ///Fethes a single user document once (not stream), querying by email.
+  ///Returns user value if user with email is found,
+  ///else, returns a Future.error.
+  Future<User> getUserByEmailOnce(String email) async {
+    final docRef = _firestore.collection("users").doc(email).withConverter(
+        fromFirestore: User.fromFirestore,
+        toFirestore: (User user, _) => user.toFireStore());
+    final docSnap = await docRef.get();
+    final user = docSnap.data(); //Convert to User object
+    if (user != null) {
+      //user was found
+      return Future.value(user);
+    } else {
+      //user NOT found
+      return Future.error(
+          "Error: No user with email: \"$email\" could be found.");
+    }
   }
-}
 
   static Future<Response> updateUser(
       {required String name,
@@ -153,6 +154,50 @@ Future<User> getUserByEmailOnce(String email) async {
     CollectionReference notesItemCollection = _Collection;
 
     return notesItemCollection.snapshots();
+  }
+
+  static Future<Response> archiveMission({required Mission mission}) async {
+    _Collection = _firestore.collection('missions_archive');
+
+    Response response = Response();
+    DocumentReference documentReference = _Collection.doc(mission.id);
+
+    Map<String, dynamic> data = <String, dynamic>{
+      "id": mission.id,
+      "location": mission.location,
+      "name": mission.name,
+      "time": mission.time
+    };
+
+    await documentReference.set(data).whenComplete(() {
+      response.code = 200;
+      response.message = "Successfully added to database";
+    }).catchError((e) {
+      response.code = 500;
+      response.message = e;
+    });
+
+    return response;
+  }
+
+  static Future<Response> delete({
+    required String collection,
+    required String docId,
+  }) async {
+    _Collection = _firestore.collection(collection);
+
+    Response response = Response();
+    DocumentReference documentReferencer = _Collection.doc(docId);
+
+    await documentReferencer.delete().whenComplete(() {
+      response.code = 200;
+      response.message = "Sucessfully Deleted Object";
+    }).catchError((e) {
+      response.code = 500;
+      response.message = e;
+    });
+
+    return response;
   }
 
 /*
@@ -286,5 +331,3 @@ Future<User> getUserByEmailOnce(String email) async {
       required String name,
       required Timestamp time}) {}
 }
-
-

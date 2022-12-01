@@ -12,26 +12,24 @@ class UserHandler {
   ///Email used to sign in with. Intended for determining which user should be fetched from the database.
   static String _emailLoggedInWith = "";
 
-
-
   ///Method for loading a user. Currently filled with dummy data.
   ///When ready, should be rewritten to use data fetched from FireStore Firebase
-  static void loadUser(){
-    // Todo: Rewrite method to use data queried from FireStore Firebase 
+  static void loadUser() {
+    // Todo: Rewrite method to use data queried from FireStore Firebase
     print("loadUser() called");
-    updateCurrentUser(User("images/defaultProfilePic.jpg",
-      "Thomas",
-      "123 Fakestreet",
-      "thomasey@stud.no",
-      "",
-      "12345678",
-      [],
-      "user"
-      )
-    );
+    updateCurrentUser(User(
+        "images/defaultProfilePic.jpg",
+        "Thomas",
+        "123 Fakestreet",
+        "thomasey@stud.no",
+        "",
+        "12345678",
+        [],
+        "user",
+        "uid:test"));
   }
 
-  static void updateCurrentUser(User newCurrentUser){
+  static void updateCurrentUser(User newCurrentUser) {
     UserSettings.currentUser = newCurrentUser;
     print(UserSettings.currentUser.name);
   }

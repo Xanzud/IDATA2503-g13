@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 /// Stores variables concerning the user
 class User {
+  String uid;
   String imagePath;
   String name;
   String address;
@@ -13,7 +14,7 @@ class User {
   String role;
 
   User(this.imagePath, this.name, this.address, this.regNr, this.email,
-      this.phoneNr, this.certifications, this.role);
+      this.phoneNr, this.certifications, this.role, this.uid);
 
   static User fromMap(Map<String, dynamic> data) {
     assert(data.containsKey("name"), "Missing name property for a user");
@@ -24,8 +25,16 @@ class User {
     assert(data.containsKey("certifications"),
         "Missing certifications property for a user");
     assert(data.containsKey("role"), "Missing role property for a user");
-    return User(data["imagePath"], data["name"], data["address"], data["regNr"],
-        data["email"], data["phoneNr"], data["certifications"], data["role"]);
+    return User(
+        data["imagePath"],
+        data["name"],
+        data["address"],
+        data["regNr"],
+        data["email"],
+        data["phoneNr"],
+        data["certifications"],
+        data["role"],
+        data["uid"]);
   }
 
   Map<String, dynamic> toMap() {
@@ -57,7 +66,8 @@ class User {
         data?['certifications'] is Iterable
             ? List.from(data?['certifications'])
             : [],
-        data?["role"]);
+        data?["role"],
+        data?["uid"]);
   }
 
   ///For mapping User object into user document for firestore.

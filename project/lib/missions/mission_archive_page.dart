@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:project/missions/edit_archive_mission_page.dart';
 import 'package:project/missions/edit_mission_page.dart';
 import 'package:project/missions/mission_entries_page.dart';
 import 'package:project/missions/list_items_builder.dart';
@@ -13,16 +14,19 @@ import '../model/Mission.dart';
 import '../services/firestore_repository.dart';
 import '../utils/show_exception_alert_dialog.dart';
 
-class MissionPage extends StatelessWidget {
-  const MissionPage({super.key});
+class MissionArchivePage extends StatelessWidget {
+  const MissionArchivePage({super.key});
 
   Future<void> _delete(BuildContext context, Mission mission) async {
+    //FirebaseCrud.delete(collection: "missions_archive", docId: mission.id)
+    //    .then((value) {});
+
     try {
       //final database = Provider.of<Repository>(context, listen: false);
-      final docMission =
-          FirebaseFirestore.instance.collection("missions").doc(mission.id);
+      final docMission = FirebaseFirestore.instance
+          .collection("missions_archive")
+          .doc(mission.id);
       docMission.delete();
-      FirebaseCrud.archiveMission(mission: mission);
     } on FirebaseException catch (e) {
       showExceptionAlertDialog(
         context,
@@ -39,17 +43,7 @@ class MissionPage extends StatelessWidget {
         builder: (context, child) {
           return Scaffold(
             appBar: AppBar(
-              title: Text('Missions'),
-              actions: <Widget>[
-                IconButton(
-                    icon: Icon(Icons.add, color: Colors.white),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (BuildContext context) {
-                        return newMissionPage();
-                      }));
-                    }),
-              ],
+              title: Text('Missions Archive'),
             ),
             body: _buildContents(context),
           );
@@ -59,7 +53,7 @@ class MissionPage extends StatelessWidget {
   Widget _buildContents(BuildContext context) {
     final database = Provider.of<Repository>(context, listen: false);
     return StreamBuilder<Iterable<Mission>>(
-      stream: database.getAllMissionsStream(),
+      stream: database.getAllArchivedMissionsStream(),
       builder: (context, snapshot) {
         return ListItemsBuilder<Mission>(
           snapshot: snapshot,
@@ -72,7 +66,7 @@ class MissionPage extends StatelessWidget {
             },
             child: MissionListTile(
                 mission: mission,
-                onTap: () => EditMissionPage.show(context,
+                onTap: () => EditArchiveMissionPage.show(context,
                     database: database, mission: mission)),
           ),
         );

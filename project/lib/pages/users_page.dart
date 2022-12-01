@@ -5,6 +5,9 @@ import 'package:project/missions/mission_entries_page.dart';
 import 'package:project/missions/list_items_builder.dart';
 import 'package:project/missions/mission_list_tile.dart';
 import 'package:project/missions/new_mission_page.dart';
+import 'package:project/model/user.dart';
+import 'package:project/pages/edit_user_page.dart';
+import 'package:project/pages/user_list_tile.dart';
 import 'package:project/services/firebase_crud.dart';
 import 'package:project/services/repository.dart';
 import 'package:provider/provider.dart';
@@ -13,16 +16,16 @@ import '../model/Mission.dart';
 import '../services/firestore_repository.dart';
 import '../utils/show_exception_alert_dialog.dart';
 
-class MissionPage extends StatelessWidget {
-  const MissionPage({super.key});
+class UsersPage extends StatelessWidget {
+  const UsersPage({super.key});
 
-  Future<void> _delete(BuildContext context, Mission mission) async {
+  Future<void> _delete(BuildContext context, User user) async {
     try {
       //final database = Provider.of<Repository>(context, listen: false);
       final docMission =
-          FirebaseFirestore.instance.collection("missions").doc(mission.id);
+          FirebaseFirestore.instance.collection("users").doc(user.uid);
       docMission.delete();
-      FirebaseCrud.archiveMission(mission: mission);
+      FirebaseCrud.delete(collection: "users", docId: user.uid);
     } on FirebaseException catch (e) {
       showExceptionAlertDialog(
         context,
@@ -39,7 +42,7 @@ class MissionPage extends StatelessWidget {
         builder: (context, child) {
           return Scaffold(
             appBar: AppBar(
-              title: Text('Missions'),
+              title: Text('Users'),
               actions: <Widget>[
                 IconButton(
                     icon: Icon(Icons.add, color: Colors.white),
@@ -58,22 +61,22 @@ class MissionPage extends StatelessWidget {
 
   Widget _buildContents(BuildContext context) {
     final database = Provider.of<Repository>(context, listen: false);
-    return StreamBuilder<Iterable<Mission>>(
-      stream: database.getAllMissionsStream(),
+    return StreamBuilder<Iterable<User>>(
+      stream: database.getUsersStream(),
       builder: (context, snapshot) {
-        return ListItemsBuilder<Mission>(
+        return ListItemsBuilder<User>(
           snapshot: snapshot,
-          itemBuilder: (context, mission) => Dismissible(
-            key: Key('mission-${mission.id}'),
+          itemBuilder: (context, user) => Dismissible(
+            key: Key('mission-${user.uid}'),
             background: Container(color: Colors.red),
             direction: DismissDirection.endToStart,
             onDismissed: (direction) {
-              _delete(context, mission);
+              _delete(context, user);
             },
-            child: MissionListTile(
-                mission: mission,
-                onTap: () => EditMissionPage.show(context,
-                    database: database, mission: mission)),
+            child: UserListTile(
+                user: user,
+                onTap: () =>
+                    EditUserPage.show(context, database: database, user: user)),
           ),
         );
       },

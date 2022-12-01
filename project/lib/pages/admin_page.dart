@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:project/missions/mission_archive_page.dart';
 import 'package:project/missions/mission_page.dart';
 import 'package:project/missions/new_mission_page.dart';
 import 'package:project/model/user.dart';
+import 'package:project/pages/users_page.dart';
 import 'package:project/services/firestore_repository.dart';
 import 'package:project/services/repository.dart';
 import 'package:provider/provider.dart';
@@ -61,6 +63,18 @@ class _buildNav extends StatelessWidget {
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (BuildContext context) {
+                return MissionArchivePage();
+              }));
+            },
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white, padding: EdgeInsets.all(20)),
+            child: Text("Mission archive",
+                style: TextStyle(color: Colors.black, fontSize: 20))),
+        SizedBox(height: 50),
+        TextButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (BuildContext context) {
                 return MissionPage();
               }));
             },
@@ -69,6 +83,17 @@ class _buildNav extends StatelessWidget {
             child: Text("Active missions",
                 style: TextStyle(color: Colors.black, fontSize: 20))),
         SizedBox(height: 50),
+        TextButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (BuildContext context) {
+                return UsersPage();
+              }));
+            },
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white, padding: EdgeInsets.all(20)),
+            child: Text("Users",
+                style: TextStyle(color: Colors.black, fontSize: 20))),
       ]),
     );
   }

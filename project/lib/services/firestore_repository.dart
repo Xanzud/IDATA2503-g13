@@ -51,4 +51,20 @@ class FirestoreRepository implements Repository {
   Future<void> saveMission(Mission mission) async {
     FirebaseCrud.saveMission(mission);
   }
+
+  @override
+  Future<void> delete(
+      {required String collection, required String docId}) async {
+    FirebaseCrud.delete(collection: collection, docId: docId);
+  }
+
+  @override
+  Stream<Iterable<Mission>> getAllArchivedMissionsStream() =>
+      FirebaseCrud().getCollectionStream(
+          ApiPaths.archivedMissionRoot(), Mission.fromMapOriginal);
+
+  @override
+  Stream<Mission?> missionArchivedStream({required String missionId}) =>
+      FirebaseCrud().getDocumentStream(
+          ApiPaths.archivedMission(missionId), Mission.fromMapOriginal);
 }
