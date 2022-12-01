@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_field/date_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project/authentication_service.dart';
 import 'package:project/services/firebase_crud.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +21,7 @@ class _NewUserPagePageState extends State<NewUserPage> {
   String? _name;
   String? _email;
   String? _uid;
+  String? _password;
 
   bool _validateAndSaveForm() {
     final form = _formKey.currentState;
@@ -27,6 +30,13 @@ class _NewUserPagePageState extends State<NewUserPage> {
       return true;
     }
     return false;
+  }
+
+  bool validatePsw(String value) {
+    String pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    RegExp regExp = new RegExp(pattern);
+    return regExp.hasMatch(value);
   }
 
   Future<void> _submit() async {
@@ -40,7 +50,7 @@ class _NewUserPagePageState extends State<NewUserPage> {
       await repository.createMission(mission, missionID);
     }
      */
-    if (_name == null || _email == null) {
+    if (_name == null || _email == null || _password == null) {
       showDialog(
           context: context,
           builder: (context) {
@@ -49,11 +59,15 @@ class _NewUserPagePageState extends State<NewUserPage> {
             );
           });
     }
+    FirebaseAuth auth = FirebaseAuth.instance;
+    var user = await auth.createUserWithEmailAndPassword(
+        email: _email!, password: _password!);
+    _uid = user.user?.uid;
 
     var response = await FirebaseCrud.createUser(
         name: _name!,
         phoneNr: "",
-        email: "",
+        email: _email!,
         role: "User",
         uid: _uid!,
         address: "",
@@ -108,52 +122,73 @@ class _NewUserPagePageState extends State<NewUserPage> {
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: _buildFormChildren(),
+          children: <Widget>[
+            TextFormField(
+              decoration: InputDecoration(labelText: "Name"),
+              onChanged: (value) {
+                setState(() {
+                  _name = value;
+                });
+              },
+            ),
+            /*
+            SizedBox(height: 50),
+            TextFormField(
+              decoration: InputDecoration(labelText: "UID"),
+              onChanged: (value) {
+                setState(() {
+                  _uid = value;
+                });
+              },
+            ),
+            */
+            SizedBox(height: 50),
+            TextFormField(
+              decoration: InputDecoration(labelText: "Email"),
+              validator: (value) {
+                if (value!.isEmpty ||
+                    !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                        .hasMatch(value)) {
+                  return "Enter Correct Email Address";
+                } else {
+                  return "null";
+                }
+              },
+              onChanged: (value) {
+                setState(() {
+                  _email = value;
+                });
+              },
+            ),
+            SizedBox(height: 50),
+            TextFormField(
+              decoration: InputDecoration(labelText: "Password"),
+              onChanged: (value) {
+                setState(() {
+                  _password = value;
+                });
+              },
+              validator: (value) {
+                if (!validatePsw(_password!)) {
+                  return "Enter a valid password";
+                }
+              },
+            ),
+            Padding(
+                padding: EdgeInsets.all(120),
+                child: ElevatedButton(
+                  onPressed: (_name == "" ||
+                          _name == null ||
+                          _email == "" ||
+                          _email == null ||
+                          _password == "" ||
+                          _password == null)
+                      ? null
+                      : _submit,
+                  child: Text("Create",
+                      style: TextStyle(fontSize: 18, color: Colors.white)),
+                ))
+          ],
         ));
-  }
-
-  List<Widget> _buildFormChildren() {
-    return [
-      TextFormField(
-        decoration: InputDecoration(labelText: "Name"),
-        onChanged: (value) {
-          setState(() {
-            _name = value;
-          });
-        },
-      ),
-      SizedBox(height: 50),
-      TextFormField(
-        decoration: InputDecoration(labelText: "UID"),
-        onChanged: (value) {
-          setState(() {
-            _uid = value;
-          });
-        },
-      ),
-      SizedBox(height: 50),
-      TextFormField(
-        decoration: InputDecoration(labelText: "Email"),
-        onChanged: (value) {
-          setState(() {
-            _email = value;
-          });
-        },
-      ),
-      Padding(
-          padding: EdgeInsets.all(120),
-          child: ElevatedButton(
-            onPressed: (_name == "" ||
-                    _name == null ||
-                    _uid == "" ||
-                    _uid == null ||
-                    _email == "" ||
-                    _email == null)
-                ? null
-                : _submit,
-            child: Text("Create",
-                style: TextStyle(fontSize: 18, color: Colors.white)),
-          )),
-    ];
   }
 }

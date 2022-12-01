@@ -1,4 +1,8 @@
+import 'dart:html';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_admin/firebase_admin.dart';
 
 class AuthenticationService {
   final FirebaseAuth _firebaseAuth;
@@ -31,6 +35,17 @@ class AuthenticationService {
     try {
       await _firebaseAuth.signOut();
       return "Signed out";
+    } on FirebaseAuthException catch (e) {
+      return e.message;
+    }
+  }
+
+  Future<String?> deleteAuth(String uid) async {
+    var credential = Credentials.applicationDefault();
+    var app = await FirebaseAdmin.instance.initializeApp(
+        AppOptions(credential: credential!, projectId: "Prepactive"));
+    try {
+      await app.auth().deleteUser(uid);
     } on FirebaseAuthException catch (e) {
       return e.message;
     }

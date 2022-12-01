@@ -1,5 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_admin/firebase_admin.dart';
+import 'package:firebase_auth/firebase_auth.dart' as Auth;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:project/authentication_service.dart';
 import 'package:project/missions/edit_mission_page.dart';
 import 'package:project/missions/mission_entries_page.dart';
 import 'package:project/missions/list_items_builder.dart';
@@ -21,13 +25,35 @@ class UsersPage extends StatelessWidget {
   const UsersPage({super.key});
 
   Future<void> _delete(BuildContext context, User user) async {
+    //FirebaseAuth auth = FirebaseAuth.instance;
+    //var user = await auth.
+    final userDel =
+        await FirebaseCrud.delete(collection: "users", docId: user.uid);
+    // TODO delete auth user
+    await FirebaseCrud.delete(collection: "accounts", docId: user.uid);
+
+    if (userDel.code == 200) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(userDel.message.toString()),
+            );
+          });
+    } else if (userDel.code == 500) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(userDel.message.toString()),
+            );
+          });
+    }
     try {
       //final database = Provider.of<Repository>(context, listen: false);
-      final docMission =
-          FirebaseFirestore.instance.collection("users").doc(user.uid);
-      docMission.delete();
-      FirebaseCrud.delete(collection: "users", docId: user.uid);
-    } on FirebaseException catch (e) {
+
+      //FirebaseCrud.delete(collection: "users", docId: user.uid);
+    } on Auth.FirebaseException catch (e) {
       showExceptionAlertDialog(
         context,
         title: 'Operation failed',
