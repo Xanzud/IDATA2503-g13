@@ -18,6 +18,7 @@ abstract class Repository {
   Stream<Mission?> missionArchivedStream({required String missionId});
   //Users
   Stream<Iterable<User>> getUsersStream();
+  Stream<Iterable<User>> getUsersStreamFromMission(String missionID);
 
   //Generic
   Future<void> delete({required String collection, required String docId});

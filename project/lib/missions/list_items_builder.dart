@@ -34,6 +34,7 @@ class ListItemsBuilder<T> extends StatelessWidget {
 
   Widget _buildList(Iterable<T> items) {
     return ListView.separated(
+      shrinkWrap: true,
       itemCount: items.length + 2,
       separatorBuilder: (context, index) => Divider(height: 0.5),
       itemBuilder: (context, index) {

@@ -67,4 +67,10 @@ class FirestoreRepository implements Repository {
   Stream<Mission?> missionArchivedStream({required String missionId}) =>
       FirebaseCrud().getDocumentStream(
           ApiPaths.archivedMission(missionId), Mission.fromMapOriginal);
+
+  @override
+  Stream<Iterable<User>> getUsersStreamFromMission(String missionID) {
+    // TODO: implement getUsersStreamFromMission
+    throw UnimplementedError();
+  }
 }

@@ -70,6 +70,37 @@ class FirebaseCrud {
     }
   }
 
+  static Future<User> getUserByUid(String uid) async {
+    final docRef = _firestore.collection("users").doc(uid).withConverter(
+        fromFirestore: User.fromFirestore,
+        toFirestore: (User user, _) => user.toFireStore());
+    final docSnap = await docRef.get();
+    final user = docSnap.data(); //Convert to User object
+    if (user != null) {
+      //user was found
+      return Future.value(user);
+    } else {
+      //user NOT found
+      return Future.error(
+          "Error: No user with email: \"$uid\" could be found.");
+    }
+  }
+
+  static Future<Mission> getMissionById(String id) async {
+    final docRef = _firestore.collection("missions").doc(id).withConverter(
+        fromFirestore: Mission.fromFirestore,
+        toFirestore: (Mission mission, _) => mission.toMap());
+    final docSnap = await docRef.get();
+    final mission = docSnap.data(); //Convert to User object
+    if (mission != null) {
+      //user was found
+      return Future.value(mission);
+    } else {
+      //user NOT found
+      return Future.error("Error: No mission with id: \"$id\" could be found.");
+    }
+  }
+
   static Future<Response> updateUser(
       {required String uid,
       required String name,
@@ -181,7 +212,8 @@ class FirebaseCrud {
       "id": documentReference.id,
       "location": location,
       "name": name,
-      "time": time
+      "time": time,
+      "attending": List<dynamic>.empty()
     };
 
     await documentReference.set(data).whenComplete(() {
@@ -212,7 +244,8 @@ class FirebaseCrud {
       "id": mission.id,
       "location": mission.location,
       "name": mission.name,
-      "time": mission.time
+      "time": mission.time,
+      "attending": mission.attending
     };
 
     await documentReference.set(data).whenComplete(() {
