@@ -11,7 +11,11 @@ class UserListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      visualDensity: VisualDensity(horizontal: 3),
       title: Text(user.name + " : " + user.email),
+      leading: CircleAvatar(
+          backgroundImage:
+              (user.imagePath == "") ? null : NetworkImage(user.imagePath)),
       trailing: const Icon(Icons.chevron_right),
       onTap: onTap,
     );

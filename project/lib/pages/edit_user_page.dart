@@ -36,6 +36,8 @@ class _EditUserPageState extends State<EditUserPage> {
 
   String? _name;
   String? _email;
+  String? _password;
+  String? _imgUrl;
 
   @override
   void initState() {
@@ -43,6 +45,7 @@ class _EditUserPageState extends State<EditUserPage> {
     if (widget.user != null) {
       _name = widget.user?.name;
       _email = widget.user?.email;
+      _imgUrl = widget.user?.imagePath;
     }
   }
 
@@ -76,7 +79,12 @@ class _EditUserPageState extends State<EditUserPage> {
           //final mission = Mission(_name!, _time!, _location!, id!);
           final docUser =
               FirebaseFirestore.instance.collection("users").doc(uid?.trim());
-          docUser.update({"uid": uid, "name": _name, "email": _email});
+          docUser.update({
+            "uid": uid,
+            "name": _name,
+            "email": _email,
+            "imagePath": _imgUrl
+          });
           //await FirebaseCrud.saveMission(mission);
           Navigator.of(context).pop();
         }
@@ -152,6 +160,24 @@ class _EditUserPageState extends State<EditUserPage> {
             value!.isNotEmpty ? null : 'Email can\'t be empty',
         onSaved: (value) => _email = value,
       ),
+      SizedBox(height: 50),
+      TextFormField(
+        decoration: InputDecoration(labelText: 'Img (url only)'),
+        initialValue: _imgUrl,
+        keyboardType: TextInputType.url,
+        onChanged: (value) {
+          setState(() {
+            _imgUrl = value;
+          });
+        },
+      ),
+      SizedBox(height: 50),
+      CircleAvatar(
+          radius: 100,
+          backgroundColor: Colors.transparent,
+          backgroundImage: (_imgUrl == "" || _imgUrl == null)
+              ? null
+              : NetworkImage(_imgUrl!)),
     ];
   }
 }
