@@ -1,6 +1,7 @@
 import 'package:project/model/user.dart';
 
 import '../model/Mission.dart';
+import '../model/packing_list.dart';
 
 abstract class Repository {
   /// Get a stream with mission snapshot for a specific mission with given ID
@@ -19,6 +20,9 @@ abstract class Repository {
   //Users
   Stream<Iterable<User>> getUsersStream();
   Stream<Iterable<User>> getUsersStreamFromMission(String missionID);
+
+  //Packing lists
+  Stream<Iterable<PackingList>> getPackingLists();
 
   //Generic
   Future<void> delete({required String collection, required String docId});

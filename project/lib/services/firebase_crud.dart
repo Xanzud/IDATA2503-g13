@@ -202,7 +202,8 @@ class FirebaseCrud {
   static Future<Response> createMission(
       {required String location,
       required String name,
-      required Timestamp time}) async {
+      required Timestamp time,
+      required String packingList}) async {
     _Collection = _firestore.collection('missions');
 
     Response response = Response();
@@ -213,6 +214,7 @@ class FirebaseCrud {
       "location": location,
       "name": name,
       "time": time,
+      "packingList": packingList,
       "attending": List<dynamic>.empty()
     };
 
@@ -245,6 +247,7 @@ class FirebaseCrud {
       "location": mission.location,
       "name": mission.name,
       "time": mission.time,
+      "packingList": mission.packingList,
       "attending": mission.attending
     };
 
@@ -402,6 +405,20 @@ class FirebaseCrud {
         .map(
           (snapshot) => builder(snapshot.data(), snapshot.id),
         )
+        .toList());
+  }
+
+  /// Returns stream of pack lists
+  Stream<Iterable<T>> getPacketListCollectionWithId<T>({
+    required T Function(Map<String, dynamic> data, String documentID) builder,
+  }) {
+    final collection = _firestore.collection("packLists");
+    final snapshots = collection.snapshots();
+
+    return snapshots.map((snapshots) => snapshots.docs
+        .map(
+          (snapshot) => builder(snapshot.data(), snapshot.id),
+    )
         .toList());
   }
 

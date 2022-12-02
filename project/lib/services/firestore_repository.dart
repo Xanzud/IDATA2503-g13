@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:project/model/Mission.dart';
+import 'package:project/model/packing_list.dart';
 import 'package:project/model/user.dart';
 import 'package:project/services/firebase_crud.dart';
 import '../../services/repository.dart';
@@ -67,6 +68,12 @@ class FirestoreRepository implements Repository {
   Stream<Mission?> missionArchivedStream({required String missionId}) =>
       FirebaseCrud().getDocumentStream(
           ApiPaths.archivedMission(missionId), Mission.fromMapOriginal);
+
+  @override
+  Stream<Iterable<PackingList>> getPackingLists() =>
+      FirebaseCrud().getPacketListCollectionWithId(
+          builder: (data, documentID) =>
+              PackingList.fromMap(data, documentID));
 
   @override
   Stream<Iterable<User>> getUsersStreamFromMission(String missionID) {

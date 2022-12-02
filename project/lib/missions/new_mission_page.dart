@@ -2,7 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project/model/packing_list.dart';
 import 'package:project/services/firebase_crud.dart';
+import 'package:provider/provider.dart';
+
+import '../services/firestore_repository.dart';
+import '../services/repository.dart';
 
 class newMissionPage extends StatefulWidget {
   @override
@@ -11,7 +16,7 @@ class newMissionPage extends StatefulWidget {
 
 class _newMissionPageState extends State<newMissionPage> {
   final _formKey = GlobalKey<FormState>();
-  final List<String> _packetLists = ["test1", "test2"];
+  late final List<String> _packetLists = [];
   String? _selectedValue;
 
   //TODO CLEANUP
@@ -42,7 +47,7 @@ class _newMissionPageState extends State<newMissionPage> {
       await repository.createMission(mission, missionID);
     }
      */
-    if (_location == null || _time == null || _name == null) {
+    if (_location == null || _time == null || _name == null || _chosenPacketList == null) {
       showDialog(
           context: context,
           builder: (context) {
@@ -53,7 +58,7 @@ class _newMissionPageState extends State<newMissionPage> {
     }
 
     var response = await FirebaseCrud.createMission(
-        location: _location!, name: _name!, time: _time!);
+        location: _location!, name: _name!, time: _time!, packingList: _chosenPacketList!);
 
     if (response.code != 200) {
       showDialog(
@@ -76,37 +81,41 @@ class _newMissionPageState extends State<newMissionPage> {
 
   @override
   Widget build(BuildContext context) {
+    return Provider<Repository>(
+        create: (context) => FirestoreRepository(),
+        builder: (context, child) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 2.0,
-        title: Text("New Mission"),
-      ),
-      body: _buildContents(),
+    appBar: AppBar(
+    elevation: 2.0,
+    title: Text("New Mission"),
+    ),
+    body: _buildContents(context),
     );
+    });
   }
 
-  Widget _buildContents() {
+  Widget _buildContents(BuildContext context) {
     return SingleChildScrollView(
         child: Padding(
       padding: const EdgeInsets.all(16.0),
       child: Card(
           child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: _buildForm(),
+        child: _buildForm(context),
       )),
     ));
   }
 
-  Widget _buildForm() {
+  Widget _buildForm(BuildContext context) {
     return Form(
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: _buildFormChildren(),
+          children: _buildFormChildren(context),
         ));
   }
 
-  List<Widget> _buildFormChildren() {
+  List<Widget> _buildFormChildren(BuildContext context) {
     return [
       TextFormField(
         decoration: InputDecoration(labelText: "Name"),
@@ -144,16 +153,7 @@ class _newMissionPageState extends State<newMissionPage> {
         },
       ),
       SizedBox(height: 50),
-      DropdownButton<String>(
-        hint: const Text("Choose Packing List"),
-        value: _selectedValue,
-        items: _packetLists
-            .map<DropdownMenuItem<String>>((String packetListsValue) {
-          return DropdownMenuItem<String>(
-              value: packetListsValue, child: Text(packetListsValue));
-        }).toList(),
-        onChanged: _packetDropDownSelector,
-      ),
+      _buildPacketSelector(context),
       Padding(
           padding: EdgeInsets.all(120),
           child: ElevatedButton(
@@ -164,10 +164,55 @@ class _newMissionPageState extends State<newMissionPage> {
     ];
   }
 
-  void _packetDropDownSelector(String? selectedValue) {
+  //Packet List selector setup
+
+  Widget _buildPacketSelector(BuildContext context) {
+    final repository = Provider.of<Repository>(context, listen: false);
+
+    return StreamBuilder<Iterable<PackingList>>(
+      stream: repository.getPackingLists(),
+      builder: (context, snapshot) {
+
+        if(_packetLists.isEmpty) {
+          //Error handling
+          if (snapshot.connectionState != ConnectionState.active) {
+            return Center(
+              child: const CircularProgressIndicator.adaptive(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text("Error: ${snapshot.error}"),
+            );
+          } else if (!snapshot.hasData || snapshot.data == null) {
+            return const Center(
+              child: Text("No data to load"),
+            );
+          }
+
+          final Iterable<PackingList> snapShotData = snapshot.data!;
+
+          for (var entry in snapShotData) {
+            _packetLists.add(entry.name);
+          }
+        }
+
+      return DropdownButton<String>(
+        hint: const Text("Choose Packing List"),
+        items: _packetLists
+            .map<DropdownMenuItem<String>>((String packetListsValue) {
+          return DropdownMenuItem<String>(
+              value: packetListsValue, child: Text(packetListsValue));
+        }).toList(),
+        onChanged: _packetDropDownSelector,
+        value: _selectedValue,
+      );
+    });
+  }
+
+  void _packetDropDownSelector(String? newValue) {
     setState(() {
-      _selectedValue = selectedValue!;
-      _chosenPacketList = selectedValue;
+      _selectedValue = newValue!;
+      _chosenPacketList = newValue;
     });
   }
 }
