@@ -19,6 +19,7 @@ abstract class Repository {
   Stream<Mission?> missionArchivedStream({required String missionId});
   //Users
   Stream<Iterable<User>> getUsersStream();
+  Stream<Iterable<User>> getUsersStreamFromMission(String missionID);
 
   //Packing lists
   Stream<Iterable<PackingList>> getPackingLists();

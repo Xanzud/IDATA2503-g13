@@ -2,11 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_field/date_field.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:project/missions/list_items_builder.dart';
 import 'package:project/model/Mission.dart';
+import 'package:project/pages/edit_user_page.dart';
+import 'package:project/pages/user_list_tile.dart';
 import 'package:project/services/firebase_crud.dart';
+import 'package:project/services/firestore_repository.dart';
 import 'package:project/services/repository.dart';
 import 'package:project/utils/show_alert_dialog.dart';
 import 'package:project/utils/show_exception_alert_dialog.dart';
+import 'package:provider/provider.dart';
+
+import '../model/user.dart';
 
 class EditMissionPage extends StatefulWidget {
   const EditMissionPage(
@@ -100,50 +107,56 @@ class _EditMissionPageState extends State<EditMissionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 2.0,
-        title: Text(widget.mission == null ? 'New Mission' : 'Edit Mission'),
-        actions: <Widget>[
-          TextButton(
-            child: Text(
-              'Save',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-            onPressed: _submit,
+    return Provider<Repository>(
+      create: (context) => FirestoreRepository(),
+      builder: (context, child) {
+        return Scaffold(
+          appBar: AppBar(
+            elevation: 2.0,
+            title:
+                Text(widget.mission == null ? 'New Mission' : 'Edit Mission'),
+            actions: <Widget>[
+              TextButton(
+                child: Text(
+                  'Save',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+                onPressed: _submit,
+              ),
+            ],
           ),
-        ],
-      ),
-      body: _buildContents(),
-      backgroundColor: Colors.grey[200],
+          body: _buildContents(context),
+          backgroundColor: Colors.grey[200],
+        );
+      },
     );
   }
 
-  Widget _buildContents() {
+  Widget _buildContents(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Card(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: _buildForm(),
+            child: _buildForm(context),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildForm() {
+  Widget _buildForm(BuildContext context) {
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: _buildFormChildren(),
+        children: _buildFormChildren(context),
       ),
     );
   }
 
-  List<Widget> _buildFormChildren() {
+  List<Widget> _buildFormChildren(BuildContext context) {
     return [
       TextFormField(
         decoration: InputDecoration(labelText: 'Mission name'),
@@ -186,6 +199,97 @@ class _EditMissionPageState extends State<EditMissionPage> {
         },
       ),
       SizedBox(height: 50),
+      /*
+      DropdownButton(
+          items: widget.mission?.attending
+              .map<DropdownMenuItem<String>>((dynamic userUid) {
+            return DropdownMenuItem<String>(
+                value: userUid, child: Text(userUid));
+          }).toList(),
+          hint: const Text("People attending"),
+          onChanged: (dynamic value) {}),
+          */
+      Text("Users attending"),
+      _buildUsersStatic(context)
     ];
+  }
+
+  Widget _buildUsersStatic(BuildContext context) {
+    final database = Provider.of<Repository>(context, listen: false);
+    Mission? mission = widget.mission;
+
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: mission!.attending.length,
+      itemBuilder: (context, index) {
+        final Future<User> user =
+            FirebaseCrud.getUserByUid(mission.attending[index]);
+        return FutureBuilder<User>(
+          future: user,
+          builder: (context, snapshot) {
+            List<Widget> widgetChildren;
+            if (snapshot.hasData) {
+              widgetChildren = [
+                UserListTile(
+                    user: snapshot.data!,
+                    onTap: () => EditUserPage.show(context,
+                        database: database, user: snapshot.data!))
+              ];
+            } else if (snapshot.hasError) {
+              widgetChildren = <Widget>[
+                const Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 60,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Text('Error: ${snapshot.error}'),
+                ),
+              ];
+            } else {
+              widgetChildren = const <Widget>[
+                SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: CircularProgressIndicator(),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 16),
+                  child: Text('Awaiting result...'),
+                ),
+              ];
+            }
+            return Column(
+              children: widgetChildren,
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildUsers(BuildContext context) {
+    final database = Provider.of<Repository>(context, listen: false);
+    return StreamBuilder<Iterable<User>>(
+      stream: database.getUsersStream(),
+      builder: (context, snapshot) {
+        return ListItemsBuilder<User>(
+          snapshot: snapshot,
+          itemBuilder: (context, user) => Dismissible(
+            key: Key('mission-${user.uid}'),
+            background: Container(color: Colors.red),
+            direction: DismissDirection.endToStart,
+            onDismissed: (direction) {
+              //_delete(context, user);
+            },
+            child: UserListTile(
+                user: user,
+                onTap: () =>
+                    EditUserPage.show(context, database: database, user: user)),
+          ),
+        );
+      },
+    );
   }
 }

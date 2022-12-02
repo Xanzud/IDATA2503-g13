@@ -6,7 +6,7 @@ class Mission {
   final String location;
   final String id;
   final String packingList;
-  final List<String> attending;
+  final List<dynamic> attending;
 
   Mission(this.name, this.time, this.location, this.id,this.packingList, this.attending);
 
@@ -36,9 +36,19 @@ class Mission {
     final Timestamp time = data["time"];
     final String location = data["location"];
     final String packingList = data["packingList"];
-    final List<String> attending = data["attending"];
+    final List<dynamic> attending = data["attending"];
 
     return Mission(name, time, location, documentId, packingList, attending);
+  }
+
+  factory Mission.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    final data = snapshot.data();
+    return Mission(data?["name"], data?["time"], data?["location"], data?["id"],
+        data?["packingList"],
+        data?["attending"]);
   }
 
   Map<String, dynamic> toMap() {
@@ -47,6 +57,7 @@ class Mission {
       "name": name,
       "time": time,
       "location": location,
+      "packingList": packingList,
       "attending": attending
     };
   }

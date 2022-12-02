@@ -69,10 +69,15 @@ class FirestoreRepository implements Repository {
       FirebaseCrud().getDocumentStream(
           ApiPaths.archivedMission(missionId), Mission.fromMapOriginal);
 
-  /// Retrieves all missions together with the ID
   @override
   Stream<Iterable<PackingList>> getPackingLists() =>
       FirebaseCrud().getPacketListCollectionWithId(
           builder: (data, documentID) =>
               PackingList.fromMap(data, documentID));
+
+  @override
+  Stream<Iterable<User>> getUsersStreamFromMission(String missionID) {
+    // TODO: implement getUsersStreamFromMission
+    throw UnimplementedError();
+  }
 }
