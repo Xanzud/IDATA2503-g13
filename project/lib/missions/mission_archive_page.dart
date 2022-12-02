@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:project/missions/archived_mission_list_tile.dart';
 import 'package:project/missions/edit_archive_mission_page.dart';
 import 'package:project/missions/edit_mission_page.dart';
 import 'package:project/missions/mission_entries_page.dart';
@@ -64,7 +65,7 @@ class MissionArchivePage extends StatelessWidget {
             onDismissed: (direction) {
               _delete(context, mission);
             },
-            child: MissionListTile(
+            child: MissionListTileArchived(
                 mission: mission,
                 onTap: () => EditArchiveMissionPage.show(context,
                     database: database, mission: mission)),

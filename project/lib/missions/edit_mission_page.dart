@@ -244,7 +244,8 @@ class _EditMissionPageState extends State<EditMissionPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 16),
-                  child: Text('Error: ${snapshot.error}'),
+                  //child: Text('Error: ${snapshot.error}'),
+                  child: Text('No attendees'),
                 ),
               ];
             } else {
