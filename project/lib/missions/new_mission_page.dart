@@ -3,10 +3,6 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project/services/firebase_crud.dart';
-import 'package:provider/provider.dart';
-
-import '../model/Mission.dart';
-import '../services/repository.dart';
 
 class newMissionPage extends StatefulWidget {
   @override
@@ -15,11 +11,14 @@ class newMissionPage extends StatefulWidget {
 
 class _newMissionPageState extends State<newMissionPage> {
   final _formKey = GlobalKey<FormState>();
+  final List<String> _packetLists = ["test1", "test2"];
+  String? _selectedValue;
 
-  //TODO should be non-initialized?
+  //TODO CLEANUP
   String? _name;
   Timestamp? _time;
   String? _location;
+  String? _chosenPacketList;
 
   String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
 
@@ -144,6 +143,17 @@ class _newMissionPageState extends State<newMissionPage> {
           _location = value;
         },
       ),
+      SizedBox(height: 50),
+      DropdownButton<String>(
+        hint: const Text("Choose Packing List"),
+        value: _selectedValue,
+        items: _packetLists
+            .map<DropdownMenuItem<String>>((String packetListsValue) {
+          return DropdownMenuItem<String>(
+              value: packetListsValue, child: Text(packetListsValue));
+        }).toList(),
+        onChanged: _packetDropDownSelector,
+      ),
       Padding(
           padding: EdgeInsets.all(120),
           child: ElevatedButton(
@@ -152,5 +162,12 @@ class _newMissionPageState extends State<newMissionPage> {
                 style: TextStyle(fontSize: 18, color: Colors.white)),
           )),
     ];
+  }
+
+  void _packetDropDownSelector(String? selectedValue) {
+    setState(() {
+      _selectedValue = selectedValue!;
+      _chosenPacketList = selectedValue;
+    });
   }
 }

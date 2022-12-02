@@ -271,6 +271,10 @@ class _FeedPageState extends State<FeedPage> {
                       Spacer(),
                       ElevatedButton(
                           onPressed: () => _onItemTapped(4),
+                          child: Text("Packing List", style: TextStyle(color: Colors.white))),
+                      Spacer(),
+                      ElevatedButton(
+                          onPressed: () => _onItemTapped(4),
                           child: Icon(Icons.edit_note)),
                     ],
                   )),
