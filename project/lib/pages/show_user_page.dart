@@ -11,8 +11,8 @@ import 'package:project/utils/show_alert_dialog.dart';
 import 'package:project/utils/show_exception_alert_dialog.dart';
 import 'package:provider/provider.dart';
 
-class EditUserPage extends StatefulWidget {
-  const EditUserPage({Key? key, required this.database, required this.user})
+class ShowUserPage extends StatefulWidget {
+  const ShowUserPage({Key? key, required this.database, required this.user})
       : super(key: key);
   final Repository? database;
   final User? user;
@@ -21,7 +21,7 @@ class EditUserPage extends StatefulWidget {
       {Repository? database, User? user}) async {
     await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
-        builder: (context) => EditUserPage(database: database, user: user),
+        builder: (context) => ShowUserPage(database: database, user: user),
         fullscreenDialog: true,
       ),
     );
@@ -29,11 +29,11 @@ class EditUserPage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _EditUserPageState();
+    return _ShowUserPageState();
   }
 }
 
-class _EditUserPageState extends State<EditUserPage> {
+class _ShowUserPageState extends State<ShowUserPage> {
   final _formKey = GlobalKey<FormState>();
 
   String? _name;
@@ -111,7 +111,7 @@ class _EditUserPageState extends State<EditUserPage> {
         return Scaffold(
           appBar: AppBar(
             elevation: 2.0,
-            title: Text(widget.user == null ? 'New User' : 'Edit User'),
+            title: Text(widget.user == null ? 'New User' : 'Showing User'),
             actions: <Widget>[
               TextButton(
                 child: Text(
@@ -160,12 +160,14 @@ class _EditUserPageState extends State<EditUserPage> {
         initialValue: _name,
         validator: (value) => value!.isNotEmpty ? null : 'Name can\'t be empty',
         onSaved: (value) => _name = value,
+        enabled: false,
       ),
       SizedBox(height: 50),
       TextFormField(
         decoration: InputDecoration(labelText: 'Email'),
         initialValue: _email != null ? '$_email' : null,
         keyboardType: TextInputType.emailAddress,
+        enabled: false,
         validator: (value) =>
             value!.isNotEmpty ? null : 'Email can\'t be empty',
         onSaved: (value) => _email = value,
@@ -175,6 +177,7 @@ class _EditUserPageState extends State<EditUserPage> {
         decoration: InputDecoration(labelText: 'Img (url only)'),
         initialValue: _imgUrl,
         keyboardType: TextInputType.url,
+        enabled: false,
         onChanged: (value) {
           setState(() {
             _imgUrl = value;
@@ -194,7 +197,7 @@ class _EditUserPageState extends State<EditUserPage> {
       ),
       _buildCertifications(context),
       SizedBox(height: 50),
-      _buildAddCertification(),
+      //_buildAddCertification(),
     ];
   }
 
@@ -204,8 +207,6 @@ class _EditUserPageState extends State<EditUserPage> {
           setState(() {
             _certifications!.add("");
           });
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('New certification added')));
         },
         child: Icon(Icons.add));
   }
@@ -242,7 +243,7 @@ class _EditUserPageState extends State<EditUserPage> {
                 _certifications!.removeAt(index);
               });
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('$item Certification removed')));
+                  SnackBar(content: Text('$item certification removed')));
             },
             child: TextFormField(
               initialValue: user.certifications[index],
