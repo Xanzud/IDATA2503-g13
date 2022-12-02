@@ -6,8 +6,9 @@ class Mission {
   final String location;
   final String id;
   final String packingList;
+  final List<String> attending;
 
-  Mission(this.name, this.time, this.location, this.id, this.packingList);
+  Mission(this.name, this.time, this.location, this.id,this.packingList, this.attending);
 
   //TODO Cleanup, don't need 2 fromMaps
   static Mission fromMap(Map<String, dynamic> data, String id) {
@@ -16,7 +17,8 @@ class Mission {
     assert(data.containsKey("location"),
         "Missing location property for a mission");
     assert(data.containsKey("packingList"), "Missing packingList property for a mission");
-    return Mission(data["name"], data["time"], data["location"], data["id"],data["packingList"]);
+    return Mission(data["name"], data["time"], data["location"], data["id"],data["packingList"], data["attending"]
+    );
   }
 
   static Mission fromMapOriginal(Map<String, dynamic> data) {
@@ -26,7 +28,7 @@ class Mission {
         "Missing location property for a mission");
     assert(data.containsKey("id"), "Missing id property for a mission");
     assert(data.containsKey("packingList"), "Missing packingList property for a mission");
-    return Mission(data["name"], data["time"], data["location"], data["id"], data["packingList"]);
+    return Mission(data["name"], data["time"], data["location"], data["id"], data["packingList"], data["attending"]);
   }
 
   factory Mission.fromMapFactory(Map<String, dynamic> data, String documentId) {
@@ -34,8 +36,9 @@ class Mission {
     final Timestamp time = data["time"];
     final String location = data["location"];
     final String packingList = data["packingList"];
+    final List<String> attending = data["attending"];
 
-    return Mission(name, time, location, documentId, packingList);
+    return Mission(name, time, location, documentId, packingList, attending);
   }
 
   Map<String, dynamic> toMap() {
@@ -44,6 +47,7 @@ class Mission {
       "name": name,
       "time": time,
       "location": location,
+      "attending": attending
     };
   }
 }
