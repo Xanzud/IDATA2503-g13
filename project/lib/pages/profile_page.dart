@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:project/services/firebase_crud.dart';
+import 'package:project/signInPage.dart';
 import 'package:project/widget/profile_widget.dart';
 import "../model/user.dart";
 
@@ -299,7 +300,12 @@ class _ProfilePageState extends State<ProfilePage> {
   //Logs out the user.
   void onLogoutButtonPressed(){
     setState(() {
-      print("Logout button pressed");
-    });
+      auth.FirebaseAuth.instance.signOut();
+      Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) {
+          return SignInPage();
+        }));
+      }
+    );
   }
 }
