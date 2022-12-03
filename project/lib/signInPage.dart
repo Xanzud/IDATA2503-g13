@@ -1,17 +1,30 @@
+import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:project/authentication_service.dart';
+import 'package:project/utils/Utils.dart';
 import 'package:project/utils/user_handler.dart';
 import 'package:provider/provider.dart';
 
-class SignInPage extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  //const SignInPage({super.key});
-
+class SignInPage extends StatefulWidget {
   @override
+  State<StatefulWidget> createState() {
+    return _SignInPageState();
+  }
+}
+
+class _SignInPageState extends State<SignInPage> {
+  String? email = "";
+  String? username = "";
+  String? password = "";
+  FirebaseAuth auth = FirebaseAuth.instance;
+  final _formKey = GlobalKey<FormState>();
   Widget build(BuildContext context) {
     return MaterialApp(
+      scaffoldMessengerKey: Utils.messengerKey,
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: SingleChildScrollView(
           child: _buildContent(context),
@@ -22,54 +35,101 @@ class SignInPage extends StatelessWidget {
     );
   }
 
+  bool _validateAndSaveForm() {
+    final form = _formKey.currentState;
+    if (form!.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _submit(BuildContext context) async {
+    if (!_formKey.currentState!.validate()) return;
+    if (_validateAndSaveForm()) {
+      try {
+        await auth.signInWithEmailAndPassword(
+            email: email!, password: password!);
+      } on FirebaseAuthException catch (err) {
+        Utils.showSnackBar(err.message, Colors.red);
+      }
+    }
+  }
+
   Widget _buildContent(BuildContext context) {
     return Container(
         padding: EdgeInsets.all(25),
         color: Colors.white,
         child: Column(
-          children: <Widget>[
-            SizedBox(height: 20),
-            SizedBox(child: Image.asset("images/icon01.png")),
-            SizedBox(height: 40),
-            Text(
-              "Username",
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: emailController,
-              obscureText: false,
-              decoration: InputDecoration(
-                labelText: "Email",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              "Password",
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20),
-            TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                    labelText: "Password", border: OutlineInputBorder())),
-            SizedBox(height: 60),
-            ElevatedButton(
-                onPressed: () {
-                  context.read<AuthenticationService>().signIn(
-                      emailController.text.trim(),
-                      passwordController.text.trim(),
-                      );
-                  //Pass email used to sign in to UserHandler, to use when loading user info for profile view.
-                  UserHandler.setEmailSignedInWith = emailController.text.trim();
-                },
-                child: Text(
-                  "Login",
-                  style: TextStyle(color: Colors.black),
-                ),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.white))
+          children: [
+            Form(
+                key: _formKey,
+                child: Center(
+                  child: Column(children: [
+                    SizedBox(height: 20),
+                    SizedBox(child: Image.asset("images/icon01.png")),
+                    SizedBox(height: 100),
+                    Text(
+                      "Login",
+                      textAlign: TextAlign.center,
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: 400,
+                          child: TextFormField(
+                            validator: (value) => value!.isNotEmpty
+                                ? null
+                                : 'Enter a valid email',
+                            decoration: InputDecoration(labelText: 'Email'),
+                            onSaved: (value) {
+                              setState(() {
+                                email = value;
+                              });
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: 400,
+                          child: TextFormField(
+                            validator: (value) => value!.isNotEmpty
+                                ? null
+                                : 'Password can\'t be empty',
+                            decoration: InputDecoration(labelText: 'Password'),
+                            obscureText: true,
+                            onSaved: (value) {
+                              setState(() {
+                                password = value;
+                              });
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                            width: 200,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _submit(context);
+                              },
+                              child: Text("Login"),
+                            ))
+                      ],
+                    )
+                  ]),
+                ))
           ],
         ));
   }

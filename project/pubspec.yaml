@@ -43,6 +43,7 @@ dependencies:
   intl: ^0.17.0
   date_field: ^3.0.0
   firebase_admin: ^0.2.0
+  email_validator: ^2.1.17
 
 
 dev_dependencies:
