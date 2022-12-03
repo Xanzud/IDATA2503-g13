@@ -68,7 +68,7 @@ class _NewUserPagePageState extends State<NewUserPage> {
         name: _name!,
         phoneNr: "",
         email: _email!,
-        role: "User",
+        role: "user",
         uid: _uid!,
         address: "",
         certifications: List<String>.empty(),

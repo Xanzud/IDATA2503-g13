@@ -191,6 +191,12 @@ class _EditArchiveMissionPageState extends State<EditArchiveMissionPage> {
         },
       ),
       SizedBox(height: 50),
+      TextFormField(
+        decoration: InputDecoration(labelText: "Packing list"),
+        initialValue: widget.mission!.packingList,
+        enabled: false,
+      ),
+      SizedBox(height: 50),
       _buildUsersStatic(context)
     ];
   }

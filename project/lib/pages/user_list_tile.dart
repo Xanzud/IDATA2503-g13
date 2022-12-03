@@ -14,8 +14,11 @@ class UserListTile extends StatelessWidget {
       visualDensity: VisualDensity(horizontal: 3),
       title: Text(user.name + " : " + user.email),
       leading: CircleAvatar(
-          backgroundImage:
-              (user.imagePath == "") ? null : NetworkImage(user.imagePath)),
+          backgroundColor: Colors.transparent,
+          backgroundImage: (user.imagePath == "")
+              ? NetworkImage(
+                  "https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png")
+              : NetworkImage(user.imagePath)),
       trailing: const Icon(Icons.chevron_right),
       onTap: onTap,
     );

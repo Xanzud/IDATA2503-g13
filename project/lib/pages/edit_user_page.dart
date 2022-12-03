@@ -41,6 +41,9 @@ class _EditUserPageState extends State<EditUserPage> {
   String? _password;
   List<dynamic>? _certifications;
   String? _imgUrl;
+  String? _role;
+
+  String? _selectedRole;
 
   @override
   void initState() {
@@ -50,6 +53,7 @@ class _EditUserPageState extends State<EditUserPage> {
       _email = widget.user?.email;
       _imgUrl = widget.user?.imagePath;
       _certifications = widget.user?.certifications;
+      _role = widget.user?.role;
     }
   }
 
@@ -70,29 +74,21 @@ class _EditUserPageState extends State<EditUserPage> {
         if (widget.user != null) {
           allNames.remove(widget.user!.name);
         }
-        if (allNames.contains(_name)) {
-          showAlertDialog(
-            context,
-            title: 'Name already used',
-            content: 'Please choose a different user name',
-            defaultActionText: 'OK',
-            cancelActionText: 'cancel',
-          );
-        } else {
-          final uid = widget.user?.uid;
-          //final mission = Mission(_name!, _time!, _location!, id!);
-          final docUser =
-              FirebaseFirestore.instance.collection("users").doc(uid?.trim());
-          docUser.update({
-            "uid": uid,
-            "name": _name,
-            "email": _email,
-            "imagePath": _imgUrl,
-            "certifications": _certifications
-          });
-          //await FirebaseCrud.saveMission(mission);
-          Navigator.of(context).pop();
-        }
+
+        final uid = widget.user?.uid;
+        //final mission = Mission(_name!, _time!, _location!, id!);
+        final docUser =
+            FirebaseFirestore.instance.collection("users").doc(uid?.trim());
+        docUser.update({
+          "uid": uid,
+          "role": _role,
+          "name": _name,
+          "email": _email,
+          "imagePath": _imgUrl,
+          "certifications": _certifications
+        });
+        //await FirebaseCrud.saveMission(mission);
+        Navigator.of(context).pop();
       } on FirebaseException catch (e) {
         showExceptionAlertDialog(
           context,
@@ -162,6 +158,24 @@ class _EditUserPageState extends State<EditUserPage> {
         onSaved: (value) => _name = value,
       ),
       SizedBox(height: 50),
+      DropdownButton<String>(
+        value: (_selectedRole == "" || _selectedRole == null)
+            ? _role
+            : _selectedRole,
+        items: <String>['user', 'admin'].map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        onChanged: (value) {
+          setState(() {
+            _selectedRole = value;
+            _role = value!;
+          });
+        },
+      ),
+      SizedBox(height: 50),
       TextFormField(
         decoration: InputDecoration(labelText: 'Email'),
         initialValue: _email != null ? '$_email' : null,
@@ -182,12 +196,22 @@ class _EditUserPageState extends State<EditUserPage> {
         },
       ),
       SizedBox(height: 50),
-      CircleAvatar(
-          radius: 100,
-          backgroundColor: Colors.transparent,
-          backgroundImage: (_imgUrl == "" || _imgUrl == null)
-              ? null
-              : NetworkImage(_imgUrl!)),
+      Column(
+        children: [
+          ClipOval(
+              child: Material(
+                  color: Colors.transparent,
+                  child: Ink.image(
+                    image: (_imgUrl == "" || _imgUrl == null)
+                        ? NetworkImage(
+                            "https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png")
+                        : NetworkImage(_imgUrl!),
+                    fit: BoxFit.cover,
+                    width: 200,
+                    height: 200,
+                  ))),
+        ],
+      ),
       SizedBox(height: 50),
       Center(
         child: Text("Certifications", style: TextStyle(fontSize: 26)),
