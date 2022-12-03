@@ -1,7 +1,3 @@
-import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:project/model/user.dart';
 import 'package:project/utils/user_settings.dart';
 
@@ -10,7 +6,7 @@ import 'package:project/utils/user_settings.dart';
 
 class UserHandler {
   ///Email used to sign in with. Intended for determining which user should be fetched from the database.
-  static String _emailLoggedInWith = "";
+  static String _emailSignedInWith = "";
 
   ///Method for loading a user. Currently filled with dummy data.
   ///When ready, should be rewritten to use data fetched from FireStore Firebase
@@ -36,9 +32,9 @@ class UserHandler {
 
   ///Returns the email used to sign in with.
   static String get getEmailSignedInWith {
-    return _emailLoggedInWith;
+    return _emailSignedInWith;
   }
 
   ///Sets the email that was used to sign in with.
-  static set setEmailSignedInWith(String email) => _emailLoggedInWith = email;
+  static set setEmailSignedInWith(String email) => _emailSignedInWith = email;
 }

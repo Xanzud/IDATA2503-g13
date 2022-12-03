@@ -22,11 +22,6 @@ class ProfileWidget extends StatelessWidget {
       child: Stack(
         children: [
           buildImage(),
-          Positioned(
-            bottom: 0,
-            right: 4,
-            child: buildEditIcon(color)
-          )
         ]
       )
     );
@@ -34,7 +29,8 @@ class ProfileWidget extends StatelessWidget {
 
   /// Handles building of round profile image.
   Widget buildImage() {
-    final image = AssetImage(imagePath);
+    //final image = AssetImage(imagePath);
+    final image = NetworkImage(imagePath);
 
     return ClipOval(
       child: Material(

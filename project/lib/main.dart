@@ -14,11 +14,14 @@ import 'package:provider/provider.dart';
 
 import 'signInPage.dart';
 
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
+    //name: "Prepacktive",
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(const MyApp());
 }
 
