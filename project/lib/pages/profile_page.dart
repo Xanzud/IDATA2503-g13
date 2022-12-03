@@ -1,16 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart' as Auth;
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:project/services/firebase_crud.dart';
-import 'package:project/services/firestore_repository.dart';
-import 'package:project/utils/user_handler.dart';
 import 'package:project/widget/profile_widget.dart';
-import 'package:provider/provider.dart';
-import '../services/repository.dart';
-import "../utils/user_settings.dart";
-import "../widget/profile_widget.dart";
 import "../model/user.dart";
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -19,7 +11,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool _isEditButtonPressed = false;
-  final Auth.User? _currentUserAuth = Auth.FirebaseAuth.instance.currentUser;
+  final auth.User? _currentUserAuth = auth.FirebaseAuth.instance.currentUser;
   late Future<User> userFuture;
 
   @override
@@ -54,6 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
         });
   }
 
+  //Builds top side appbar.
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       leading: const BackButton(),
@@ -64,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
   ///Helper method for populating the profile view with the relevant data.
   List<Widget> _buildprofileContent(BuildContext context, User user) {
     return [
-      SizedBox(height: 24),
+      const SizedBox(height: 24),
       Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: ProfileWidget(
@@ -72,45 +65,45 @@ class _ProfilePageState extends State<ProfilePage> {
           onClicked: () async {},
         ),
       ),
-      SizedBox(height: 24),
+      const SizedBox(height: 24),
       Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: TextFormField(
-          decoration: InputDecoration(labelText: 'User name'),
+          decoration: const InputDecoration(labelText: 'User name'),
           initialValue: user.name,
           validator: (value) =>
               value!.isNotEmpty ? null : 'Name can\'t be empty',
         ),
       ),
-      SizedBox(height: 24),
+      const SizedBox(height: 24),
       Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: TextFormField(
-          decoration: InputDecoration(labelText: 'Email'),
+          decoration: const InputDecoration(labelText: 'Email'),
           initialValue: user.email != null ? user.email : null,
           keyboardType: TextInputType.emailAddress,
           validator: (value) =>
               value!.isNotEmpty ? null : 'Email can\'t be empty',
         ),
       ),
-      SizedBox(height: 24),
+      const SizedBox(height: 24),
       Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: TextFormField(
-          decoration: InputDecoration(labelText: 'Phone #'),
+          decoration: const InputDecoration(labelText: 'Phone #'),
           initialValue: user.phoneNr,
           keyboardType: TextInputType.phone,
         ),
       ),
-      SizedBox(height: 24),
-      Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
+      const SizedBox(height: 24),
+      const Padding(
+        padding: EdgeInsets.only(left: 10, right: 10),
         child: Center(
           child: Text("Certifications"),
         ),
       ),
       _buildCertifications(context, user),
-      SizedBox(height: 24),
+      const SizedBox(height: 24),
       _buildEditButton(),
     ];
   }
@@ -125,13 +118,15 @@ class _ProfilePageState extends State<ProfilePage> {
       itemBuilder: (context, index) {
         final item = certifications[index];
 
-        return Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: TextFormField(
-                initialValue: user.certifications[index],
-                decoration: InputDecoration(
-                  border: UnderlineInputBorder(),
-                )));
+      return Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: TextFormField(
+          initialValue: item,
+          decoration: const InputDecoration(
+            border: UnderlineInputBorder(),
+            )
+          )
+        );
       },
     );
   }
@@ -146,7 +141,7 @@ class _ProfilePageState extends State<ProfilePage> {
             },
             child: Text(
               _isEditButtonPressed ? "Save" : "Edit",
-              style: TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.black),
             )));
   }
 
