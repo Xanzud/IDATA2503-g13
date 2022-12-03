@@ -87,7 +87,7 @@ class _ProfilePageState extends State<ProfilePage> {
       Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: ProfileWidget(
-          imagePath: user.imagePath,
+          imagePath: _imagePath!.isEmpty ? "https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png":user.imagePath,
           onClicked: () async {
           },
         ),
@@ -261,10 +261,6 @@ class _ProfilePageState extends State<ProfilePage> {
   void onEditButtonPressed() {
     setState(() {
       if(_textFormFieldEditable == true){
-        print("//////////////////////");
-        print(_phoneNr);
-        print("//////////////////////");
-
         final profile = FirebaseFirestore.instance.collection("users").doc(_currentUserAuth!.uid);
         profile.update({
           "imagePath": _imagePath,
@@ -274,6 +270,9 @@ class _ProfilePageState extends State<ProfilePage> {
           "regNr": _regNr,
           }
         );
+        final snackBar = SnackBar(
+          content: const Text("profile updated"));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
       _textFormFieldEditable = !_textFormFieldEditable;
     });
