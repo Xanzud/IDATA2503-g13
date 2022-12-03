@@ -2,14 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:project/authentication_service.dart';
-import 'package:project/missions/mission_page.dart';
-import 'package:project/model/Mission.dart';
-import 'package:project/pages/admin_page.dart';
 import 'package:project/pages/feed_page.dart';
 import 'package:project/services/firestore_repository.dart';
 import 'package:project/services/repository.dart';
 import 'firebase_options.dart';
-import 'package:project/landingPage.dart';
 import 'package:provider/provider.dart';
 
 import 'signInPage.dart';

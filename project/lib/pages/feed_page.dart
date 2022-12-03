@@ -95,6 +95,7 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
+  //TODO cleanup
   Widget _buildMissionInfo(BuildContext context) {
     const String missionId = "g1tXCcqtk1YSV45o9p6v";
     final repository = Provider.of<Repository>(context, listen: false);
@@ -327,6 +328,7 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
+  //TODO Cleanup
   /// Build the price text for the product
   Widget _buildMissionLocation(String location) {
     return Padding(
