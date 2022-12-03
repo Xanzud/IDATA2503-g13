@@ -23,6 +23,9 @@ class MissionPage extends StatelessWidget {
           FirebaseFirestore.instance.collection("missions").doc(mission.id);
       docMission.delete();
       FirebaseCrud.archiveMission(mission: mission);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              'Mission \'${mission.name}\' deleted and moved to archive')));
     } on FirebaseException catch (e) {
       showExceptionAlertDialog(
         context,
