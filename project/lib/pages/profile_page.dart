@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:project/services/firebase_crud.dart';
@@ -10,9 +11,17 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  bool _isEditButtonPressed = false;
+  bool _textFormFieldEditable = false;
   final auth.User? _currentUserAuth = auth.FirebaseAuth.instance.currentUser;
   late Future<User> userFuture;
+
+  final _formKey = GlobalKey<FormState>();
+  bool isFirstRun = true;
+  late String? _imagePath;
+  late String? _name;
+  late String? _email;
+  late String? _phoneNr;
+  late String? _regNr;
 
   @override
   void initState() {
@@ -33,12 +42,29 @@ class _ProfilePageState extends State<ProfilePage> {
           } else if (snapshot.hasData) {
             //If we get here, we should have been able to fetch the data.
             User user = snapshot.data!;
-            String userName = user.name;
+            //If this is the first run, initialze user data variables.
+            if(isFirstRun){
+              isFirstRun = !isFirstRun;
+              _imagePath = user.imagePath;
+              _name = user.name;
+              _email = user.email;
+              _phoneNr = user.phoneNr;
+              _regNr = user.regNr;
+            }
             return Scaffold(
                 appBar: _buildAppBar(context),
                 body: ListView(
-                    physics: const BouncingScrollPhysics(),
-                    children: _buildprofileContent(context, user)));
+                  physics: const BouncingScrollPhysics(),
+                  children: [
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: _buildprofileContent(context, user)
+                      )
+                    )
+                  ]
+                )
+            );
           } else {
             //Return an empty widget.
             return const SizedBox();
@@ -62,37 +88,121 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: ProfileWidget(
           imagePath: user.imagePath,
-          onClicked: () async {},
+          onClicked: () async {
+          },
         ),
       ),
       const SizedBox(height: 24),
+      //Image path url
       Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: TextFormField(
-          decoration: const InputDecoration(labelText: 'User name'),
-          initialValue: user.name,
+          enabled: _textFormFieldEditable,
+          decoration: const InputDecoration(
+            labelText: 'Image url',
+            //Change underline color when editable
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.red),
+              )
+            ),
+          initialValue: _imagePath,
+          onChanged: (value) {
+            setState(() {
+              _imagePath = value;
+            });
+          },
           validator: (value) =>
-              value!.isNotEmpty ? null : 'Name can\'t be empty',
+              value!.isNotEmpty ? null : 'No image url specifiec',
         ),
       ),
+      //Name
       const SizedBox(height: 24),
       Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: TextFormField(
-          decoration: const InputDecoration(labelText: 'Email'),
-          initialValue: user.email != null ? user.email : null,
+          enabled: _textFormFieldEditable,
+          decoration: const InputDecoration(
+            labelText: 'Name',
+            //Change underline color when editable
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.red),
+              )
+            ),
+          initialValue: _name,
+          onChanged: (value) {
+            setState(() {
+              _name = value;
+              print(_name);
+            });
+          },
+          validator: (value) =>
+              value!.isNotEmpty ? value = null : value = 'Name can\'t be empty',
+        ),
+      ),
+      const SizedBox(height: 24),
+      //Email
+      Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: TextFormField(
+          enabled: _textFormFieldEditable,
+          decoration: const InputDecoration(
+            labelText: 'Email',
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.red),
+              )
+            ),
+          initialValue: _email,
+          onChanged: (value) {
+            setState(() {
+              _email = value;
+            });
+          },
           keyboardType: TextInputType.emailAddress,
           validator: (value) =>
               value!.isNotEmpty ? null : 'Email can\'t be empty',
         ),
       ),
       const SizedBox(height: 24),
+      //Phone #
       Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: TextFormField(
-          decoration: const InputDecoration(labelText: 'Phone #'),
-          initialValue: user.phoneNr,
+          enabled: _textFormFieldEditable,
+          decoration: const InputDecoration(
+            labelText: 'Phone #',
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.red),
+              )
+            ),
+          initialValue: _phoneNr,
+          onChanged: (value) {
+            setState(() {
+              _phoneNr = value;
+              print(_phoneNr);
+            });
+          },
           keyboardType: TextInputType.phone,
+        ),
+      ),
+      const SizedBox(height: 24),
+      //Reg #
+      Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: TextFormField(
+          enabled: _textFormFieldEditable,
+          decoration: const InputDecoration(
+            labelText: 'Vehicle reg #',
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.red),
+              )
+            ),
+          initialValue: _regNr,
+          onChanged: (value) {
+            setState(() {
+              _regNr = value;
+            });
+          },
+          keyboardType: TextInputType.text,
         ),
       ),
       const SizedBox(height: 24),
@@ -121,6 +231,7 @@ class _ProfilePageState extends State<ProfilePage> {
       return Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: TextFormField(
+          enabled: false, //Should never be anabled, as users should not be able to edit these themselves.
           initialValue: item,
           decoration: const InputDecoration(
             border: UnderlineInputBorder(),
@@ -140,16 +251,31 @@ class _ProfilePageState extends State<ProfilePage> {
               onEditButtonPressed();
             },
             child: Text(
-              _isEditButtonPressed ? "Save" : "Edit",
+              _textFormFieldEditable ? "Save" : "Edit",
               style: const TextStyle(color: Colors.black),
             )));
   }
 
   ///Method to be called when edit button is pressed
-  ///Simply toggles isEditButtonPressed.
+  ///Simply toggles _isEditButtonPressed.
   void onEditButtonPressed() {
     setState(() {
-      _isEditButtonPressed = !_isEditButtonPressed;
+      if(_textFormFieldEditable == true){
+        print("//////////////////////");
+        print(_phoneNr);
+        print("//////////////////////");
+
+        final profile = FirebaseFirestore.instance.collection("users").doc(_currentUserAuth!.uid);
+        profile.update({
+          "imagePath": _imagePath,
+          "name": _name,
+          "email": _email,
+          "phoneNr": _phoneNr,
+          "regNr": _regNr,
+          }
+        );
+      }
+      _textFormFieldEditable = !_textFormFieldEditable;
     });
   }
 }
