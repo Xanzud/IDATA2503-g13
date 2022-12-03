@@ -422,6 +422,20 @@ class FirebaseCrud {
         .toList());
   }
 
+  /// Returns a stream for a packing collection for a mission
+  Stream<Iterable<T>> getMissionPackingListWithId<T>({
+    required T Function(Map<String, dynamic> data, String documentID) builder,
+  }) {
+    final collection = _firestore.collection("/missionPackingLists/ROTV8J1DjDqOBpkCzwtW/itemCollection");
+    final snapshots = collection.snapshots();
+
+    return snapshots.map((snapshots) => snapshots.docs
+        .map(
+          (snapshot) => builder(snapshot.data(), snapshot.id),
+    )
+        .toList());
+  }
+
   static void updateMission(
       {required String location,
       required String name,

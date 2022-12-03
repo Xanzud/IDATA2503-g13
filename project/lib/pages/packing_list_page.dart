@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../model/packing_item.dart';
+import '../services/firestore_repository.dart';
+import '../services/repository.dart';
 
 class packingListPage extends StatefulWidget {
   @override
@@ -10,24 +13,22 @@ class packingListPage extends StatefulWidget {
 
 class _packingListPageState extends State<packingListPage> {
 
-  List<PackingItem> testList = [new PackingItem("test1", "Test shelf", 4, false, "id"),
-    new PackingItem("test2", "Test shelf", 4, false, "id"),
-    new PackingItem("test3", "Test shelf", 4, false, "id")
-  ];
-
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 2.0,
-        title: Text("Packing List"),
-      ),
-      body: _buildMainContent(),
-    );
+    return Provider<Repository>(
+        create: (context) => FirestoreRepository(),
+        builder: (context, child) {
+          return Scaffold(
+            appBar: AppBar(
+              elevation: 2.0,
+              title: Text("Packing List"),
+            ),
+            body: _buildMainContent(context),
+          );
+        });
   }
 
-  Widget _buildMainContent() {
+  Widget _buildMainContent(BuildContext context) {
     return SingleChildScrollView(
         child: Padding(
       padding: const EdgeInsets.all(16.0),
@@ -36,61 +37,103 @@ class _packingListPageState extends State<packingListPage> {
   }
 
   Widget _buildList() {
-    return Table(
-      border: TableBorder.all(),
-      columnWidths: const <int, TableColumnWidth>{
-      },
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      children: _buildRows(),
-    );
+    final repository = Provider.of<Repository>(context, listen: false);
+
+    return StreamBuilder<Iterable<PackingItem>>(
+        stream: repository.getItemCollectionForMission(),
+        builder: (context, snapshot) {
+
+
+
+          // Error handling
+          if (snapshot.connectionState != ConnectionState.active) {
+            return Center(
+              child: const CircularProgressIndicator.adaptive(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text("Error: ${snapshot.error}"),
+            );
+          } else if (!snapshot.hasData || snapshot.data == null) {
+            return const Center(
+              child: Text("No data to load"),
+            );
+          }
+
+          final Iterable<PackingItem> itemCollection = snapshot.data!;
+
+          return Table(
+            border: TableBorder.all(),
+            columnWidths: const <int, TableColumnWidth>{},
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            children: _buildItemRows(itemCollection)
+          );
+        });
   }
 
-  List<TableRow> _buildRows() {
-    return <TableRow>[
-      TableRow(
-        children: <Widget>[
-          Container(
-            height: 64,
-            width: 128,
-            child: Row(children: [
+  List<TableRow> _buildItemRows(Iterable<PackingItem> itemCollection) {
+    List<TableRow> returnList = <TableRow>[];
+
+    returnList.add(_buildInfoRow());
+
+    for(var item in itemCollection) {
+      returnList.add(_buildSingleRow(item));
+    }
+
+    return returnList;
+  }
+
+  TableRow _buildInfoRow() {
+    return TableRow(
+      children: <Widget>[
+        Container(
+          height: 64,
+          width: 128,
+          child: Row(
+            children: [
               Spacer(),
               Text("Name"),
               Spacer(),
-            ],),
+            ],
           ),
-          Container(
-            height: 64,
-            width: 128,
-            child: Row(children: [
+        ),
+        Container(
+          height: 64,
+          width: 128,
+          child: Row(
+            children: [
               Spacer(),
               Text("Shelf"),
               Spacer(),
-            ],),
+            ],
           ),
-          Container(
-            height: 64,
-            width: 128,
-            child: Row(children: [
+        ),
+        Container(
+          height: 64,
+          width: 128,
+          child: Row(
+            children: [
               Spacer(),
               Text("Number"),
               Spacer(),
-            ],),
+            ],
           ),
-          Container(
-            height: 64,
-            width: 128,
-            child: Row(children: [
+        ),
+        Container(
+          height: 64,
+          width: 128,
+          child: Row(
+            children: [
               Spacer(),
               Text("Packed?"),
               Spacer(),
-            ],),
+            ],
           ),
-        ],
-      ),
-      _buildSingleRow(testList[0])
-    ];
-  }
+        ),
 
+      ],
+    );
+  }
 
   TableRow _buildSingleRow(PackingItem item) {
     return TableRow(
@@ -98,45 +141,68 @@ class _packingListPageState extends State<packingListPage> {
         Container(
           height: 64,
           width: 128,
-          child: Row(children: [
-            Spacer(),
-            Text(item.name),
-            Spacer(),
-          ],),
+          child: Row(
+            children: [
+              Spacer(),
+              Text(item.name),
+              Spacer(),
+            ],
+          ),
         ),
         Container(
           height: 64,
           width: 128,
-          child: Row(children: [
-            Spacer(),
-            Text(item.shelf),
-            Spacer(),
-          ],),
+          child: Row(
+            children: [
+              Spacer(),
+              Text(item.shelf),
+              Spacer(),
+            ],
+          ),
         ),
         Container(
           height: 64,
           width: 128,
-          child: Row(children: [
-            Spacer(),
-            Text(item.packed.toString()),
-            Spacer(),
-          ],),
+          child: Row(
+            children: [
+              Spacer(),
+              Text(item.count.toString()),
+              Spacer(),
+            ],
+          ),
         ),
         Container(
           height: 64,
           width: 128,
-          child: Row(children: [
-            Spacer(),
-            Text(item.packed.toString()),
-            Spacer(),
-            Checkbox(
-              checkColor: Colors.white,
-              value: false, onChanged: (bool? value) {},
-            ),
-            Spacer(),
-          ],),
+          child: Row(
+            children: [
+              Spacer(),
+              Text(_itemPacked(item.packed)),
+              Spacer(),
+              Checkbox(
+                checkColor: Colors.white,
+                value: false,
+                onChanged: (bool? value) {
+                  value: true;
+                  checkPackedItem();
+                  },
+              ),
+              Spacer(),
+            ],
+          ),
         ),
       ],
     );
+  }
+  
+  String _itemPacked(bool packed) {
+    if(packed) {
+      return "Packed";
+    }
+    else return "Not packed";
+  }
+
+  void checkPackedItem() {
+
   }
 }

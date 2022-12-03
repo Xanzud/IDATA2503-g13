@@ -1,3 +1,4 @@
+import 'package:project/model/packing_item.dart';
 import 'package:project/model/user.dart';
 
 import '../model/Mission.dart';
@@ -23,6 +24,9 @@ abstract class Repository {
 
   //Packing lists
   Stream<Iterable<PackingList>> getPackingLists();
+
+  //Item collection for missions
+  Stream<Iterable<PackingItem>> getItemCollectionForMission();
 
   //Generic
   Future<void> delete({required String collection, required String docId});
