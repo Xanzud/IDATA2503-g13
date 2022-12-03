@@ -418,7 +418,7 @@ class FirebaseCrud {
     return snapshots.map((snapshots) => snapshots.docs
         .map(
           (snapshot) => builder(snapshot.data(), snapshot.id),
-    )
+        )
         .toList());
   }
 

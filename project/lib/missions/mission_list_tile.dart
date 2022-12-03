@@ -10,7 +10,7 @@ class MissionListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String attendingStr = "No attendees";
-    if (mission.attending[0] == "" || mission.attending[0] == null) {
+    if (mission.attending.isEmpty) {
       attendingStr = "No attendees";
     } else {
       attendingStr = "${mission.attending.length} attending";

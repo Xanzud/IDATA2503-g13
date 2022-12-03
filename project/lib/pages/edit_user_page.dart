@@ -237,6 +237,7 @@ class _EditUserPageState extends State<EditUserPage> {
         return Dismissible(
             key: Key(item),
             background: Container(color: Colors.red),
+            direction: DismissDirection.endToStart,
             onDismissed: (direction) {
               setState(() {
                 _certifications!.removeAt(index);

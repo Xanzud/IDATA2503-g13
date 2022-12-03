@@ -47,35 +47,31 @@ class _newMissionPageState extends State<newMissionPage> {
       await repository.createMission(mission, missionID);
     }
      */
-    if (_location == null || _time == null || _name == null || _chosenPacketList == null) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Text("Null values"),
-            );
-          });
-    }
-
-    var response = await FirebaseCrud.createMission(
-        location: _location!, name: _name!, time: _time!, packingList: _chosenPacketList!);
-
-    if (response.code != 200) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Text(response.message.toString()),
-            );
-          });
+    if (_location == null ||
+        _time == null ||
+        _name == null ||
+        _chosenPacketList == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Fill the form before submitting'),
+        backgroundColor: Colors.red,
+      ));
+      return;
     } else {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Text(response.message.toString()),
-            );
-          });
+      var response = await FirebaseCrud.createMission(
+          location: _location!,
+          name: _name!,
+          time: _time!,
+          packingList: _chosenPacketList!);
+
+      if (response.code != 200) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(response.message.toString())));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(response.message.toString()),
+          backgroundColor: Colors.red,
+        ));
+      }
     }
   }
 
@@ -84,14 +80,14 @@ class _newMissionPageState extends State<newMissionPage> {
     return Provider<Repository>(
         create: (context) => FirestoreRepository(),
         builder: (context, child) {
-    return Scaffold(
-    appBar: AppBar(
-    elevation: 2.0,
-    title: Text("New Mission"),
-    ),
-    body: _buildContents(context),
-    );
-    });
+          return Scaffold(
+            appBar: AppBar(
+              elevation: 2.0,
+              title: Text("New Mission"),
+            ),
+            body: _buildContents(context),
+          );
+        });
   }
 
   Widget _buildContents(BuildContext context) {
@@ -136,8 +132,8 @@ class _newMissionPageState extends State<newMissionPage> {
         ),
         mode: DateTimeFieldPickerMode.dateAndTime,
         autovalidateMode: AutovalidateMode.always,
-        validator: (e) =>
-            (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
+        //validator: (e) =>
+        //(e?.day ?? 0) == 1 ? 'Please not the first day' : null,
         onDateSelected: (DateTime value) {
           setState(() {
             _time = Timestamp.fromMicrosecondsSinceEpoch(
@@ -170,43 +166,42 @@ class _newMissionPageState extends State<newMissionPage> {
     final repository = Provider.of<Repository>(context, listen: false);
 
     return StreamBuilder<Iterable<PackingList>>(
-      stream: repository.getPackingLists(),
-      builder: (context, snapshot) {
+        stream: repository.getPackingLists(),
+        builder: (context, snapshot) {
+          if (_packetLists.isEmpty) {
+            //Error handling
+            if (snapshot.connectionState != ConnectionState.active) {
+              return Center(
+                child: const CircularProgressIndicator.adaptive(),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text("Error: ${snapshot.error}"),
+              );
+            } else if (!snapshot.hasData || snapshot.data == null) {
+              return const Center(
+                child: Text("No data to load"),
+              );
+            }
 
-        if(_packetLists.isEmpty) {
-          //Error handling
-          if (snapshot.connectionState != ConnectionState.active) {
-            return Center(
-              child: const CircularProgressIndicator.adaptive(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text("Error: ${snapshot.error}"),
-            );
-          } else if (!snapshot.hasData || snapshot.data == null) {
-            return const Center(
-              child: Text("No data to load"),
-            );
+            final Iterable<PackingList> snapShotData = snapshot.data!;
+
+            for (var entry in snapShotData) {
+              _packetLists.add(entry.name);
+            }
           }
 
-          final Iterable<PackingList> snapShotData = snapshot.data!;
-
-          for (var entry in snapShotData) {
-            _packetLists.add(entry.name);
-          }
-        }
-
-      return DropdownButton<String>(
-        hint: const Text("Choose Packing List"),
-        items: _packetLists
-            .map<DropdownMenuItem<String>>((String packetListsValue) {
-          return DropdownMenuItem<String>(
-              value: packetListsValue, child: Text(packetListsValue));
-        }).toList(),
-        onChanged: _packetDropDownSelector,
-        value: _selectedValue,
-      );
-    });
+          return DropdownButton<String>(
+            hint: const Text("Choose Packing List"),
+            items: _packetLists
+                .map<DropdownMenuItem<String>>((String packetListsValue) {
+              return DropdownMenuItem<String>(
+                  value: packetListsValue, child: Text(packetListsValue));
+            }).toList(),
+            onChanged: _packetDropDownSelector,
+            value: _selectedValue,
+          );
+        });
   }
 
   void _packetDropDownSelector(String? newValue) {

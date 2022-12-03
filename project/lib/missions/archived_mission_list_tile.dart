@@ -11,10 +11,10 @@ class MissionListTileArchived extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String attendingStr = "No one attended this mission";
-    if (mission.attending[0] == "" || mission.attending[0] == null) {
+    if (mission.attending.isEmpty) {
       attendingStr = "No one attended this mission";
     } else {
-      attendingStr = "${mission.attending.length} attended this mission";
+      attendingStr = "${mission.attending.length} attending";
     }
 
     return ListTile(

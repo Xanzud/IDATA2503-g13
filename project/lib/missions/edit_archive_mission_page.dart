@@ -199,55 +199,72 @@ class _EditArchiveMissionPageState extends State<EditArchiveMissionPage> {
     final database = Provider.of<Repository>(context, listen: false);
     Mission? mission = widget.mission;
 
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: mission!.attending.length,
-      itemBuilder: (context, index) {
-        final Future<User> user =
-            FirebaseCrud.getUserByUid(mission.attending[index]);
-        return FutureBuilder<User>(
-          future: user,
-          builder: (context, snapshot) {
-            List<Widget> widgetChildren;
-            if (snapshot.hasData) {
-              widgetChildren = [
-                UserListTile(
-                    user: snapshot.data!,
-                    onTap: () => EditUserPage.show(context,
-                        database: database, user: snapshot.data!))
-              ];
-            } else if (snapshot.hasError) {
-              widgetChildren = <Widget>[
-                const Icon(
-                  Icons.error_outline,
-                  color: Colors.red,
-                  size: 60,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  //child: Text('Error: ${snapshot.error}'),
-                  child: Text('No attendees'),
-                ),
-              ];
-            } else {
-              widgetChildren = const <Widget>[
-                SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: CircularProgressIndicator(),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 16),
-                  child: Text('Awaiting result...'),
-                ),
-              ];
-            }
-            return Column(
-              children: widgetChildren,
-            );
-          },
-        );
-      },
-    );
+    if (mission!.attending.isNotEmpty) {
+      return ListView.builder(
+        shrinkWrap: true,
+        itemCount: mission.attending.length,
+        itemBuilder: (context, index) {
+          final Future<User> user =
+              FirebaseCrud.getUserByUid(mission.attending[index]);
+          return FutureBuilder<User>(
+            future: user,
+            builder: (context, snapshot) {
+              List<Widget> widgetChildren;
+              if (snapshot.hasData) {
+                widgetChildren = [
+                  UserListTile(
+                      user: snapshot.data!,
+                      onTap: () => EditUserPage.show(context,
+                          database: database, user: snapshot.data!))
+                ];
+              } else if (snapshot.hasError) {
+                widgetChildren = <Widget>[
+                  const Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 60,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    //child: Text('Error: ${snapshot.error}'),
+                    child: Text('No one attended'),
+                  ),
+                ];
+              } else {
+                widgetChildren = const <Widget>[
+                  SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: CircularProgressIndicator(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: Text('Awaiting result...'),
+                  ),
+                ];
+              }
+              return Column(
+                children: widgetChildren,
+              );
+            },
+          );
+        },
+      );
+    } else {
+      return Column(
+        children: [
+          const Icon(
+            Icons.error_outline,
+            color: Colors.red,
+            size: 60,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            //child: Text('Error: ${snapshot.error}'),
+            child: Text('No one attended'),
+          )
+        ],
+      );
+    }
   }
 }
