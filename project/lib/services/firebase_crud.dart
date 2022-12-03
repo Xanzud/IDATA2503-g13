@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:project/model/Mission.dart';
+import 'package:project/model/mission_packing_collection_builder.dart';
+import 'package:project/model/packing_item.dart';
 import 'package:project/services/api_paths.dart';
 import 'package:project/services/firestore_service.dart';
 import '../model/Response.dart';
@@ -215,7 +218,8 @@ class FirebaseCrud {
       "name": name,
       "time": time,
       "packingList": packingList,
-      "attending": List<dynamic>.empty()
+      "attending": List<dynamic>.empty(),
+      "itemCollectionId": await createMissionPackingList(packingList)
     };
 
     await documentReference.set(data).whenComplete(() {
@@ -426,13 +430,14 @@ class FirebaseCrud {
   Stream<Iterable<T>> getMissionPackingListWithId<T>({
     required T Function(Map<String, dynamic> data, String documentID) builder,
   }) {
-    final collection = _firestore.collection("/missionPackingLists/ROTV8J1DjDqOBpkCzwtW/itemCollection");
+    final collection = _firestore
+        .collection("/missionPackingLists/ROTV8J1DjDqOBpkCzwtW/itemCollection");
     final snapshots = collection.snapshots();
 
     return snapshots.map((snapshots) => snapshots.docs
         .map(
           (snapshot) => builder(snapshot.data(), snapshot.id),
-    )
+        )
         .toList());
   }
 
@@ -440,4 +445,37 @@ class FirebaseCrud {
       {required String location,
       required String name,
       required Timestamp time}) {}
+
+  //TODO Too big method?
+  static Future<String> createMissionPackingList(String packingListType) async {
+    _Collection = _firestore.collection("/missionPackingLists");
+
+    String returnString = "";
+    String documentIdFromCurrentDate = DateTime.now().toIso8601String();
+
+    final dataT = <String, dynamic>{};
+    DocumentReference packingListRef = _Collection.doc(documentIdFromCurrentDate);
+
+    await packingListRef.set(dataT).whenComplete(() async {
+
+      MissionPackingCollectionBuilder builder = MissionPackingCollectionBuilder();
+      List<PackingItem> itemList = builder.buildList(packingListType);
+      final batch = _firestore.batch();
+
+      DocumentReference itemCollectionRef = _Collection.doc(documentIdFromCurrentDate).collection("itemCollection").doc();
+
+      for(PackingItem item in itemList) {
+        batch.set(itemCollectionRef, item.toMap());
+      }
+
+      await batch.commit().whenComplete(() {
+        returnString = documentIdFromCurrentDate;
+      });
+    });
+    return returnString;
+  }
+
+  static Future<void> addSinglePackingItemToCollection() async {
+
+  }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../model/packing_item.dart';
 import '../services/firestore_repository.dart';
 import '../services/repository.dart';
@@ -15,6 +14,7 @@ class _packingListPageState extends State<packingListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final repository = Provider.of<Repository>(context, listen: false);
     return Provider<Repository>(
         create: (context) => FirestoreRepository(),
         builder: (context, child) {
@@ -24,6 +24,10 @@ class _packingListPageState extends State<packingListPage> {
               title: Text("Packing List"),
             ),
             body: _buildMainContent(context),
+
+            //TODO Just for testing
+            floatingActionButton: FloatingActionButton(onPressed: () { },
+            ),
           );
         });
   }

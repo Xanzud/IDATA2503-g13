@@ -7,8 +7,9 @@ class Mission {
   final String id;
   final String packingList;
   final List<dynamic> attending;
+  final String itemCollectionId;
 
-  Mission(this.name, this.time, this.location, this.id,this.packingList, this.attending);
+  Mission(this.name, this.time, this.location, this.id,this.packingList, this.attending, this.itemCollectionId);
 
   //TODO Cleanup, don't need 2 fromMaps
   static Mission fromMap(Map<String, dynamic> data, String id) {
@@ -17,7 +18,7 @@ class Mission {
     assert(data.containsKey("location"),
         "Missing location property for a mission");
     assert(data.containsKey("packingList"), "Missing packingList property for a mission");
-    return Mission(data["name"], data["time"], data["location"], data["id"],data["packingList"], data["attending"]
+    return Mission(data["name"], data["time"], data["location"], data["id"],data["packingList"], data["attending"], data["itemCollectionId"]
     );
   }
 
@@ -28,7 +29,7 @@ class Mission {
         "Missing location property for a mission");
     assert(data.containsKey("id"), "Missing id property for a mission");
     assert(data.containsKey("packingList"), "Missing packingList property for a mission");
-    return Mission(data["name"], data["time"], data["location"], data["id"], data["packingList"], data["attending"]);
+    return Mission(data["name"], data["time"], data["location"], data["id"], data["packingList"], data["attending"], data["itemCollectionId"]);
   }
 
   factory Mission.fromMapFactory(Map<String, dynamic> data, String documentId) {
@@ -37,8 +38,9 @@ class Mission {
     final String location = data["location"];
     final String packingList = data["packingList"];
     final List<dynamic> attending = data["attending"];
+    final String itemCollectionId = data["itemCollectionId"];
 
-    return Mission(name, time, location, documentId, packingList, attending);
+    return Mission(name, time, location, documentId, packingList, attending, itemCollectionId);
   }
 
   factory Mission.fromFirestore(
@@ -48,7 +50,7 @@ class Mission {
     final data = snapshot.data();
     return Mission(data?["name"], data?["time"], data?["location"], data?["id"],
         data?["packingList"],
-        data?["attending"]);
+        data?["attending"], data?["itemCollectionId"]);
   }
 
   Map<String, dynamic> toMap() {

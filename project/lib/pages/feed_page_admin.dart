@@ -14,12 +14,12 @@ import '../missions/edit_mission_page.dart';
 import '../utils/DateFormatter.dart';
 import '../utils/user_settings.dart';
 
-class FeedPage extends StatefulWidget {
+class LandingPageAdmin extends StatefulWidget {
   @override
-  _FeedPageState createState() => _FeedPageState();
+  _LandingPageAdminState createState() => _LandingPageAdminState();
 }
 
-class _FeedPageState extends State<FeedPage> {
+class _LandingPageAdminState extends State<LandingPageAdmin> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -95,7 +95,6 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
-  //TODO cleanup
   Widget _buildMissionInfo(BuildContext context) {
     const String missionId = "g1tXCcqtk1YSV45o9p6v";
     final repository = Provider.of<Repository>(context, listen: false);
@@ -272,7 +271,8 @@ class _FeedPageState extends State<FeedPage> {
                       Spacer(),
                       ElevatedButton(
                           onPressed: () => _onItemTapped(4),
-                          child: Text("Packing List", style: TextStyle(color: Colors.white))),
+                          child: Text("Packing List",
+                              style: TextStyle(color: Colors.white))),
                       Spacer(),
                       ElevatedButton(
                           onPressed: () => _onItemTapped(4),
@@ -328,7 +328,6 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
-  //TODO Cleanup
   /// Build the price text for the product
   Widget _buildMissionLocation(String location) {
     return Padding(
