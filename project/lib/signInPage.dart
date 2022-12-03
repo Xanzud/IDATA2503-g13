@@ -9,6 +9,7 @@ import 'package:project/utils/user_handler.dart';
 import 'package:provider/provider.dart';
 
 class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
   @override
   State<StatefulWidget> createState() {
     return _SignInPageState();
@@ -21,18 +22,18 @@ class _SignInPageState extends State<SignInPage> {
   String? password = "";
   FirebaseAuth auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
+
   Widget build(BuildContext context) {
-    return MaterialApp(
-      scaffoldMessengerKey: Utils.messengerKey,
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: SingleChildScrollView(
-          child: _buildContent(context),
-        ),
-        resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.white,
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: _buildContent(context),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   bool _validateAndSaveForm() {
@@ -51,7 +52,9 @@ class _SignInPageState extends State<SignInPage> {
         await auth.signInWithEmailAndPassword(
             email: email!, password: password!);
       } on FirebaseAuthException catch (err) {
-        Utils.showSnackBar(err.message, Colors.red);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(err.message!)));
+        //Utils.showSnackBar(err.message, Colors.red);
       }
     }
   }
