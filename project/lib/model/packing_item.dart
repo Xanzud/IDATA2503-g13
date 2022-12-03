@@ -4,9 +4,9 @@ class PackingItem {
   final String shelf;
   final int count;
   bool packed;
-  final String id;
+  late String id = "";
 
-  PackingItem(this.name, this.shelf, this.count, this.packed, this.id);
+  PackingItem(this.name, this.shelf, this.count, this.packed);
 
   factory PackingItem.fromMap(Map<String, dynamic> data, String docID) {
     final String name = data["name"];
@@ -14,6 +14,18 @@ class PackingItem {
     final int count = data["count"];
     final bool packed = data["packed"];
 
-    return PackingItem(name, shelf, count, packed, docID);
+    PackingItem packingItem = PackingItem(name, shelf, count, packed);
+    packingItem.id = docID;
+
+    return packingItem;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "name": name,
+      "shelf": shelf,
+      "count": count,
+      "packed": packed,
+    };
   }
 }
