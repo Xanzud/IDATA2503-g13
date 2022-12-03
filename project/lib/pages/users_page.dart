@@ -33,21 +33,11 @@ class UsersPage extends StatelessWidget {
     await FirebaseCrud.delete(collection: "accounts", docId: user.uid);
 
     if (userDel.code == 200) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Text(userDel.message.toString()),
-            );
-          });
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(userDel.message.toString())));
     } else if (userDel.code == 500) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Text(userDel.message.toString()),
-            );
-          });
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(userDel.message.toString())));
     }
     try {
       //final database = Provider.of<Repository>(context, listen: false);

@@ -28,6 +28,8 @@ class MissionArchivePage extends StatelessWidget {
           .collection("missions_archive")
           .doc(mission.id);
       docMission.delete();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Archived mission \'${mission.name}\' deleted')));
     } on FirebaseException catch (e) {
       showExceptionAlertDialog(
         context,
