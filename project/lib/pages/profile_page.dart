@@ -105,14 +105,12 @@ class _ProfilePageState extends State<ProfilePage> {
               borderSide: BorderSide(color: Colors.red),
               )
             ),
-          initialValue: _imagePath,
+          initialValue: _imagePath == "" ? "No image url set" : _imagePath,
           onChanged: (value) {
             setState(() {
               _imagePath = value;
             });
           },
-          validator: (value) =>
-              value!.isNotEmpty ? null : 'No image url specifiec',
         ),
       ),
       //Name
@@ -128,15 +126,12 @@ class _ProfilePageState extends State<ProfilePage> {
               borderSide: BorderSide(color: Colors.red),
               )
             ),
-          initialValue: _name,
+          initialValue: _name == "" ? "No name set" : _name,
           onChanged: (value) {
             setState(() {
               _name = value;
-              print(_name);
             });
           },
-          validator: (value) =>
-              value!.isNotEmpty ? value = null : value = 'Name can\'t be empty',
         ),
       ),
       const SizedBox(height: 24),
@@ -151,15 +146,13 @@ class _ProfilePageState extends State<ProfilePage> {
               borderSide: BorderSide(color: Colors.red),
               )
             ),
-          initialValue: _email,
+          initialValue: _email == "" ? "No email set" : _email,
           onChanged: (value) {
             setState(() {
               _email = value;
             });
           },
           keyboardType: TextInputType.emailAddress,
-          validator: (value) =>
-              value!.isNotEmpty ? null : 'Email can\'t be empty',
         ),
       ),
       const SizedBox(height: 24),
@@ -174,11 +167,10 @@ class _ProfilePageState extends State<ProfilePage> {
               borderSide: BorderSide(color: Colors.red),
               )
             ),
-          initialValue: _phoneNr,
+          initialValue: _phoneNr == "" ? "No phone # set" : _phoneNr,
           onChanged: (value) {
             setState(() {
               _phoneNr = value;
-              print(_phoneNr);
             });
           },
           keyboardType: TextInputType.phone,
@@ -196,7 +188,7 @@ class _ProfilePageState extends State<ProfilePage> {
               borderSide: BorderSide(color: Colors.red),
               )
             ),
-          initialValue: _regNr,
+          initialValue: _regNr == "" ? "No vehicle reg # set" : _regNr,
           onChanged: (value) {
             setState(() {
               _regNr = value;
@@ -215,6 +207,8 @@ class _ProfilePageState extends State<ProfilePage> {
       _buildCertifications(context, user),
       const SizedBox(height: 24),
       _buildEditButton(),
+      const SizedBox(height: 24),
+      _buildLogoutButton(),
     ];
   }
 
@@ -222,24 +216,31 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildCertifications(BuildContext context, User user) {
     List<dynamic>? certifications = user.certifications;
 
-    return ListView.builder(
+    if(user.certifications.length == 0){
+      return const Text(
+        """No certifications to show.\nContact admin to add certifications.""",
+        style: TextStyle(color: Colors.red)
+        );
+
+    } else {
+      return ListView.builder(
       shrinkWrap: true,
       itemCount: user.certifications.length,
       itemBuilder: (context, index) {
         final item = certifications[index];
 
-      return Padding(
+        return Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: TextFormField(
           enabled: false, //Should never be anabled, as users should not be able to edit these themselves.
           initialValue: item,
           decoration: const InputDecoration(
             border: UnderlineInputBorder(),
-            )
-          )
-        );
-      },
-    );
+            ))
+          );
+        }
+      );
+    }
   }
 
   ///Helper method for creating the edit button.
@@ -275,6 +276,30 @@ class _ProfilePageState extends State<ProfilePage> {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
       _textFormFieldEditable = !_textFormFieldEditable;
+    });
+  }
+
+
+  Widget _buildLogoutButton(){
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, right: 10),
+      child: ElevatedButton(
+        onPressed: () {
+          onLogoutButtonPressed();
+        },
+        child: const Text(
+          "Logout",
+          style: TextStyle(color: Colors.black)),
+      )
+    );
+  }
+
+  //Method to be called when Logout button is pressed.
+  //Logs out the user.
+  void onLogoutButtonPressed(){
+    setState(() {
+      print("Logout button pressed");
     });
   }
 }
