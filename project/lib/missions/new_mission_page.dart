@@ -16,8 +16,7 @@ class newMissionPage extends StatefulWidget {
 
 class _newMissionPageState extends State<newMissionPage> {
   final _formKey = GlobalKey<FormState>();
-  late final List<String> _packetLists = [];
-  String? _selectedValue;
+  late final List<String> _packingLists = [];
 
   //TODO CLEANUP
   String? _name;
@@ -149,6 +148,7 @@ class _newMissionPageState extends State<newMissionPage> {
         },
       ),
       SizedBox(height: 50),
+      Text("Packing List"),
       _buildPacketSelector(context),
       Padding(
           padding: EdgeInsets.all(120),
@@ -168,7 +168,7 @@ class _newMissionPageState extends State<newMissionPage> {
     return StreamBuilder<Iterable<PackingList>>(
         stream: repository.getPackingLists(),
         builder: (context, snapshot) {
-          if (_packetLists.isEmpty) {
+          if (_packingLists.isEmpty) {
             //Error handling
             if (snapshot.connectionState != ConnectionState.active) {
               return Center(
@@ -187,26 +187,25 @@ class _newMissionPageState extends State<newMissionPage> {
             final Iterable<PackingList> snapShotData = snapshot.data!;
 
             for (var entry in snapShotData) {
-              _packetLists.add(entry.name);
+              _packingLists.add(entry.name);
             }
           }
 
           return DropdownButton<String>(
             hint: const Text("Choose Packing List"),
-            items: _packetLists
+            items: _packingLists
                 .map<DropdownMenuItem<String>>((String packetListsValue) {
               return DropdownMenuItem<String>(
                   value: packetListsValue, child: Text(packetListsValue));
             }).toList(),
             onChanged: _packetDropDownSelector,
-            value: _selectedValue,
+            value: _chosenPacketList,
           );
         });
   }
 
   void _packetDropDownSelector(String? newValue) {
     setState(() {
-      _selectedValue = newValue!;
       _chosenPacketList = newValue;
     });
   }
