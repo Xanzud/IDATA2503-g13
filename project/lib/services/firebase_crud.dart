@@ -483,6 +483,16 @@ class FirebaseCrud {
       String collectionId, String itemName) async {
     _Collection = _firestore
         .collection("/missionPackingLists/$collectionId/itemCollection/");
-    _Collection.doc(itemName).update({"packed": true});
+
+    final docRef = _Collection.doc(itemName);
+    final docSnap = await docRef.get();
+    Map<String, dynamic> data = docSnap.data() as Map<String, dynamic>;
+    final packingItem = PackingItem.fromMap(data, docSnap.id);
+
+    if (packingItem.packed == false) {
+      _Collection.doc(itemName).update({"packed": true});
+    } else {
+      _Collection.doc(itemName).update({"packed": false});
+    }
   }
 }

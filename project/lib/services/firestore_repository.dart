@@ -83,7 +83,7 @@ class FirestoreRepository implements Repository {
               PackingItem.fromMap(data, documentID), itemCollectionId: itemCollectionId);
 
   @override
-  Future<void> markItemAsPacked(String collectionId, String itemId) async {
+  Future<void> updateItemAsPacked(String collectionId, String itemId) async {
     FirebaseCrud().updateItemPackedStatus(collectionId, itemId);
   }
 

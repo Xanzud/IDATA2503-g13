@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' as Auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:project/authentication_service.dart';
 import 'package:project/model/user.dart';
 import 'package:project/pages/feed_page.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
           home: AuthenticationWrapper(),
         ));
   }
+
 }
 
 class AuthenticationWrapper extends StatefulWidget {
