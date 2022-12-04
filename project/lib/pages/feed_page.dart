@@ -33,6 +33,11 @@ class _FeedPageState extends State<FeedPage> {
             MaterialPageRoute(builder: (BuildContext context) {
           return ProfilePage();
         }));
+      } else if (_selectedIndex == 1) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) {
+          return ProfilePage();
+        }));
       } else if (_selectedIndex == 3) {
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) {
@@ -87,11 +92,11 @@ class _FeedPageState extends State<FeedPage> {
             backgroundColor: Colors.white),
         BottomNavigationBarItem(
             icon: Icon(
-              Icons.report,
+              Icons.info,
               size: 50,
               color: Colors.red,
             ),
-            label: 'Report',
+            label: 'About',
             backgroundColor: Colors.white),
       ],
       type: BottomNavigationBarType.fixed,
