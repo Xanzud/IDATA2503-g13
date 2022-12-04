@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' as Auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+//import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:project/authentication_service.dart';
 import 'package:project/pages/feed_page.dart';
 import 'package:project/pages/feed_page_admin.dart';
@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
-
+    /*
     FirebaseMessaging.instance.getInitialMessage();
 
     FirebaseMessaging.onMessage.listen((message) {
@@ -40,6 +40,7 @@ class _MyAppState extends State<MyApp> {
         print(message.notification!.title);
       }
     });
+    */
   }
 
   // This widget is the root of your application.

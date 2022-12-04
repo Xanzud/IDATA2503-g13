@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:html';
-
 import 'package:project/model/Mission.dart';
 import 'package:project/model/packing_list.dart';
 import 'package:project/model/user.dart';
@@ -73,14 +71,14 @@ class FirestoreRepository implements Repository {
   @override
   Stream<Iterable<PackingList>> getPackingLists() =>
       FirebaseCrud().getPacketListCollectionWithId(
-          builder: (data, documentID) =>
-              PackingList.fromMap(data, documentID));
+          builder: (data, documentID) => PackingList.fromMap(data, documentID));
 
   @override
-  Stream<Iterable<PackingItem>> getItemCollectionForMission(String itemCollectionId) =>
+  Stream<Iterable<PackingItem>> getItemCollectionForMission(
+          String itemCollectionId) =>
       FirebaseCrud().getMissionPackingListWithId(
-          builder: (data, documentID) =>
-              PackingItem.fromMap(data, documentID), itemCollectionId: itemCollectionId);
+          builder: (data, documentID) => PackingItem.fromMap(data, documentID),
+          itemCollectionId: itemCollectionId);
 
   @override
   Future<void> updateItemAsPacked(String collectionId, String itemId) async {
