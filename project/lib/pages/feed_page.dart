@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project/missions/mission_page.dart';
@@ -7,6 +8,7 @@ import 'package:project/model/Mission.dart';
 import 'package:project/pages/admin_page.dart';
 import 'package:project/pages/packing_list_page.dart';
 import 'package:project/pages/profile_page.dart';
+import 'package:project/services/firebase_crud.dart';
 import 'package:project/services/firestore_repository.dart';
 import 'package:project/services/repository.dart';
 import 'package:provider/provider.dart';
@@ -237,16 +239,27 @@ class _FeedPageState extends State<FeedPage> {
                     mission.elementAt(index).time,
                     mission.elementAt(index).location,
                     mission.elementAt(index).itemCollectionId,
-                    repository),
+                    repository,
+                    mission.elementAt(index)),
               );
             }),
           );
         });
   }
 
-  Widget _buildSingleMissionObject(String? name, Timestamp time,
-      String? location, String collectionId, Repository database) {
-    bool isChecked = true;
+  Widget _buildSingleMissionObject(
+      String? name,
+      Timestamp time,
+      String? location,
+      String collectionId,
+      Repository database,
+      Mission mission) {
+    bool isChecked;
+    if (mission.attending.contains(FirebaseAuth.instance.currentUser!.uid)) {
+      isChecked = true;
+    } else {
+      isChecked = false;
+    }
     return Container(
         height: 150,
         decoration: BoxDecoration(
@@ -284,9 +297,9 @@ class _FeedPageState extends State<FeedPage> {
                           child: Text("Packing List",
                               style: TextStyle(color: Colors.white))),
                       Spacer(),
-                      ElevatedButton(
-                          onPressed: () => _onItemTapped(4),
-                          child: Icon(Icons.edit_note)),
+                      //ElevatedButton(
+                      //    onPressed: () => _onItemTapped(4),
+                      //    child: Icon(Icons.edit_note)),
                     ],
                   )),
             ),
@@ -316,7 +329,41 @@ class _FeedPageState extends State<FeedPage> {
                             checkColor: Colors.white,
                             value: isChecked,
                             onChanged: (bool? value) {
-                              setState(() => isChecked = value!);
+                              if (value! == true) {
+                                try {
+                                  final docMission = FirebaseFirestore.instance
+                                      .collection("missions")
+                                      .doc(mission.id);
+                                  List<dynamic> attendingUsers =
+                                      mission.attending;
+                                  attendingUsers.add(
+                                      FirebaseAuth.instance.currentUser!.uid);
+                                  docMission.update({
+                                    "attending": attendingUsers,
+                                  });
+                                } on FirebaseException catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(e.message!)));
+                                }
+                              } else {
+                                try {
+                                  final docMission = FirebaseFirestore.instance
+                                      .collection("missions")
+                                      .doc(mission.id);
+                                  List<dynamic> attendingUsers =
+                                      mission.attending;
+                                  attendingUsers.remove(
+                                      FirebaseAuth.instance.currentUser!.uid);
+                                  docMission.update({
+                                    "attending": attendingUsers,
+                                  });
+                                } on FirebaseException catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(e.message!)));
+                                }
+                              }
+
+                              setState(() {});
                             },
                           )
                         ],
