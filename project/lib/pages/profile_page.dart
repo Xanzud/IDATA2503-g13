@@ -88,11 +88,21 @@ class _ProfilePageState extends State<ProfilePage> {
       const SizedBox(height: 24),
       Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
-        child: ProfileWidget(
-          imagePath: _imagePath!.isEmpty
-              ? "https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png"
-              : user.imagePath,
-          onClicked: () async {},
+        child: Column(
+          children: [
+            ClipOval(
+                child: Material(
+                    color: Colors.transparent,
+                    child: Ink.image(
+                      image: (_imagePath == "" || _imagePath == null)
+                          ? NetworkImage(
+                              "https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png")
+                          : NetworkImage(_imagePath!),
+                      fit: BoxFit.cover,
+                      width: 200,
+                      height: 200,
+                    ))),
+          ],
         ),
       ),
       const SizedBox(height: 24),
