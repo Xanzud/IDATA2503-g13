@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_field/date_field.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:project/model/Mission.dart';
 import 'package:project/model/user.dart';
 import 'package:project/services/firebase_crud.dart';
@@ -10,6 +11,7 @@ import 'package:project/services/repository.dart';
 import 'package:project/utils/show_alert_dialog.dart';
 import 'package:project/utils/show_exception_alert_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ShowUserPage extends StatefulWidget {
   const ShowUserPage({Key? key, required this.database, required this.user})
@@ -178,6 +180,25 @@ class _ShowUserPageState extends State<ShowUserPage> {
           });
         },
       ),
+      SizedBox(height: 20),
+      Row(
+        children: [
+          Spacer(),
+          ButtonTheme(
+              height: 40,
+              child: ElevatedButton(
+                  onPressed: () async {
+                    Uri uri = Uri.parse("tel:$_phoneNr");
+                    if (!await launchUrl(uri)) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text("Can't dial")));
+                    }
+                  },
+                  child: Icon(Icons.call, size: 35))),
+          Spacer()
+        ],
+      ),
+
       SizedBox(height: 50),
       Column(
         children: [

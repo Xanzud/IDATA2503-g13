@@ -10,6 +10,7 @@ import 'package:project/services/repository.dart';
 import 'package:project/utils/show_alert_dialog.dart';
 import 'package:project/utils/show_exception_alert_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EditUserPage extends StatefulWidget {
   const EditUserPage({Key? key, required this.database, required this.user})
@@ -197,6 +198,24 @@ class _EditUserPageState extends State<EditUserPage> {
             _phoneNr = value;
           });
         },
+      ),
+      SizedBox(height: 20),
+      Row(
+        children: [
+          Spacer(),
+          ButtonTheme(
+              height: 40,
+              child: ElevatedButton(
+                  onPressed: () async {
+                    Uri uri = Uri.parse("tel:$_phoneNr");
+                    if (!await launchUrl(uri)) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text("Can't dial")));
+                    }
+                  },
+                  child: Icon(Icons.call, size: 35))),
+          Spacer()
+        ],
       ),
       SizedBox(height: 50),
       TextFormField(
