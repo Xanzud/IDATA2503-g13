@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:project/missions/mission_page.dart';
 import 'package:project/missions/new_mission_page.dart';
 import 'package:project/model/Mission.dart';
+import 'package:project/pages/about_page.dart';
 import 'package:project/pages/admin_page.dart';
 import 'package:project/pages/packing_list_page.dart';
 import 'package:project/pages/profile_page.dart';
@@ -36,7 +37,7 @@ class _FeedPageState extends State<FeedPage> {
       } else if (_selectedIndex == 1) {
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) {
-          return ProfilePage();
+          return AboutPage();
         }));
       } else if (_selectedIndex == 3) {
         Navigator.push(context,

@@ -46,7 +46,7 @@ dependencies:
   date_field: ^3.0.0
   firebase_admin: ^0.2.0
   email_validator: ^2.1.17
-  package_info_plus: ^1.0.6
+  package_info_plus: ^3.0.2
 
 
 dev_dependencies:

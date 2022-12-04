@@ -10,42 +10,71 @@ class AboutPage extends StatefulWidget {
 }
 
 class _AboutPageState extends State<AboutPage> {
-  late String _appName;
-  late String _packageName;
-  late String _version;
-  late String _buildNumber;
+  String? _appName;
+  String? _packageName;
+  String? _version;
+  String? _buildNumber;
 
   @override
   Widget build(BuildContext context) {
-    PackageInfo.fromPlatform().then((PackageInfo pi) {
-      _appName = pi.appName;
-      _packageName = pi.packageName;
-      _version = pi.version;
-      _buildNumber = pi.buildNumber;
-    });
+    return Scaffold(
+      appBar: AppBar(
+        leading: const BackButton(),
+        elevation: 0,
+        title: Text("About"),
+      ),
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.all(50),
+          child: FutureBuilder(
+            future: PackageInfo.fromPlatform(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                PackageInfo pInfo = snapshot.data!;
+                _appName = pInfo.appName;
+                _packageName = pInfo.packageName;
+                _version = pInfo.version;
+                _buildNumber = pInfo.buildNumber;
 
-    return Column(
-      children: [
-        Text(
-          "App name: $_appName",
-          style: const TextStyle(fontSize: 14, color: Colors.black),
+                return Column(
+                  children: [
+                    Text(
+                      "App name: $_appName",
+                      style: const TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      "Package name: $_packageName",
+                      style: const TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      "Version: $_version",
+                      style: const TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      "Build number: $_buildNumber",
+                      style: const TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text("Error: ${snapshot.error}"),
+                );
+              } else if (!snapshot.hasData || snapshot.data == null) {
+                return const Center(
+                  child: Text("No data to load"),
+                );
+              }
+              return const Center(
+                child: Text("No data to load"),
+              );
+            },
+          ),
         ),
-        const SizedBox(height: 24),
-        Text(
-          "Package name: $_packageName",
-          style: const TextStyle(fontSize: 14, color: Colors.black),
-        ),
-        const SizedBox(height: 24),
-        Text(
-          "Version: $_version",
-          style: const TextStyle(fontSize: 14, color: Colors.black),
-        ),
-        const SizedBox(height: 24),
-        Text(
-          "Build number: $_buildNumber",
-          style: const TextStyle(fontSize: 14, color: Colors.black),
-        ),
-      ],
+      ),
     );
   }
 }
