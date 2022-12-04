@@ -2,12 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:project/missions/archived_mission_list_tile.dart';
 import 'package:project/missions/edit_archive_mission_page.dart';
-import 'package:project/missions/edit_mission_page.dart';
-import 'package:project/missions/mission_entries_page.dart';
 import 'package:project/missions/list_items_builder.dart';
-import 'package:project/missions/mission_list_tile.dart';
-import 'package:project/missions/new_mission_page.dart';
-import 'package:project/services/firebase_crud.dart';
 import 'package:project/services/repository.dart';
 import 'package:provider/provider.dart';
 

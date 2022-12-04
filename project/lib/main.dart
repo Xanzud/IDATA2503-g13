@@ -3,12 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:project/authentication_service.dart';
-import 'package:project/model/user.dart';
 import 'package:project/pages/feed_page.dart';
 import 'package:project/pages/feed_page_admin.dart';
-import 'package:project/services/firebase_crud.dart';
-import 'package:project/services/firestore_repository.dart';
-import 'package:project/services/repository.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 
@@ -87,41 +83,6 @@ class _MainState extends State<AuthenticationWrapper> {
       } else {
         return FeedPage();
       }
-      //return LandingPageAdmin();
-      /*
-      return FutureBuilder(
-        future: FirebaseCrud.getUserByUid(firebaseUser.uid),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            User user = snapshot.data!;
-            if (user.role == "admin") {
-              return Provider<Repository>(
-                create: (_) => FirestoreRepository(),
-                builder: (context, child) {
-                  return LandingPageAdmin();
-                },
-              );
-            } else {
-              return Provider<Repository>(
-                create: (_) => FirestoreRepository(),
-                builder: (context, child) {
-                  return LandingPageAdmin();
-                },
-              );
-            }
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text("Error: ${snapshot.error}"),
-            );
-          } else if (!snapshot.hasData || snapshot.data == null) {
-            return const Center(
-              child: Text("No data to load"),
-            );
-          }
-          return SignInPage();
-        },
-      );
-      */
     } else {
       return SignInPage();
     }
