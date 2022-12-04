@@ -50,7 +50,6 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   Widget build(BuildContext context) {
-    final user = UserSettings.currentUser;
     return Provider<Repository>(
         create: (context) => FirestoreRepository(),
         builder: (context, child) {
@@ -68,8 +67,10 @@ class _FeedPageState extends State<FeedPage> {
                   )),
             ),
             body: Padding(
-                padding: const EdgeInsets.fromLTRB(40, 100, 40, 40),
-                child: _buildMissionInfoAll(context)),
+              padding: const EdgeInsets.fromLTRB(40, 100, 40, 40),
+              child:
+                  SingleChildScrollView(child: _buildMissionInfoAll(context)),
+            ),
             bottomNavigationBar: Theme(
                 data: ThemeData(
                     splashColor: Colors.transparent,
@@ -108,107 +109,6 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
-  //TODO cleanup
-  Widget _buildMissionInfo(BuildContext context) {
-    const String missionId = "g1tXCcqtk1YSV45o9p6v";
-    final repository = Provider.of<Repository>(context, listen: false);
-    bool isChecked = false;
-
-    return StreamBuilder<Mission?>(
-        stream: repository.getMissionStream(missionId),
-        builder: (context, snapshot) {
-          // Check if we got something other than real data...
-          if (snapshot.connectionState != ConnectionState.active) {
-            return Center(
-              child: const CircularProgressIndicator.adaptive(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text("Error: ${snapshot.error}"),
-            );
-          } else if (!snapshot.hasData || snapshot.data == null) {
-            return const Center(
-              child: Text("No data to load"),
-            );
-          }
-
-          // If we get so far, this means we got data!
-          final Mission mission = snapshot.data!;
-
-          return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                    height: 150,
-                    decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey,
-                            blurRadius: 1,
-                            offset: Offset(1, 4),
-                          )
-                        ]),
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      children: <Widget>[
-                        Align(
-                            alignment: Alignment.topLeft,
-                            child: Padding(
-                              padding: EdgeInsets.all(5),
-                              child: Text(mission.name,
-                                  style: TextStyle(color: Colors.red[300])),
-                            )),
-                        Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Text(mission.name,
-                                  style: TextStyle(
-                                      color: Colors.blue[700], fontSize: 18)),
-                            )),
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(10, 20, 0, 0),
-                              child: Row(
-                                children: [
-                                  Wrap(
-                                    crossAxisAlignment:
-                                        WrapCrossAlignment.center,
-                                    spacing: 5,
-                                    children: [
-                                      Icon(Icons.access_time_outlined),
-                                      Text(mission.time.toString()),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  Wrap(
-                                    crossAxisAlignment:
-                                        WrapCrossAlignment.center,
-                                    spacing: 5,
-                                    children: [
-                                      Text('Attend',
-                                          style: TextStyle(fontSize: 16)),
-                                      Checkbox(
-                                        checkColor: Colors.white,
-                                        value: isChecked,
-                                        onChanged: (bool? value) {
-                                          setState(() => isChecked = value!);
-                                        },
-                                      )
-                                    ],
-                                  )
-                                ],
-                              )),
-                        ),
-                      ],
-                    )),
-              ]);
-        });
-  }
-
   Widget _buildMissionInfoAll(BuildContext context) {
     final repository = Provider.of<Repository>(context, listen: false);
     bool isChecked = false;
@@ -216,7 +116,7 @@ class _FeedPageState extends State<FeedPage> {
     return StreamBuilder<Iterable<Mission>>(
         stream: repository.getAllMissionsStreamWithID(),
         builder: (context, snapshot) {
-          // Check if we got something other than real data...
+          // Error handling
           if (snapshot.connectionState != ConnectionState.active) {
             return Center(
               child: const CircularProgressIndicator.adaptive(),
@@ -231,7 +131,6 @@ class _FeedPageState extends State<FeedPage> {
             );
           }
 
-          // If we get so far, this means we got data!
           final Iterable<Mission> mission = snapshot.data!;
 
           return Column(
@@ -378,38 +277,5 @@ class _FeedPageState extends State<FeedPage> {
             ),
           ],
         ));
-  }
-
-  Widget _buildMissionTitle(String missionName) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        missionName,
-        style: const TextStyle(fontSize: 24),
-      ),
-    );
-  }
-
-  //TODO Cleanup
-  /// Build the price text for the product
-  Widget _buildMissionLocation(String location) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8, bottom: 8),
-      child: Text(
-        "location: $location",
-        style: const TextStyle(fontSize: 16),
-      ),
-    );
-  }
-
-  /// Build the product image
-  Widget _buildMissionTime(String time) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8, bottom: 8),
-      child: Text(
-        "time: $time",
-        style: const TextStyle(fontSize: 16),
-      ),
-    );
   }
 }
