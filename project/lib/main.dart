@@ -20,26 +20,26 @@ Future<void> main() async {
     //name: "Prepacktive",
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp( const MyApp(key: null));
+  runApp(const MyApp(key: null));
 }
 
 class MyApp extends StatefulWidget {
-const MyApp({required Key? key}) : super(key: key); //This is the semi-colon.
+  const MyApp({required Key? key}) : super(key: key); //This is the semi-colon.
 
-@override
-_MyAppState createState() => _MyAppState();
+  @override
+  _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
+    WidgetsFlutterBinding.ensureInitialized();
 
     FirebaseMessaging.instance.getInitialMessage();
 
     FirebaseMessaging.onMessage.listen((message) {
-      if(message.notification != null) {
+      if (message.notification != null) {
         print(message.notification!.body);
         print(message.notification!.title);
       }
@@ -70,7 +70,6 @@ class _MyAppState extends State<MyApp> {
           home: AuthenticationWrapper(),
         ));
   }
-
 }
 
 class AuthenticationWrapper extends StatefulWidget {
