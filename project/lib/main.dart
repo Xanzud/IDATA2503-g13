@@ -19,31 +19,9 @@ Future<void> main() async {
   runApp(const MyApp(key: null));
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({required Key? key}) : super(key: key); //This is the semi-colon.
 
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsFlutterBinding.ensureInitialized();
-    /*
-    FirebaseMessaging.instance.getInitialMessage();
-
-    FirebaseMessaging.onMessage.listen((message) {
-      if (message.notification != null) {
-        print(message.notification!.body);
-        print(message.notification!.title);
-      }
-    });
-    */
-  }
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
