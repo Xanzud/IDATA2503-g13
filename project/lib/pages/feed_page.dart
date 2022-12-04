@@ -27,16 +27,9 @@ class _FeedPageState extends State<FeedPage> {
     setState(() {
       _selectedIndex = index;
       if (_selectedIndex == 0) {
-        // Using setstate to update
-      } else if (_selectedIndex == 1) {
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) {
           return ProfilePage();
-        }));
-      } else if (_selectedIndex == 2) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) {
-          return const AdminPage();
         }));
       } else if (_selectedIndex == 3) {
         Navigator.push(context,
@@ -70,7 +63,11 @@ class _FeedPageState extends State<FeedPage> {
             body: Padding(
                 padding: const EdgeInsets.fromLTRB(40, 100, 40, 40),
                 child: _buildMissionInfoAll(context)),
-            bottomNavigationBar: bottomNavigationBar(context),
+            bottomNavigationBar: Theme(
+                data: ThemeData(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent),
+                child: bottomNavigationBar(context)),
           );
         });
   }
@@ -79,17 +76,27 @@ class _FeedPageState extends State<FeedPage> {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-            icon: Icon(Icons.feed, size: 40),
-            label: 'Feed',
-            backgroundColor: Colors.red),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.person, size: 40),
+            icon: Icon(
+              Icons.person,
+              size: 50,
+              color: Colors.red,
+            ),
             label: 'Profile',
-            backgroundColor: Colors.blue),
+            backgroundColor: Colors.white),
+        BottomNavigationBarItem(
+            icon: Icon(
+              Icons.report,
+              size: 50,
+              color: Colors.red,
+            ),
+            label: 'Report',
+            backgroundColor: Colors.white),
       ],
       type: BottomNavigationBarType.fixed,
-      currentIndex: _selectedIndex,
-      selectedItemColor: Colors.amber[200],
+      selectedItemColor: Colors.grey,
+      unselectedItemColor: Colors.grey,
+      selectedFontSize: 14,
+      unselectedFontSize: 14,
       onTap: _onItemTapped,
     );
   }

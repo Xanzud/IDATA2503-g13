@@ -73,6 +73,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return AppBar(
       leading: const BackButton(),
       elevation: 0,
+      title: Text("Profile View"),
     );
   }
 
