@@ -215,8 +215,15 @@ class _packingListPageState extends State<packingListPage> {
                 checkColor: Colors.white,
                 value: checkedMap[item.name],
                 onChanged: (bool? value) {
-                  checkPackedItem(itemCollectionId, item.id, item.name);
+                  checkPackedItem(itemCollectionId, item.id);
                   setState(() {
+                    if(checkedMap[item.name] == false) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(const SnackBar(content: Text("Item Packed!")));
+                    } else {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(const SnackBar(content: Text("Item Unpacked!")));
+                    }
                     checkedMap[item.name] = value!;
                   });
                   },
@@ -236,7 +243,7 @@ class _packingListPageState extends State<packingListPage> {
     return "Not packed";
   }
 
-  void checkPackedItem(String collectionId, String itemId, String itemName)  {
+  void checkPackedItem(String collectionId, String itemId)  {
      database!.updateItemAsPacked(collectionId, itemId);
   }
 }
