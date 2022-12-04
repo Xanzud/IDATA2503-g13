@@ -63,8 +63,10 @@ class _FeedPageState extends State<FeedPage> {
                   )),
             ),
             body: Padding(
-                padding: const EdgeInsets.fromLTRB(40, 100, 40, 40),
-                child: _buildMissionInfoAll(context)),
+              padding: const EdgeInsets.fromLTRB(40, 100, 40, 40),
+              child:
+                  SingleChildScrollView(child: _buildMissionInfoAll(context)),
+            ),
             bottomNavigationBar: Theme(
                 data: ThemeData(
                     splashColor: Colors.transparent,

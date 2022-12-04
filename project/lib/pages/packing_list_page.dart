@@ -211,16 +211,13 @@ class _packingListPageState extends State<packingListPage> {
               Spacer(),
               Text(_itemPacked(item.packed)),
               Spacer(),
-              //TODO Temporary solution to checked
               Checkbox(
                 checkColor: Colors.white,
                 value: checkedMap[item.name],
                 onChanged: (bool? value) {
                   checkPackedItem(itemCollectionId, item.id, item.name);
                   setState(() {
-                    print(checkedMap[item.name]);
                     checkedMap[item.name] = value!;
-                    print(checkedMap[item.name]);
                   });
                   },
               ),

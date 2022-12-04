@@ -67,7 +67,8 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
             ),
             body: Padding(
                 padding: const EdgeInsets.fromLTRB(40, 100, 40, 40),
-                child: _buildMissionInfoAll(context)),
+                child: SingleChildScrollView(
+                    child: _buildMissionInfoAll(context))),
             bottomNavigationBar: bottomNavigationBar(context),
           );
         });
