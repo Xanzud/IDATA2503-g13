@@ -30,7 +30,6 @@ class _packingListPageState extends State<packingListPage> {
   late final String itemCollectionId;
   late final Repository? database;
   late Map<String, bool> checkedMap = {};
-  List<bool> checkBoxList = [false, true];
 
   bool hasBeenInitialized = false;
 
@@ -90,7 +89,7 @@ class _packingListPageState extends State<packingListPage> {
           final Iterable<PackingItem> itemCollection = snapshot.data!;
 
           return Table(
-            border: TableBorder.all(),
+            border: TableBorder.symmetric(inside: const BorderSide(style: BorderStyle.solid)),
             columnWidths: const <int, TableColumnWidth>{},
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: _buildItemRows(itemCollection)
@@ -125,7 +124,7 @@ class _packingListPageState extends State<packingListPage> {
           child: Row(
             children: [
               Spacer(),
-              Text("Name"),
+              Text("Name", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
               Spacer(),
             ],
           ),
@@ -136,7 +135,7 @@ class _packingListPageState extends State<packingListPage> {
           child: Row(
             children: [
               Spacer(),
-              Text("Shelf"),
+              Text("Shelf", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               Spacer(),
             ],
           ),
@@ -147,7 +146,7 @@ class _packingListPageState extends State<packingListPage> {
           child: Row(
             children: [
               Spacer(),
-              Text("Number"),
+              Text("Number", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               Spacer(),
             ],
           ),
@@ -158,7 +157,7 @@ class _packingListPageState extends State<packingListPage> {
           child: Row(
             children: [
               Spacer(),
-              Text("Packed?"),
+              Text("Packed?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               Spacer(),
             ],
           ),
