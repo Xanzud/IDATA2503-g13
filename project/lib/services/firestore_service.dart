@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class FirestoreService {
+  //TODO Cleanup
+
   FirestoreService._();
   static final instance = FirestoreService._();
 

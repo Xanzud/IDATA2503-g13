@@ -29,11 +29,18 @@ class _packingListPageState extends State<packingListPage> {
 
   late final String itemCollectionId;
   late final Repository? database;
+  List<bool> checkBoxList = [false, true];
+
+  bool hasBeenInitialized = false;
 
   @override
   Widget build(BuildContext context) {
-    itemCollectionId = widget.itemCollectionId;
-    database = widget.database;
+
+    if(hasBeenInitialized == false) {
+      itemCollectionId = widget.itemCollectionId;
+      database = widget.database;
+      hasBeenInitialized = true;
+    }
 
     return Provider<Repository>(
         create: (context) => FirestoreRepository(),
@@ -69,8 +76,8 @@ class _packingListPageState extends State<packingListPage> {
 
           // Error handling
           if (snapshot.connectionState != ConnectionState.active) {
-            return Center(
-              child: const CircularProgressIndicator.adaptive(),
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
             );
           } else if (snapshot.hasError) {
             return Center(
@@ -201,12 +208,15 @@ class _packingListPageState extends State<packingListPage> {
               Spacer(),
               Text(_itemPacked(item.packed)),
               Spacer(),
+              //TODO Temporary solution to checked
               Checkbox(
                 checkColor: Colors.white,
-                value: false,
+                value: checkBoxList[0],
                 onChanged: (bool? value) {
-                  value: true;
-                  checkPackedItem();
+                  checkPackedItem(itemCollectionId, item.id);
+                  setState(() {
+                    value = checkBoxList[1];
+                  });
                   },
               ),
               Spacer(),
@@ -221,10 +231,10 @@ class _packingListPageState extends State<packingListPage> {
     if(packed) {
       return "Packed";
     }
-    else return "Not packed";
+    return "Not packed";
   }
 
-  void checkPackedItem() {
-
+  void checkPackedItem(String collectionId, String itemId)  {
+     database!.markItemAsPacked(collectionId, itemId);
   }
 }

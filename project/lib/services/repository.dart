@@ -26,6 +26,7 @@ abstract class Repository {
 
   //Item collection for missions
   Stream<Iterable<PackingItem>> getItemCollectionForMission(String itemCollectionId);
+  Future<void> markItemAsPacked(String collectionId, String itemName);
 
   //Generic
   Future<void> delete({required String collection, required String docId});
