@@ -252,7 +252,8 @@ class FirebaseCrud {
       "name": mission.name,
       "time": mission.time,
       "packingList": mission.packingList,
-      "attending": mission.attending
+      "attending": mission.attending,
+      "itemCollectionId": mission.itemCollectionId,
     };
 
     await documentReference.set(data).whenComplete(() {
