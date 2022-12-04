@@ -5,6 +5,7 @@ import 'package:project/missions/mission_page.dart';
 import 'package:project/missions/new_mission_page.dart';
 import 'package:project/model/Mission.dart';
 import 'package:project/pages/admin_page.dart';
+import 'package:project/pages/packing_list_page.dart';
 import 'package:project/pages/profile_page.dart';
 import 'package:project/services/firestore_repository.dart';
 import 'package:project/services/repository.dart';
@@ -22,7 +23,7 @@ class LandingPageAdmin extends StatefulWidget {
 class _LandingPageAdminState extends State<LandingPageAdmin> {
   int _selectedIndex = 0;
 
-  void _onItemTapped(int index) {
+  void _onItemTapped(int index, [String? collectionId, Repository? database]) {
     setState(() {
       _selectedIndex = index;
       if (_selectedIndex == 0) {
@@ -36,6 +37,12 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) {
           return const AdminPage();
+        }));
+      } else if (_selectedIndex == 3) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) {
+          return packingListPage(
+              itemCollectionId: collectionId!, database: database);
         }));
       }
     });
@@ -228,15 +235,17 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
                 child: _buildSingleMissionObject(
                     mission.elementAt(index).name,
                     mission.elementAt(index).time,
-                    mission.elementAt(index).location),
+                    mission.elementAt(index).location,
+                    mission.elementAt(index).itemCollectionId,
+                    repository),
               );
             }),
           );
         });
   }
 
-  Widget _buildSingleMissionObject(
-      String? name, Timestamp time, String? location) {
+  Widget _buildSingleMissionObject(String? name, Timestamp time,
+      String? location, String collectionId, Repository database) {
     bool isChecked = true;
     return Container(
         height: 150,
@@ -270,7 +279,8 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
                               TextStyle(color: Colors.blue[700], fontSize: 18)),
                       Spacer(),
                       ElevatedButton(
-                          onPressed: () => _onItemTapped(4),
+                          onPressed: () =>
+                              _onItemTapped(3, collectionId, database),
                           child: Text("Packing List",
                               style: TextStyle(color: Colors.white))),
                       Spacer(),

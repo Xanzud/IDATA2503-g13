@@ -50,47 +50,36 @@ class _NewUserPagePageState extends State<NewUserPage> {
       await repository.createMission(mission, missionID);
     }
      */
-    if (_name == null || _email == null || _password == null) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Text("Null values"),
-            );
-          });
-    }
-    FirebaseAuth auth = FirebaseAuth.instance;
-    var user = await auth.createUserWithEmailAndPassword(
-        email: _email!, password: _password!);
-    _uid = user.user?.uid;
+    if (_validateAndSaveForm()) {
+      if (!_formKey.currentState!.validate()) return;
+      try {
+        FirebaseAuth auth = FirebaseAuth.instance;
+        var user = await auth.createUserWithEmailAndPassword(
+            email: _email!, password: _password!);
+        _uid = user.user?.uid;
 
-    var response = await FirebaseCrud.createUser(
-        name: _name!,
-        phoneNr: "",
-        email: _email!,
-        role: "user",
-        uid: _uid!,
-        address: "",
-        certifications: List<String>.empty(),
-        imagePath: "",
-        regNr: "");
+        var response = await FirebaseCrud.createUser(
+            name: _name!,
+            phoneNr: "",
+            email: _email!,
+            role: "user",
+            uid: _uid!,
+            address: "",
+            certifications: List<String>.empty(),
+            imagePath: "",
+            regNr: "");
 
-    if (response.code != 200) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Text(response.message.toString()),
-            );
-          });
-    } else {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Text(response.message.toString()),
-            );
-          });
+        if (response.code != 200) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(response.message.toString())));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(response.message.toString())));
+        }
+      } on FirebaseAuthException catch (err) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(err.message!)));
+      }
     }
   }
 
@@ -125,6 +114,13 @@ class _NewUserPagePageState extends State<NewUserPage> {
           children: <Widget>[
             TextFormField(
               decoration: InputDecoration(labelText: "Name"),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Enter a name";
+                } else {
+                  return null;
+                }
+              },
               onChanged: (value) {
                 setState(() {
                   _name = value;
@@ -151,7 +147,7 @@ class _NewUserPagePageState extends State<NewUserPage> {
                         .hasMatch(value)) {
                   return "Enter Correct Email Address";
                 } else {
-                  return "null";
+                  return null;
                 }
               },
               onChanged: (value) {
@@ -168,23 +164,13 @@ class _NewUserPagePageState extends State<NewUserPage> {
                   _password = value;
                 });
               },
-              validator: (value) {
-                if (!validatePsw(_password!)) {
-                  return "Enter a valid password";
-                }
-              },
+              validator: (value) =>
+                  value!.isNotEmpty ? null : 'Password can\'t be empty',
             ),
             Padding(
                 padding: EdgeInsets.all(120),
                 child: ElevatedButton(
-                  onPressed: (_name == "" ||
-                          _name == null ||
-                          _email == "" ||
-                          _email == null ||
-                          _password == "" ||
-                          _password == null)
-                      ? null
-                      : _submit,
+                  onPressed: _submit,
                   child: Text("Create",
                       style: TextStyle(fontSize: 18, color: Colors.white)),
                 ))

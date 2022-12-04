@@ -27,6 +27,13 @@ class UsersPage extends StatelessWidget {
   Future<void> _delete(BuildContext context, User user) async {
     //FirebaseAuth auth = FirebaseAuth.instance;
     //var user = await auth.
+    if (user.uid == Auth.FirebaseAuth.instance.currentUser!.uid) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Can't delete your own account"),
+        backgroundColor: Colors.red,
+      ));
+      return;
+    }
     final userDel =
         await FirebaseCrud.delete(collection: "users", docId: user.uid);
     // TODO delete auth user

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:project/services/firebase_crud.dart';
@@ -33,7 +34,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    //final database = Provider.of<Repository>(context, listen: false);
     return FutureBuilder(
         future: userFuture,
         builder: (context, snapshot) {
@@ -44,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
             //If we get here, we should have been able to fetch the data.
             User user = snapshot.data!;
             //If this is the first run, initialze user data variables.
-            if(isFirstRun){
+            if (isFirstRun) {
               isFirstRun = !isFirstRun;
               _imagePath = user.imagePath;
               _name = user.name;
@@ -54,18 +54,13 @@ class _ProfilePageState extends State<ProfilePage> {
             }
             return Scaffold(
                 appBar: _buildAppBar(context),
-                body: ListView(
-                  physics: const BouncingScrollPhysics(),
-                  children: [
-                    Form(
+                body:
+                    ListView(physics: const BouncingScrollPhysics(), children: [
+                  Form(
                       key: _formKey,
-                      child: Column(
-                        children: _buildprofileContent(context, user)
-                      )
-                    )
-                  ]
-                )
-            );
+                      child:
+                          Column(children: _buildprofileContent(context, user)))
+                ]));
           } else {
             //Return an empty widget.
             return const SizedBox();
@@ -88,9 +83,10 @@ class _ProfilePageState extends State<ProfilePage> {
       Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: ProfileWidget(
-          imagePath: _imagePath!.isEmpty ? "https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png":user.imagePath,
-          onClicked: () async {
-          },
+          imagePath: _imagePath!.isEmpty
+              ? "https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png"
+              : user.imagePath,
+          onClicked: () async {},
         ),
       ),
       const SizedBox(height: 24),
@@ -100,12 +96,11 @@ class _ProfilePageState extends State<ProfilePage> {
         child: TextFormField(
           enabled: _textFormFieldEditable,
           decoration: const InputDecoration(
-            labelText: 'Image url',
-            //Change underline color when editable
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
-              )
-            ),
+              labelText: 'Image url',
+              //Change underline color when editable
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+              )),
           initialValue: _imagePath == "" ? "No image url set" : _imagePath,
           onChanged: (value) {
             setState(() {
@@ -121,13 +116,18 @@ class _ProfilePageState extends State<ProfilePage> {
         child: TextFormField(
           enabled: _textFormFieldEditable,
           decoration: const InputDecoration(
-            labelText: 'Name',
-            //Change underline color when editable
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
-              )
-            ),
+              labelText: 'Name',
+              //Change underline color when editable
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+              )),
           initialValue: _name == "" ? "No name set" : _name,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Name field cannot be empty";
+            }
+            return null;
+          },
           onChanged: (value) {
             setState(() {
               _name = value;
@@ -142,12 +142,19 @@ class _ProfilePageState extends State<ProfilePage> {
         child: TextFormField(
           enabled: _textFormFieldEditable,
           decoration: const InputDecoration(
-            labelText: 'Email',
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
-              )
-            ),
+              labelText: 'Email',
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+              )),
           initialValue: _email == "" ? "No email set" : _email,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Email field cannot be empty";
+            } else if (!EmailValidator.validate(value)) {
+              return "Not a valid email address.";
+            }
+            return null;
+          },
           onChanged: (value) {
             setState(() {
               _email = value;
@@ -163,12 +170,17 @@ class _ProfilePageState extends State<ProfilePage> {
         child: TextFormField(
           enabled: _textFormFieldEditable,
           decoration: const InputDecoration(
-            labelText: 'Phone #',
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
-              )
-            ),
+              labelText: 'Phone #',
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+              )),
           initialValue: _phoneNr == "" ? "No phone # set" : _phoneNr,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Phone # field cannot be empty";
+            }
+            return null;
+          },
           onChanged: (value) {
             setState(() {
               _phoneNr = value;
@@ -184,11 +196,10 @@ class _ProfilePageState extends State<ProfilePage> {
         child: TextFormField(
           enabled: _textFormFieldEditable,
           decoration: const InputDecoration(
-            labelText: 'Vehicle reg #',
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
-              )
-            ),
+              labelText: 'Vehicle reg #',
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+              )),
           initialValue: _regNr == "" ? "No vehicle reg # set" : _regNr,
           onChanged: (value) {
             setState(() {
@@ -217,30 +228,27 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildCertifications(BuildContext context, User user) {
     List<dynamic>? certifications = user.certifications;
 
-    if(user.certifications.length == 0){
+    if (user.certifications.length == 0) {
       return const Text(
-        """No certifications to show.\nContact admin to add certifications.""",
-        style: TextStyle(color: Colors.red)
-        );
-
+          """No certifications to show.\nContact admin to add certifications.""",
+          style: TextStyle(color: Colors.red));
     } else {
       return ListView.builder(
-      shrinkWrap: true,
-      itemCount: user.certifications.length,
-      itemBuilder: (context, index) {
-        final item = certifications[index];
+          shrinkWrap: true,
+          itemCount: user.certifications.length,
+          itemBuilder: (context, index) {
+            final item = certifications[index];
 
-        return Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
-        child: TextFormField(
-          enabled: false, //Should never be anabled, as users should not be able to edit these themselves.
-          initialValue: item,
-          decoration: const InputDecoration(
-            border: UnderlineInputBorder(),
-            ))
-          );
-        }
-      );
+            return Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: TextFormField(
+                    enabled:
+                        false, //Should never be anabled, as users should not be able to edit these themselves.
+                    initialValue: item,
+                    decoration: const InputDecoration(
+                      border: UnderlineInputBorder(),
+                    )));
+          });
     }
   }
 
@@ -261,51 +269,60 @@ class _ProfilePageState extends State<ProfilePage> {
   ///Method to be called when edit button is pressed
   ///Simply toggles _isEditButtonPressed.
   void onEditButtonPressed() {
-    setState(() {
-      if(_textFormFieldEditable == true){
-        final profile = FirebaseFirestore.instance.collection("users").doc(_currentUserAuth!.uid);
-        profile.update({
-          "imagePath": _imagePath,
-          "name": _name,
-          "email": _email,
-          "phoneNr": _phoneNr,
-          "regNr": _regNr,
-          }
-        );
-        final snackBar = SnackBar(
-          content: const Text("profile updated"));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-      _textFormFieldEditable = !_textFormFieldEditable;
-    });
+    //If form is currently editable
+    if (_textFormFieldEditable == true) {
+      setState(() {
+        //If validators pass
+        if (_formKey.currentState!.validate()) {
+          _textFormFieldEditable = !_textFormFieldEditable;
+          //If all valid, update the database.
+          final profile = FirebaseFirestore.instance
+              .collection("users")
+              .doc(_currentUserAuth!.uid);
+          profile.update({
+            "imagePath": _imagePath,
+            "name": _name,
+            "email": _email,
+            "phoneNr": _phoneNr,
+            "regNr": _regNr,
+          });
+          final snackBar = SnackBar(content: const Text("profile updated"));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      });
+      //If form is NOT currently editable
+    } else if (_textFormFieldEditable == false) {
+      setState(() {
+        _textFormFieldEditable = true;
+      });
+    }
   }
 
-
-  Widget _buildLogoutButton(){
-
+  //Helper method for creating logout button.
+  Widget _buildLogoutButton() {
     return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10),
-      child: ElevatedButton(
-        onPressed: () {
-          onLogoutButtonPressed();
-        },
-        child: const Text(
-          "Logout",
-          style: TextStyle(color: Colors.black)),
-      )
-    );
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: ElevatedButton(
+          onPressed: () {
+            onLogoutButtonPressed();
+          },
+          child: const Text("Logout", style: TextStyle(color: Colors.black)),
+        ));
   }
 
   //Method to be called when Logout button is pressed.
   //Logs out the user.
-  void onLogoutButtonPressed(){
+  void onLogoutButtonPressed() {
     setState(() {
       auth.FirebaseAuth.instance.signOut();
-      Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) {
-          return SignInPage();
-        }));
-      }
-    );
+
+      Navigator.of(context).pushAndRemoveUntil(
+          new MaterialPageRoute(builder: (context) => new SignInPage()),
+          (route) => false);
+    });
+  }
+
+  String checkValidators() {
+    throw UnimplementedError();
   }
 }

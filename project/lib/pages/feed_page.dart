@@ -38,12 +38,12 @@ class _FeedPageState extends State<FeedPage> {
             MaterialPageRoute(builder: (BuildContext context) {
           return const AdminPage();
         }));
-      }
-      else if (_selectedIndex == 3) {
+      } else if (_selectedIndex == 3) {
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) {
-              return packingListPage(itemCollectionId: collectionId!, database: database);
-            }));
+          return packingListPage(
+              itemCollectionId: collectionId!, database: database);
+        }));
       }
     });
   }
@@ -85,14 +85,6 @@ class _FeedPageState extends State<FeedPage> {
         BottomNavigationBarItem(
             icon: Icon(Icons.person, size: 40),
             label: 'Profile',
-            backgroundColor: Colors.blue),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.admin_panel_settings_outlined, size: 40),
-            label: 'Admin',
-            backgroundColor: Colors.blue),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.add_card_sharp, size: 40),
-            label: 'Packing',
             backgroundColor: Colors.blue),
       ],
       type: BottomNavigationBarType.fixed,
@@ -237,15 +229,16 @@ class _FeedPageState extends State<FeedPage> {
                     mission.elementAt(index).name,
                     mission.elementAt(index).time,
                     mission.elementAt(index).location,
-                mission.elementAt(index).itemCollectionId, repository),
+                    mission.elementAt(index).itemCollectionId,
+                    repository),
               );
             }),
           );
         });
   }
 
-  Widget _buildSingleMissionObject(
-      String? name, Timestamp time, String? location, String collectionId, Repository database) {
+  Widget _buildSingleMissionObject(String? name, Timestamp time,
+      String? location, String collectionId, Repository database) {
     bool isChecked = true;
     return Container(
         height: 150,
@@ -279,8 +272,10 @@ class _FeedPageState extends State<FeedPage> {
                               TextStyle(color: Colors.blue[700], fontSize: 18)),
                       Spacer(),
                       ElevatedButton(
-                          onPressed: () => _onItemTapped(3, collectionId, database),
-                          child: Text("Packing List", style: TextStyle(color: Colors.white))),
+                          onPressed: () =>
+                              _onItemTapped(3, collectionId, database),
+                          child: Text("Packing List",
+                              style: TextStyle(color: Colors.white))),
                       Spacer(),
                       ElevatedButton(
                           onPressed: () => _onItemTapped(4),

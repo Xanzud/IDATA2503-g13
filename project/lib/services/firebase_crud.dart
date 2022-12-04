@@ -16,12 +16,13 @@ CollectionReference _Collection = _firestore.collection('');
 class FirebaseCrud {
   // Users
 
-  static Future<Response> addUser({required String name,
-    required String phone,
-    required String address,
-    String? reg,
-    String? certifications,
-    String? email}) async {
+  static Future<Response> addUser(
+      {required String name,
+      required String phone,
+      required String address,
+      String? reg,
+      String? certifications,
+      String? email}) async {
     _Collection = _firestore.collection('users');
 
     Response response = Response();
@@ -103,13 +104,14 @@ class FirebaseCrud {
     }
   }
 
-  static Future<Response> updateUser({required String uid,
-    required String name,
-    required String phoneNr,
-    required String address,
-    String? reg,
-    List<String>? certifications,
-    String? email}) async {
+  static Future<Response> updateUser(
+      {required String uid,
+      required String name,
+      required String phoneNr,
+      required String address,
+      String? reg,
+      List<String>? certifications,
+      String? email}) async {
     _Collection = _firestore.collection('users');
 
     Response response = Response();
@@ -153,15 +155,16 @@ class FirebaseCrud {
     return response;
   }
 
-  static Future<Response> createUser({required String name,
-    required String phoneNr,
-    required String email,
-    required String role,
-    required String uid,
-    required String imagePath,
-    required List<String> certifications,
-    required String address,
-    required String regNr}) async {
+  static Future<Response> createUser(
+      {required String name,
+      required String phoneNr,
+      required String email,
+      required String role,
+      required String uid,
+      required String imagePath,
+      required List<String> certifications,
+      required String address,
+      required String regNr}) async {
     _Collection = _firestore.collection('users');
 
     Response response = Response();
@@ -199,10 +202,11 @@ class FirebaseCrud {
 
   // Missions
 
-  static Future<Response> createMission({required String location,
-    required String name,
-    required Timestamp time,
-    required String packingList}) async {
+  static Future<Response> createMission(
+      {required String location,
+      required String name,
+      required Timestamp time,
+      required String packingList}) async {
     _Collection = _firestore.collection('missions');
 
     Response response = Response();
@@ -248,7 +252,8 @@ class FirebaseCrud {
       "name": mission.name,
       "time": mission.time,
       "packingList": mission.packingList,
-      "attending": mission.attending
+      "attending": mission.attending,
+      "itemCollectionId": mission.itemCollectionId,
     };
 
     await documentReference.set(data).whenComplete(() {
@@ -344,12 +349,12 @@ class FirebaseCrud {
     return response;
   }
 
-  Stream<T?> getDocumentStream<T>(String path,
-      T Function(Map<String, dynamic>) converter) {
+  Stream<T?> getDocumentStream<T>(
+      String path, T Function(Map<String, dynamic>) converter) {
     print("Get document at $path");
     // Get snapshot stream first
     final Stream<DocumentSnapshot<Map<String, dynamic>>> snapshots =
-    _firestore.doc(path).snapshots();
+        _firestore.doc(path).snapshots();
 
     // Then we need to convert it to Stream<T?> - take every snapshot and
     // convert it to a T object. This effectively creates a new Stream
@@ -364,12 +369,12 @@ class FirebaseCrud {
   /// Get a stream for a collection stored at a specific path.
   /// Automatically convert each item in the collection to an object of
   /// corresponding type using the provided [converter] function
-  Stream<Iterable<T>> getCollectionStream<T>(String path,
-      T Function(Map<String, dynamic>) converter) {
+  Stream<Iterable<T>> getCollectionStream<T>(
+      String path, T Function(Map<String, dynamic>) converter) {
     print("Get collection items at $path");
     // Get snapshot stream first
     final Stream<QuerySnapshot<Map<String, dynamic>>> snapshots =
-    _firestore.collection(path).snapshots();
+        _firestore.collection(path).snapshots();
 
     // Then we traverse all the documents (as QueryDocumentSnapshot)
     // For each document, we extract the key-value pairs as Map<String, dynamic>
@@ -401,12 +406,11 @@ class FirebaseCrud {
     final collection = _firestore.collection("missions");
     final snapshots = collection.snapshots();
 
-    return snapshots.map((snapshots) =>
-        snapshots.docs
-            .map(
-              (snapshot) => builder(snapshot.data(), snapshot.id),
+    return snapshots.map((snapshots) => snapshots.docs
+        .map(
+          (snapshot) => builder(snapshot.data(), snapshot.id),
         )
-            .toList());
+        .toList());
   }
 
   /// Returns stream of pack lists
@@ -416,34 +420,33 @@ class FirebaseCrud {
     final collection = _firestore.collection("packLists");
     final snapshots = collection.snapshots();
 
-    return snapshots.map((snapshots) =>
-        snapshots.docs
-            .map(
-              (snapshot) => builder(snapshot.data(), snapshot.id),
+    return snapshots.map((snapshots) => snapshots.docs
+        .map(
+          (snapshot) => builder(snapshot.data(), snapshot.id),
         )
-            .toList());
+        .toList());
   }
 
   /// Returns a stream for a packing collection for a mission
-  Stream<Iterable<T>> getMissionPackingListWithId<T>({
-    required T Function(Map<String,
-        dynamic> data, String documentID) builder, required String itemCollectionId
-  }) {
+  Stream<Iterable<T>> getMissionPackingListWithId<T>(
+      {required T Function(Map<String, dynamic> data, String documentID)
+          builder,
+      required String itemCollectionId}) {
     final collection = _firestore
         .collection("/missionPackingLists/$itemCollectionId/itemCollection");
     final snapshots = collection.snapshots();
 
-    return snapshots.map((snapshots) =>
-        snapshots.docs
-            .map(
-              (snapshot) => builder(snapshot.data(), snapshot.id),
+    return snapshots.map((snapshots) => snapshots.docs
+        .map(
+          (snapshot) => builder(snapshot.data(), snapshot.id),
         )
-            .toList());
+        .toList());
   }
 
-  static void updateMission({required String location,
-    required String name,
-    required Timestamp time}) {}
+  static void updateMission(
+      {required String location,
+      required String name,
+      required Timestamp time}) {}
 
   //TODO Too big method?
   static Future<String> createMissionPackingList(String packingListType) async {
@@ -453,17 +456,20 @@ class FirebaseCrud {
     String documentIdFromCurrentDate = DateTime.now().toIso8601String();
 
     final dataT = <String, dynamic>{};
-    DocumentReference packingListRef = _Collection.doc(
-        documentIdFromCurrentDate);
+    DocumentReference packingListRef =
+        _Collection.doc(documentIdFromCurrentDate);
 
     await packingListRef.set(dataT).whenComplete(() async {
       //Code for building the item list and writing it to FireStore
-      MissionPackingCollectionBuilder builder = MissionPackingCollectionBuilder();
+      MissionPackingCollectionBuilder builder =
+          MissionPackingCollectionBuilder();
       List<PackingItem> itemList = builder.buildList(packingListType);
       final batch = _firestore.batch();
       for (PackingItem item in itemList) {
-        DocumentReference itemCollectionRef = _Collection.doc(
-            documentIdFromCurrentDate).collection("itemCollection").doc();
+        DocumentReference itemCollectionRef =
+            _Collection.doc(documentIdFromCurrentDate)
+                .collection("itemCollection")
+                .doc();
         batch.set(itemCollectionRef, item.toMap());
       }
 
@@ -474,19 +480,19 @@ class FirebaseCrud {
     return returnString;
   }
 
-  Future<void> updateItemPackedStatus(String collectionId,
-      String itemName) async {
-    _Collection = _firestore.collection("/missionPackingLists/$collectionId/itemCollection/");
+  Future<void> updateItemPackedStatus(
+      String collectionId, String itemName) async {
+    _Collection = _firestore
+        .collection("/missionPackingLists/$collectionId/itemCollection/");
 
     final docRef = _Collection.doc(itemName);
     final docSnap = await docRef.get();
     Map<String, dynamic> data = docSnap.data() as Map<String, dynamic>;
     final packingItem = PackingItem.fromMap(data, docSnap.id);
 
-    if(packingItem.packed == false) {
+    if (packingItem.packed == false) {
       _Collection.doc(itemName).update({"packed": true});
-    }
-    else {
+    } else {
       _Collection.doc(itemName).update({"packed": false});
     }
   }
