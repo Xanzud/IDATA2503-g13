@@ -27,13 +27,11 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
     setState(() {
       _selectedIndex = index;
       if (_selectedIndex == 0) {
-        // Using setstate to update
-      } else if (_selectedIndex == 1) {
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) {
           return ProfilePage();
         }));
-      } else if (_selectedIndex == 2) {
+      } else if (_selectedIndex == 1) {
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) {
           return const AdminPage();
@@ -79,25 +77,27 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-            icon: Icon(Icons.feed, size: 40),
-            label: 'Feed',
-            backgroundColor: Colors.red),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.person, size: 40),
+            icon: Icon(
+              Icons.person,
+              size: 60,
+              color: Colors.red,
+            ),
             label: 'Profile',
-            backgroundColor: Colors.blue),
+            backgroundColor: Colors.white),
         BottomNavigationBarItem(
-            icon: Icon(Icons.admin_panel_settings_outlined, size: 40),
+            icon: Icon(
+              Icons.admin_panel_settings_outlined,
+              size: 60,
+              color: Colors.red,
+            ),
             label: 'Admin',
-            backgroundColor: Colors.blue),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.add_card_sharp, size: 40),
-            label: 'Packing',
-            backgroundColor: Colors.blue),
+            backgroundColor: Colors.white),
       ],
       type: BottomNavigationBarType.fixed,
-      currentIndex: _selectedIndex,
-      selectedItemColor: Colors.amber[200],
+      selectedItemColor: Colors.grey,
+      unselectedItemColor: Colors.grey,
+      selectedFontSize: 14,
+      unselectedFontSize: 14,
       onTap: _onItemTapped,
     );
   }
@@ -237,15 +237,21 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
                     mission.elementAt(index).time,
                     mission.elementAt(index).location,
                     mission.elementAt(index).itemCollectionId,
-                    repository),
+                    repository,
+                    mission.elementAt(index)),
               );
             }),
           );
         });
   }
 
-  Widget _buildSingleMissionObject(String? name, Timestamp time,
-      String? location, String collectionId, Repository database) {
+  Widget _buildSingleMissionObject(
+      String? name,
+      Timestamp time,
+      String? location,
+      String collectionId,
+      Repository database,
+      Mission mission) {
     bool isChecked = true;
     return Container(
         height: 150,
@@ -279,13 +285,17 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
                               TextStyle(color: Colors.blue[700], fontSize: 18)),
                       Spacer(),
                       ElevatedButton(
-                          onPressed: () =>
-                              _onItemTapped(3, collectionId, database),
+                          onPressed: () {
+                            _onItemTapped(3, collectionId, database);
+                          },
                           child: Text("Packing List",
                               style: TextStyle(color: Colors.white))),
                       Spacer(),
                       ElevatedButton(
-                          onPressed: () => _onItemTapped(4),
+                          onPressed: () {
+                            EditMissionPage.show(context,
+                                database: database, mission: mission);
+                          },
                           child: Icon(Icons.edit_note)),
                     ],
                   )),
