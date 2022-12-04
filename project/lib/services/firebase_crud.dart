@@ -428,10 +428,10 @@ class FirebaseCrud {
 
   /// Returns a stream for a packing collection for a mission
   Stream<Iterable<T>> getMissionPackingListWithId<T>({
-    required T Function(Map<String, dynamic> data, String documentID) builder,
+    required T Function(Map<String, dynamic> data, String documentID) builder, required String itemCollectionId
   }) {
     final collection = _firestore
-        .collection("/missionPackingLists/ROTV8J1DjDqOBpkCzwtW/itemCollection");
+        .collection("/missionPackingLists/$itemCollectionId/itemCollection");
     final snapshots = collection.snapshots();
 
     return snapshots.map((snapshots) => snapshots.docs
@@ -458,13 +458,12 @@ class FirebaseCrud {
 
     await packingListRef.set(dataT).whenComplete(() async {
 
+      //Code for building the item list and writing it to FireStore
       MissionPackingCollectionBuilder builder = MissionPackingCollectionBuilder();
       List<PackingItem> itemList = builder.buildList(packingListType);
       final batch = _firestore.batch();
-
-      DocumentReference itemCollectionRef = _Collection.doc(documentIdFromCurrentDate).collection("itemCollection").doc();
-
       for(PackingItem item in itemList) {
+        DocumentReference itemCollectionRef = _Collection.doc(documentIdFromCurrentDate).collection("itemCollection").doc();
         batch.set(itemCollectionRef, item.toMap());
       }
 

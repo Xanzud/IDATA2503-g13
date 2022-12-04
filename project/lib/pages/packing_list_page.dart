@@ -6,15 +6,35 @@ import '../services/firestore_repository.dart';
 import '../services/repository.dart';
 
 class packingListPage extends StatefulWidget {
+  const packingListPage({Key? key, required this.itemCollectionId, required this.database})
+    : super(key: key);
+  final String itemCollectionId;
+  final Repository? database;
+
+  Future<void> show(BuildContext context,
+      {required String itemCollectionId, Repository? database}) async {
+    await Navigator.of(context, rootNavigator: true).push(
+      MaterialPageRoute(
+        builder: (context) => packingListPage(itemCollectionId: itemCollectionId, database: database,),
+        fullscreenDialog: true,
+      ),
+    );
+  }
+
   @override
   _packingListPageState createState() => _packingListPageState();
 }
 
 class _packingListPageState extends State<packingListPage> {
 
+  late final String itemCollectionId;
+  late final Repository? database;
+
   @override
   Widget build(BuildContext context) {
-    final repository = Provider.of<Repository>(context, listen: false);
+    itemCollectionId = widget.itemCollectionId;
+    database = widget.database;
+
     return Provider<Repository>(
         create: (context) => FirestoreRepository(),
         builder: (context, child) {
@@ -41,10 +61,8 @@ class _packingListPageState extends State<packingListPage> {
   }
 
   Widget _buildList() {
-    final repository = Provider.of<Repository>(context, listen: false);
-
     return StreamBuilder<Iterable<PackingItem>>(
-        stream: repository.getItemCollectionForMission(),
+        stream: database?.getItemCollectionForMission(itemCollectionId),
         builder: (context, snapshot) {
 
 

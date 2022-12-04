@@ -77,10 +77,10 @@ class FirestoreRepository implements Repository {
               PackingList.fromMap(data, documentID));
 
   @override
-  Stream<Iterable<PackingItem>> getItemCollectionForMission() =>
+  Stream<Iterable<PackingItem>> getItemCollectionForMission(String itemCollectionId) =>
       FirebaseCrud().getMissionPackingListWithId(
           builder: (data, documentID) =>
-              PackingItem.fromMap(data, documentID));
+              PackingItem.fromMap(data, documentID), itemCollectionId: itemCollectionId);
 
   @override
   Stream<Iterable<User>> getUsersStreamFromMission(String missionID) {
