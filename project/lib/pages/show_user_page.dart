@@ -41,6 +41,7 @@ class _ShowUserPageState extends State<ShowUserPage> {
   String? _password;
   List<dynamic>? _certifications;
   String? _imgUrl;
+  String? _phoneNr;
 
   @override
   void initState() {
@@ -50,6 +51,7 @@ class _ShowUserPageState extends State<ShowUserPage> {
       _email = widget.user?.email;
       _imgUrl = widget.user?.imagePath;
       _certifications = widget.user?.certifications;
+      _phoneNr = widget.user?.phoneNr;
     }
   }
 
@@ -88,7 +90,8 @@ class _ShowUserPageState extends State<ShowUserPage> {
             "name": _name,
             "email": _email,
             "imagePath": _imgUrl,
-            "certifications": _certifications
+            "certifications": _certifications,
+            "phoneNr": _phoneNr
           });
           //await FirebaseCrud.saveMission(mission);
           Navigator.of(context).pop();
@@ -112,15 +115,6 @@ class _ShowUserPageState extends State<ShowUserPage> {
           appBar: AppBar(
             elevation: 2.0,
             title: Text(widget.user == null ? 'New User' : 'Showing User'),
-            actions: <Widget>[
-              TextButton(
-                child: Text(
-                  'Save',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-                onPressed: _submit,
-              ),
-            ],
           ),
           body: _buildContents(context),
           backgroundColor: Colors.grey[200],
@@ -174,23 +168,33 @@ class _ShowUserPageState extends State<ShowUserPage> {
       ),
       SizedBox(height: 50),
       TextFormField(
-        decoration: InputDecoration(labelText: 'Img (url only)'),
-        initialValue: _imgUrl,
-        keyboardType: TextInputType.url,
+        decoration: InputDecoration(labelText: 'Phone Nr.'),
+        initialValue: _phoneNr,
+        keyboardType: TextInputType.number,
         enabled: false,
         onChanged: (value) {
           setState(() {
-            _imgUrl = value;
+            _phoneNr = value;
           });
         },
       ),
       SizedBox(height: 50),
-      CircleAvatar(
-          radius: 100,
-          backgroundColor: Colors.transparent,
-          backgroundImage: (_imgUrl == "" || _imgUrl == null)
-              ? null
-              : NetworkImage(_imgUrl!)),
+      Column(
+        children: [
+          ClipOval(
+              child: Material(
+                  color: Colors.transparent,
+                  child: Ink.image(
+                    image: (_imgUrl == "" || _imgUrl == null)
+                        ? NetworkImage(
+                            "https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png")
+                        : NetworkImage(_imgUrl!),
+                    fit: BoxFit.cover,
+                    width: 200,
+                    height: 200,
+                  ))),
+        ],
+      ),
       SizedBox(height: 50),
       Center(
         child: Text("Certifications", style: TextStyle(fontSize: 26)),
@@ -237,6 +241,7 @@ class _ShowUserPageState extends State<ShowUserPage> {
         */
         return Dismissible(
             key: Key(item),
+            direction: DismissDirection.none,
             background: Container(color: Colors.red),
             onDismissed: (direction) {
               setState(() {
@@ -247,6 +252,7 @@ class _ShowUserPageState extends State<ShowUserPage> {
             },
             child: TextFormField(
               initialValue: user.certifications[index],
+              enabled: false,
               decoration: InputDecoration(
                 border: UnderlineInputBorder(),
                 labelText: 'Certification',

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project/missions/mission_page.dart';
 import 'package:project/missions/new_mission_page.dart';
+import 'package:project/missions/show_mission_page.dart';
 import 'package:project/model/Mission.dart';
 import 'package:project/pages/about_page.dart';
 import 'package:project/pages/admin_page.dart';
@@ -202,6 +203,16 @@ class _FeedPageState extends State<FeedPage> {
                           child: Text("Packing List",
                               style: TextStyle(color: Colors.white))),
                       Spacer(),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (BuildContext context) {
+                              return ShowMissionPage(
+                                  database: database, mission: mission);
+                            }));
+                          },
+                          child: Text("Show",
+                              style: TextStyle(color: Colors.white))),
                       //ElevatedButton(
                       //    onPressed: () => _onItemTapped(4),
                       //    child: Icon(Icons.edit_note)),

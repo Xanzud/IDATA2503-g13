@@ -42,6 +42,7 @@ class _EditUserPageState extends State<EditUserPage> {
   List<dynamic>? _certifications;
   String? _imgUrl;
   String? _role;
+  String? _phoneNr;
 
   String? _selectedRole;
 
@@ -54,6 +55,7 @@ class _EditUserPageState extends State<EditUserPage> {
       _imgUrl = widget.user?.imagePath;
       _certifications = widget.user?.certifications;
       _role = widget.user?.role;
+      _phoneNr = widget.user?.phoneNr;
     }
   }
 
@@ -85,7 +87,8 @@ class _EditUserPageState extends State<EditUserPage> {
           "name": _name,
           "email": _email,
           "imagePath": _imgUrl,
-          "certifications": _certifications
+          "certifications": _certifications,
+          "phoneNr": _phoneNr,
         });
         //await FirebaseCrud.saveMission(mission);
         Navigator.of(context).pop();
@@ -183,6 +186,17 @@ class _EditUserPageState extends State<EditUserPage> {
         validator: (value) =>
             value!.isNotEmpty ? null : 'Email can\'t be empty',
         onSaved: (value) => _email = value,
+      ),
+      SizedBox(height: 50),
+      TextFormField(
+        decoration: InputDecoration(labelText: 'Phone Nr.'),
+        initialValue: _phoneNr,
+        keyboardType: TextInputType.phone,
+        onChanged: (value) {
+          setState(() {
+            _phoneNr = value;
+          });
+        },
       ),
       SizedBox(height: 50),
       TextFormField(
