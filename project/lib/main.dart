@@ -20,12 +20,31 @@ Future<void> main() async {
     //name: "Prepacktive",
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  runApp(const MyApp());
+  runApp( const MyApp(key: null));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+const MyApp({required Key? key}) : super(key: key); //This is the semi-colon.
+
+@override
+_MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState(){
+    super.initState();
+
+    FirebaseMessaging.instance.getInitialMessage();
+
+    FirebaseMessaging.onMessage.listen((message) {
+      if(message.notification != null) {
+        print(message.notification!.body);
+        print(message.notification!.title);
+      }
+    });
+  }
 
   // This widget is the root of your application.
   @override
