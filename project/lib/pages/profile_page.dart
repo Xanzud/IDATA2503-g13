@@ -58,8 +58,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     ListView(physics: const BouncingScrollPhysics(), children: [
                   Form(
                       key: _formKey,
-                      child:
-                          Column(children: _buildprofileContent(context, user)))
+                      child: Column(children: [
+                        Padding(
+                            padding: EdgeInsets.all(80),
+                            child: Column(
+                              children: _buildprofileContent(context, user),
+                            )),
+                      ]))
                 ]));
           } else {
             //Return an empty widget.
