@@ -11,11 +11,13 @@ import 'package:provider/provider.dart';
 import 'signInPage.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    //name: "Prepactive",
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp(
+      //name: "Prepactive",
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {};
   runApp(const MyApp(key: null));
 }
 
