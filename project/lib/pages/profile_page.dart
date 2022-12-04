@@ -107,7 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.red),
               )),
-          initialValue: _imagePath == "" ? "No image url set" : _imagePath,
+          initialValue: _imagePath,
           onChanged: (value) {
             setState(() {
               _imagePath = value;
@@ -127,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.red),
               )),
-          initialValue: _name == "" ? "No name set" : _name,
+          initialValue: _name,
           validator: (value) {
             if (value == null || value.isEmpty) {
               return "Name field cannot be empty";
@@ -152,7 +152,7 @@ class _ProfilePageState extends State<ProfilePage> {
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.red),
               )),
-          initialValue: _email == "" ? "No email set" : _email,
+          initialValue: _email,
           validator: (value) {
             if (value == null || value.isEmpty) {
               return "Email field cannot be empty";
@@ -180,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.red),
               )),
-          initialValue: _phoneNr == "" ? "No phone # set" : _phoneNr,
+          initialValue: _phoneNr,
           validator: (value) {
             if (value == null || value.isEmpty) {
               return "Phone # field cannot be empty";
@@ -206,7 +206,7 @@ class _ProfilePageState extends State<ProfilePage> {
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.red),
               )),
-          initialValue: _regNr == "" ? "No vehicle reg # set" : _regNr,
+          initialValue: _regNr,
           onChanged: (value) {
             setState(() {
               _regNr = value;
