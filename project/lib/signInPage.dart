@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:project/authentication_service.dart';
 import 'package:project/pages/feed_page.dart';
+import 'package:project/pages/feed_page_admin.dart';
+import 'package:project/services/firebase_crud.dart';
 import 'package:project/utils/Utils.dart';
 import 'package:project/utils/user_handler.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +54,27 @@ class _SignInPageState extends State<SignInPage> {
       try {
         await auth.signInWithEmailAndPassword(
             email: email!, password: password!);
+
+        /*
         if (FirebaseAuth.instance.currentUser != null) {
+          await FirebaseCrud.getUserByUid(
+                  FirebaseAuth.instance.currentUser!.uid)
+              .then((value) {
+            if (value.role == "admin") {
+            } else {
+              Navigator.of(context).pushAndRemoveUntil(
+                  new MaterialPageRoute(builder: (context) => new FeedPage()),
+                  (route) => false);
+            }
+          });
+        }
+        */
+        if (FirebaseAuth.instance.currentUser!.email == "admin@admin.com") {
+          Navigator.of(context).pushAndRemoveUntil(
+              new MaterialPageRoute(
+                  builder: (context) => new LandingPageAdmin()),
+              (route) => false);
+        } else {
           Navigator.of(context).pushAndRemoveUntil(
               new MaterialPageRoute(builder: (context) => new FeedPage()),
               (route) => false);
