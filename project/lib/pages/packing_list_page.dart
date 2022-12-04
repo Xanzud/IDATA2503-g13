@@ -29,6 +29,7 @@ class _packingListPageState extends State<packingListPage> {
 
   late final String itemCollectionId;
   late final Repository? database;
+  late Map<String, bool> checkedMap = {};
   List<bool> checkBoxList = [false, true];
 
   bool hasBeenInitialized = false;
@@ -51,12 +52,9 @@ class _packingListPageState extends State<packingListPage> {
               title: Text("Packing List"),
             ),
             body: _buildMainContent(context),
-
-            //TODO Just for testing
-            floatingActionButton: FloatingActionButton(onPressed: () { },
-            ),
-          );
-        });
+            );
+        }
+    );
   }
 
   Widget _buildMainContent(BuildContext context) {
@@ -106,6 +104,12 @@ class _packingListPageState extends State<packingListPage> {
     returnList.add(_buildInfoRow());
 
     for(var item in itemCollection) {
+      if(item.packed == true) {
+        checkedMap[item.name] = true;
+      }
+      else {
+        checkedMap[item.name] = false;
+      }
       returnList.add(_buildSingleRow(item));
     }
 
@@ -159,7 +163,6 @@ class _packingListPageState extends State<packingListPage> {
             ],
           ),
         ),
-
       ],
     );
   }
@@ -211,11 +214,13 @@ class _packingListPageState extends State<packingListPage> {
               //TODO Temporary solution to checked
               Checkbox(
                 checkColor: Colors.white,
-                value: checkBoxList[0],
+                value: checkedMap[item.name],
                 onChanged: (bool? value) {
-                  checkPackedItem(itemCollectionId, item.id);
+                  checkPackedItem(itemCollectionId, item.id, item.name);
                   setState(() {
-                    value = checkBoxList[1];
+                    print(checkedMap[item.name]);
+                    checkedMap[item.name] = value!;
+                    print(checkedMap[item.name]);
                   });
                   },
               ),
@@ -234,7 +239,7 @@ class _packingListPageState extends State<packingListPage> {
     return "Not packed";
   }
 
-  void checkPackedItem(String collectionId, String itemId)  {
+  void checkPackedItem(String collectionId, String itemId, String itemName)  {
      database!.updateItemAsPacked(collectionId, itemId);
   }
 }
