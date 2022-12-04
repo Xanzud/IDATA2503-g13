@@ -29,20 +29,6 @@ class MissionEntriesPage extends StatelessWidget {
     );
   }
 
-/*
-  Future<void> _deleteEntry(BuildContext context, Entry entry) async {
-    try {
-      await database.deleteEntry(entry);
-    } on FirebaseException catch (e) {
-      showExceptionAlertDialog(
-        context,
-        title: 'Operation failed',
-        exception: e,
-      );
-    }
-  }
-  */
-
   @override
   Widget build(BuildContext context) {
     return Provider<Repository>(

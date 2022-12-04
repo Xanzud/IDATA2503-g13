@@ -1,15 +1,9 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:project/authentication_service.dart';
 import 'package:project/pages/feed_page.dart';
 import 'package:project/pages/feed_page_admin.dart';
-import 'package:project/services/firebase_crud.dart';
-import 'package:project/utils/Utils.dart';
-import 'package:project/utils/user_handler.dart';
-import 'package:provider/provider.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});

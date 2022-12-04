@@ -18,7 +18,6 @@ class _newMissionPageState extends State<newMissionPage> {
   final _formKey = GlobalKey<FormState>();
   late final List<String> _packingLists = [];
 
-  //TODO CLEANUP
   String? _name;
   Timestamp? _time;
   String? _location;
@@ -26,26 +25,7 @@ class _newMissionPageState extends State<newMissionPage> {
 
   String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
 
-  bool _validateAndSaveForm() {
-    final form = _formKey.currentState;
-    if (form!.validate()) {
-      form.save();
-      return true;
-    }
-    return false;
-  }
-
   Future<void> _submit() async {
-    /*
-    if(_validateAndSaveForm()) {
-      print("form saved $_name, $_time, $_location");
-      final repository = Provider.of<Repository>(context, listen: false);
-      final mission = Mission(_name!, _time!, _location!);
-
-      String missionID = "/${documentIdFromCurrentDate()}";
-      await repository.createMission(mission, missionID);
-    }
-     */
     if (_location == null ||
         _time == null ||
         _name == null ||
@@ -131,8 +111,6 @@ class _newMissionPageState extends State<newMissionPage> {
         ),
         mode: DateTimeFieldPickerMode.dateAndTime,
         autovalidateMode: AutovalidateMode.always,
-        //validator: (e) =>
-        //(e?.day ?? 0) == 1 ? 'Please not the first day' : null,
         onDateSelected: (DateTime value) {
           setState(() {
             _time = Timestamp.fromMicrosecondsSinceEpoch(
