@@ -235,6 +235,6 @@ class _packingListPageState extends State<packingListPage> {
   }
 
   void checkPackedItem(String collectionId, String itemId)  {
-     database!.markItemAsPacked(collectionId, itemId);
+     database!.updateItemAsPacked(collectionId, itemId);
   }
 }
