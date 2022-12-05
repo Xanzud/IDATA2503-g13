@@ -129,10 +129,12 @@ class _buildBody extends StatelessWidget {
         return Center(
             child: Column(
           children: [
+            /*
             Padding(
               padding: EdgeInsets.all(20),
               child: Text("Users", style: TextStyle(fontSize: 16)),
             ),
+            
             Column(
               children: List.generate(usersData.length, (index) {
                 return Text(usersData.elementAt(index).name +
@@ -140,6 +142,7 @@ class _buildBody extends StatelessWidget {
                     usersData.elementAt(index).email);
               }),
             ),
+            */
           ],
         ));
       },
