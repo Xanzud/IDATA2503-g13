@@ -60,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       key: _formKey,
                       child: Column(children: [
                         Padding(
-                            padding: EdgeInsets.all(80),
+                            padding: EdgeInsets.all(20),
                             child: Column(
                               children: _buildprofileContent(context, user),
                             )),

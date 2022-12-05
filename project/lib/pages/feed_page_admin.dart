@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project/model/Mission.dart';
@@ -61,7 +62,7 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
                   )),
             ),
             body: Padding(
-                padding: const EdgeInsets.fromLTRB(40, 100, 40, 40),
+                padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
                 child: SingleChildScrollView(
                     child: _buildMissionInfoAll(context))),
             bottomNavigationBar: bottomNavigationBar(context),
@@ -100,6 +101,7 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
 
   Widget _buildMissionInfoAll(BuildContext context) {
     final repository = Provider.of<Repository>(context, listen: false);
+    bool isChecked = false;
 
     return StreamBuilder<Iterable<Mission>>(
         stream: repository.getAllMissionsStreamWithID(),
@@ -146,9 +148,14 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
       String collectionId,
       Repository database,
       Mission mission) {
-    bool isChecked = true;
+    bool isChecked;
+    if (mission.attending.contains(FirebaseAuth.instance.currentUser!.uid)) {
+      isChecked = true;
+    } else {
+      isChecked = false;
+    }
     return Container(
-        height: 150,
+        height: 210,
         decoration: BoxDecoration(
             color: Colors.grey[300],
             borderRadius: BorderRadius.circular(20),
@@ -159,24 +166,28 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
                 offset: Offset(1, 4),
               )
             ]),
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(4.0),
         child: Column(
           children: <Widget>[
-            Align(
-                alignment: Alignment.topLeft,
+            Expanded(
                 child: Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Text(name!, style: TextStyle(color: Colors.red[300])),
-                )),
-            Align(
-              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.fromLTRB(2, 10, 2, 0),
+              child: Text(location!,
+                  style: TextStyle(color: Colors.red[300], fontSize: 16)),
+            )),
+            Expanded(
+                //alignment: Alignment.topLeft,
+                child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 6),
+              child: Text(name!,
+                  style: TextStyle(color: Colors.blue[700], fontSize: 18)),
+            )),
+            Expanded(
+              //alignment: Alignment.centerLeft,
               child: Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(4),
                   child: Row(
                     children: [
-                      Text(name,
-                          style:
-                              TextStyle(color: Colors.blue[700], fontSize: 18)),
                       Spacer(),
                       ElevatedButton(
                           onPressed: () {
@@ -191,13 +202,14 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
                                 database: database, mission: mission);
                           },
                           child: Icon(Icons.edit_note)),
+                      Spacer(),
                     ],
                   )),
             ),
-            Align(
-              alignment: Alignment.bottomLeft,
+            Expanded(
+              //alignment: Alignment.bottomLeft,
               child: Padding(
-                  padding: EdgeInsets.fromLTRB(10, 20, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(8, 4, 8, 0),
                   child: Row(
                     children: [
                       Wrap(
@@ -210,7 +222,7 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
                                   time.microsecondsSinceEpoch))),
                         ],
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
                         spacing: 5,
@@ -220,7 +232,41 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
                             checkColor: Colors.white,
                             value: isChecked,
                             onChanged: (bool? value) {
-                              setState(() => isChecked = value!);
+                              if (value! == true) {
+                                try {
+                                  final docMission = FirebaseFirestore.instance
+                                      .collection("missions")
+                                      .doc(mission.id);
+                                  List<dynamic> attendingUsers =
+                                      mission.attending;
+                                  attendingUsers.add(
+                                      FirebaseAuth.instance.currentUser!.uid);
+                                  docMission.update({
+                                    "attending": attendingUsers,
+                                  });
+                                } on FirebaseException catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(e.message!)));
+                                }
+                              } else {
+                                try {
+                                  final docMission = FirebaseFirestore.instance
+                                      .collection("missions")
+                                      .doc(mission.id);
+                                  List<dynamic> attendingUsers =
+                                      mission.attending;
+                                  attendingUsers.remove(
+                                      FirebaseAuth.instance.currentUser!.uid);
+                                  docMission.update({
+                                    "attending": attendingUsers,
+                                  });
+                                } on FirebaseException catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(e.message!)));
+                                }
+                              }
+
+                              setState(() {});
                             },
                           )
                         ],

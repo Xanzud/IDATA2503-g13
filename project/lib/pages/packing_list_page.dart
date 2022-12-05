@@ -59,7 +59,7 @@ class _packingListPageState extends State<packingListPage> {
   Widget _buildMainContent(BuildContext context) {
     return SingleChildScrollView(
         child: Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(4),
       child: _buildList(),
     ));
   }
@@ -207,9 +207,10 @@ class _packingListPageState extends State<packingListPage> {
           width: 128,
           child: Row(
             children: [
-              Spacer(),
-              Text(_itemPacked(item.packed)),
-              Spacer(),
+              //Causes overflow error
+              //Spacer(),
+              //Text(_itemPacked(item.packed)),
+              //Spacer(),
               Checkbox(
                 checkColor: Colors.white,
                 value: checkedMap[item.name],

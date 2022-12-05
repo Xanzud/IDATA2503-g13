@@ -69,7 +69,7 @@ class _FeedPageState extends State<FeedPage> {
                   )),
             ),
             body: Padding(
-              padding: const EdgeInsets.fromLTRB(40, 100, 40, 40),
+              padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
               child:
                   SingleChildScrollView(child: _buildMissionInfoAll(context)),
             ),
@@ -167,7 +167,7 @@ class _FeedPageState extends State<FeedPage> {
       isChecked = false;
     }
     return Container(
-        height: 150,
+        height: 210,
         decoration: BoxDecoration(
             color: Colors.grey[300],
             borderRadius: BorderRadius.circular(20),
@@ -178,24 +178,26 @@ class _FeedPageState extends State<FeedPage> {
                 offset: Offset(1, 4),
               )
             ]),
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(4.0),
         child: Column(
           children: <Widget>[
-            Align(
-                alignment: Alignment.topLeft,
+            Expanded(
                 child: Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Text(name!, style: TextStyle(color: Colors.red[300])),
+                  padding: EdgeInsets.fromLTRB(2, 10, 2, 0),
+                  child: Text(location!, style: TextStyle(color: Colors.red[300], fontSize: 16)),
                 )),
-            Align(
-              alignment: Alignment.centerLeft,
+            Expanded(
+              //alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 6),
+                  child: Text(name!,
+                      style: TextStyle(color: Colors.blue[700], fontSize: 18)),
+                )),
+            Expanded(
               child: Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(4),
                   child: Row(
                     children: [
-                      Text(name,
-                          style:
-                              TextStyle(color: Colors.blue[700], fontSize: 18)),
                       Spacer(),
                       ElevatedButton(
                           onPressed: () =>
@@ -213,16 +215,16 @@ class _FeedPageState extends State<FeedPage> {
                           },
                           child: Text("Show",
                               style: TextStyle(color: Colors.white))),
+                      Spacer(),
                       //ElevatedButton(
                       //    onPressed: () => _onItemTapped(4),
                       //    child: Icon(Icons.edit_note)),
                     ],
                   )),
             ),
-            Align(
-              alignment: Alignment.bottomLeft,
+            Expanded(
               child: Padding(
-                  padding: EdgeInsets.fromLTRB(10, 20, 0, 0),
+                  padding: EdgeInsets.fromLTRB(8, 4, 8, 0),
                   child: Row(
                     children: [
                       Wrap(
@@ -235,7 +237,7 @@ class _FeedPageState extends State<FeedPage> {
                                   time.microsecondsSinceEpoch))),
                         ],
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
                         spacing: 5,
