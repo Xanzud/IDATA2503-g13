@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project/model/Mission.dart';
+import 'package:project/pages/about_page.dart';
 import 'package:project/pages/admin_page.dart';
 import 'package:project/pages/packing_list_page.dart';
 import 'package:project/pages/profile_page.dart';
@@ -32,6 +33,11 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) {
           return const AdminPage();
+        }));
+      } else if (_selectedIndex == 2) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) {
+          return AboutPage();
         }));
       } else if (_selectedIndex == 3) {
         Navigator.push(context,
@@ -88,6 +94,14 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
               color: Colors.red,
             ),
             label: 'Admin',
+            backgroundColor: Colors.white),
+        BottomNavigationBarItem(
+            icon: Icon(
+              Icons.info,
+              size: 50,
+              color: Colors.red,
+            ),
+            label: 'About',
             backgroundColor: Colors.white),
       ],
       type: BottomNavigationBarType.fixed,
