@@ -58,6 +58,7 @@ class _EditMissionPageState extends State<EditMissionPage> {
       _name = widget.mission?.name;
       _location = widget.mission?.location;
       _time = widget.mission?.time;
+      _selectedValue = widget.mission?.packingList;
     }
   }
 
