@@ -6,7 +6,6 @@ import 'package:project/model/Mission.dart';
 import 'package:project/model/mission_packing_collection_builder.dart';
 import 'package:project/model/packing_item.dart';
 import 'package:project/services/api_paths.dart';
-import 'package:project/services/firestore_service.dart';
 import '../model/Response.dart';
 import '../model/user.dart';
 
@@ -287,36 +286,8 @@ class FirebaseCrud {
     return response;
   }
 
-/*
-  static Future<Response> updateMission(
-      {required String location,
-      required String name,
-      required Timestamp time}) async {
-    _Collection = _firestore.collection('missions');
-
-    Response response = Response();
-    DocumentReference documentReference = _Collection.doc();
-
-    Map<String, dynamic> data = <String, dynamic>{
-      "location": location,
-      "name": name,
-      "time": time
-    };
-
-    await documentReference.update(data).whenComplete(() {
-      response.code = 200;
-      response.message = "Successfully updated mission";
-    }).catchError((e) {
-      response.code = 500;
-      response.message = e;
-    });
-
-    return response;
-  }
-  */
-
   static Future<void> saveMission(Mission mission) =>
-      FirestoreService.instance.setData(
+      setData(
         path: ApiPaths.mission(mission.id),
         data: mission.toMap(),
       );
@@ -393,7 +364,7 @@ class FirebaseCrud {
     });
   }
 
-  Future<void> setData(
+  static Future<void> setData(
       {required String path, required Map<String, dynamic> data}) async {
     final reference = FirebaseFirestore.instance.doc(path);
     await reference.set(data);

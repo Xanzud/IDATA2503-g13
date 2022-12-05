@@ -19,7 +19,7 @@ class FirestoreRepository implements Repository {
 
   @override
   Future<void> createMission(Mission mission, String missionID) =>
-      FirebaseCrud().setData(
+      FirebaseCrud.setData(
         path: ApiPaths.missionRoot() + missionID,
         data: mission.toMap(),
       );
