@@ -103,6 +103,7 @@ class _SignInPageState extends State<SignInPage> {
                         SizedBox(
                           width: 400,
                           child: TextFormField(
+                            keyboardType: TextInputType.emailAddress,
                             validator: (value) => value!.isNotEmpty
                                 ? null
                                 : 'Enter a valid email',
