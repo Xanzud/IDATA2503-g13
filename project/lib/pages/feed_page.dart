@@ -135,6 +135,26 @@ class _FeedPageState extends State<FeedPage> {
 
           final Iterable<Mission> mission = snapshot.data!;
 
+          if (mission.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "Nothing here.",
+                    style:
+                        const TextStyle(fontSize: 32.0, color: Colors.black54),
+                  ),
+                  Text(
+                    "Add a new mission?",
+                    style:
+                        const TextStyle(fontSize: 16.0, color: Colors.black54),
+                  ),
+                ],
+              ),
+            );
+          }
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: List.generate(mission.length, (index) {
@@ -183,16 +203,17 @@ class _FeedPageState extends State<FeedPage> {
           children: <Widget>[
             Expanded(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(2, 10, 2, 0),
-                  child: Text(location!, style: TextStyle(color: Colors.red[300], fontSize: 16)),
-                )),
+              padding: EdgeInsets.fromLTRB(2, 10, 2, 0),
+              child: Text(location!,
+                  style: TextStyle(color: Colors.red[300], fontSize: 16)),
+            )),
             Expanded(
-              //alignment: Alignment.topLeft,
+                //alignment: Alignment.topLeft,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 6),
-                  child: Text(name!,
-                      style: TextStyle(color: Colors.blue[700], fontSize: 18)),
-                )),
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 6),
+              child: Text(name!,
+                  style: TextStyle(color: Colors.blue[700], fontSize: 18)),
+            )),
             Expanded(
               child: Padding(
                   padding: EdgeInsets.all(4),

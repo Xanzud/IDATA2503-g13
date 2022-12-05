@@ -286,8 +286,7 @@ class FirebaseCrud {
     return response;
   }
 
-  static Future<void> saveMission(Mission mission) =>
-      setData(
+  static Future<void> saveMission(Mission mission) => setData(
         path: ApiPaths.mission(mission.id),
         data: mission.toMap(),
       );

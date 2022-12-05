@@ -137,6 +137,26 @@ class _LandingPageAdminState extends State<LandingPageAdmin> {
 
           final Iterable<Mission> mission = snapshot.data!;
 
+          if (mission.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "Nothing here.",
+                    style:
+                        const TextStyle(fontSize: 32.0, color: Colors.black54),
+                  ),
+                  Text(
+                    "Add a new mission?",
+                    style:
+                        const TextStyle(fontSize: 16.0, color: Colors.black54),
+                  ),
+                ],
+              ),
+            );
+          }
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: List.generate(mission.length, (index) {
