@@ -168,7 +168,7 @@ class _NewUserPagePageState extends State<NewUserPage> {
                   value!.isNotEmpty ? null : 'Password can\'t be empty',
             ),
             Padding(
-                padding: EdgeInsets.all(120),
+                padding: EdgeInsets.all(80),
                 child: ElevatedButton(
                   onPressed: _submit,
                   child: Text("Create",

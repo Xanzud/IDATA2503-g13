@@ -129,7 +129,7 @@ class _newMissionPageState extends State<newMissionPage> {
       Text("Packing List"),
       _buildPacketSelector(context),
       Padding(
-          padding: EdgeInsets.all(120),
+          padding: EdgeInsets.all(80),
           child: ElevatedButton(
             onPressed: _submit,
             child: Text("Submit",
